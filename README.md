@@ -7,8 +7,8 @@ QCLAB provides I/O through openQASM making it compatible with quantum hardware.
 
 
 ## Developers - Lawrence Berkeley National Laboratory
-- Daan Camps - dcamps@lbl.gov
-- Roel Van Beeumen - rvanbeeumen@lbl.gov
+- [Daan Camps](http://campsd.github.io/) - dcamps@lbl.gov
+- [Roel Van Beeumen](http://www.roelvanbeeumen.be/) - rvanbeeumen@lbl.gov
 
 
 ## Funding
