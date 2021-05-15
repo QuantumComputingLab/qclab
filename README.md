@@ -1,10 +1,35 @@
 # QCLAB Matlab Toolbox
 
+<p align="center"><img src="doxygen/QCLAB.png?raw=true" /></p>
+
 QCLAB is an object-oriented MATLAB toolbox for creating and representing
 quantum circuits. QCLAB can be used for rapid prototyping and testing of
 quantum algorithms, and allows for fast algorithm development and discovery.
 QCLAB provides I/O through openQASM making it compatible with quantum hardware.
 
+### How to run? ###
+
+The QCLAB Toolbox is implemented using MATLAB object oriented functionalities
+and is compatible with MATLAB R2018a or newer.
+
+1. Clone repository:
+
+        git clone https://github.com/QuantumComputingLab/qclab.git
+
+2. Add all files from qclab directory to MATLAB path to install QCLAB
+
+		addpath(genpath(qclabroot));
+		savepath;
+
+3. Run tests in MATLAB:
+		
+		cd test/
+		runTests.m
+ 
+4. Generate documentation with doxygen. Requires [doxygen](https://www.doxygen.nl/index.html) and [doxymatlab](https://github.com/simgunz/doxymatlab). Adjust tags `FILTER_PATTERNS` and `FILTER_SOURCE_PATTERNS`  in `doxygen/Doxyfile.dox` to local `m2cpp.pl` script.
+	
+		cd doxygen
+		doxygen Doxyfile.dox
 
 ## Developers - Lawrence Berkeley National Laboratory
 - [Daan Camps](http://campsd.github.io/) - dcamps@lbl.gov
