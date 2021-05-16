@@ -18,7 +18,7 @@ and is compatible with MATLAB R2018a or newer.
 
 2. Add all files from qclab directory to MATLAB path to install QCLAB
 
-		addpath(genpath(qclabroot));
+		addpath(qclabroot);
 		savepath;
 
 3. Run tests in MATLAB:
