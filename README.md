@@ -28,7 +28,7 @@ and is compatible with MATLAB R2018a or newer.
  
 4. Generate documentation with doxygen. Requires [doxygen](https://www.doxygen.nl/index.html) and [doxymatlab](https://github.com/simgunz/doxymatlab). Adjust tags `FILTER_PATTERNS` and `FILTER_SOURCE_PATTERNS`  in `doxygen/Doxyfile.dox` to local `m2cpp.pl` script.
 	
-		cd doxygen
+		cd doc/doxygen/
 		doxygen Doxyfile.dox
 
 ## Developers - Lawrence Berkeley National Laboratory
