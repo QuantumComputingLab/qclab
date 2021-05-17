@@ -1,6 +1,6 @@
 # QCLAB Matlab Toolbox
 
-<p align="center"><img src="doxygen/QCLAB.png?raw=true" /></p>
+<p align="center"><img src="doc/doxygen/QCLAB.png?raw=true" /></p>
 
 QCLAB is an object-oriented MATLAB toolbox for creating and representing
 quantum circuits. QCLAB can be used for rapid prototyping and testing of
