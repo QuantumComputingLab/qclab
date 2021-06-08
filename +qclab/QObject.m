@@ -32,7 +32,7 @@ classdef (Abstract) QObject < handle & ...
     %> @brief Returns the unitary matrix corresponding to this quantum object. 
     [mat] = matrix(obj)
     %> @brief Applies this quantum object to the given matrix. 
-    [mat] = apply(obj,side,op,mat)
+    [mat] = apply(obj,side,op,mat,offset)
     %> @brief Writes the QASM code of this quantum object to the given file id.
     [out] = toQASM(obj,fid, offset)
     %> @brief Checks if other equals this quantum object.

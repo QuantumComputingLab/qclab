@@ -12,15 +12,21 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
   properties (Access = protected)
     %> Number of qubits of this quantum circuit.
     nbQubits_(1,1)  int32
+    %> Qubit offset of this quantum circuit.
+    offset_(1,1)  int32
     %> Gates of this quantum circuit.
     gates_      qclab.QObject
   end
   
   methods
-    %> @brief Constructs a quantum circuit with number of  `size`
-    function obj = QCircuit( nbQubits )
-      assert(qclab.isNonNegInteger(nbQubits)) ;
+    %> @brief Constructs a quantum circuit with `nbQubits` qubits starting at
+    %> qubit `offset`. The default value for `offset` is 0.
+    function obj = QCircuit( nbQubits, offset )
+      if nargin == 1, offset = 0; end
+      assert(qclab.isNonNegInteger(nbQubits-1)) ;
+      assert(qclab.isNonNegInteger(offset)) ;
       obj.nbQubits_ = nbQubits ;
+      obj.offset_ = offset ;
     end
     
     % nbQubits
@@ -28,9 +34,14 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       nbQubits = obj.nbQubits_;
     end
     
+    % qubit
+    function [qubit] = qubit(obj)
+      qubit = obj.offset_;
+    end
+    
     % qubits
     function [qubits] = qubits(obj)
-      qubits = 0:obj.nbQubits_-1;
+      qubits = obj.offset_:obj.nbQubits_+obj.offset_-1;
     end
     
     % matrix
@@ -49,34 +60,37 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
     %>             (in quantum circuit ordering)
     %> @param op 'N', 'T' or 'C' for respectively normal, transpose or conjugate 
     %>           transpose application of QCircuit
-    %> @param qsz qubit size of `mat`
+    %> @param nbQubits qubit size of `mat`
     %> @param mat matrix to which QCircuit is applied
+    %> @param offset offset applied to qubit
     % ==========================================================================
-    function [mat] = apply(obj, side, op, qsz, mat)
-      assert( qsz >= obj.nbQubits_ );
-      if strcmp(side,'L') % left
-        assert( size(mat,2) == 2^qsz);
-      else % right
-        assert( size(mat,1) == 2^qsz);
-      end
-      % operation
-      if strcmp(op, 'N') % normal
-        mats = obj.matrix;
-      elseif strcmp(op, 'T') % transpose
-        mats = obj.matrix.';
-      else % conjugate transpose
-        mats = obj.matrix';
-      end
-      % kron(Ileft, mats, Iright)
-      if ( qsz == obj.nbQubits_ )
-        matn = mats;
+    function [mat] = apply(obj, side, op, nbQubits, mat, offset )
+      assert( nbQubits >= obj.nbQubits_ );
+      if nargin == 5, offset = 0; end
+      if strcmp(op, 'N')
+        if strcmp(side,'L') % Left + NoTrans
+          for i = length(obj.gates_):-1:1
+            mat = apply(obj.gates_(i), side, op, nbQubits, mat, ...
+                        obj.offset_ + offset );
+          end
+        else % Right + NoTrans
+          for i = 1:length(obj.gates_)
+            mat = apply(obj.gates_(i), side, op, nbQubits, mat, ...
+                        obj.offset_ + offset );
+          end
+        end
       else
-        matn = kron(mats, qclab.qId(qsz - obj.nbQubits_)) ;
-      end
-      if strcmp(side, 'L') % left
-        mat = mat * matn ;
-      else % right
-        mat = matn * mat ;
+        if strcmp(side,'L') % Left + [Conj]Trans
+          for i = 1:length(obj.gates_)
+            mat = apply(obj.gates_(i), side, op, nbQubits, mat, ...
+                        obj.offset_ + offset );
+          end
+        else % Right + [Conj]Trans
+          for i = length(obj.gates_):-1:1
+            mat = apply(obj.gates_(i), side, op, nbQubits, mat, ...
+                        obj.offset_ + offset );
+          end
+        end
       end
     end
     
@@ -84,7 +98,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
     function [out] = toQASM(obj, fid, offset)
       if nargin == 2, offset = 0; end
       for i= 1:length(obj.gates_)
-        [out] = obj.gates_(i).toQASM( fid, offset ) ;
+        [out] = obj.gates_(i).toQASM( fid, obj.offset_ + offset ) ;
         if ( out ~= 0 ), return; end
       end
     end
@@ -97,32 +111,43 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       end
     end
     
+    %> Returns the qubit offset of this quantum circuit.
+    function [offset] = offset(obj)
+      offset = obj.offset_ ;
+    end
+    
+    %> Sets the qubit offset of this quantum circuit.
+    function setOffset(obj, offset)
+      assert(qclab.isNonNegInteger(offset));
+      obj.offset_ = offset ;
+    end
+    
     %
     % Element Access : 
     %
     
-    %> @brief Returns array of handles to the gates of this quantum circuit.
-    function [gates] = gatesHandle( obj )
-      gates = obj.gates_ ;
+    %> @brief Returns array of handles to the gates of this quantum circuit at
+    %> postions `pos`. Default for `pos` is all gates.
+    function [gates] = gateHandles( obj, pos )
+      if nargin == 0
+        gates = obj.gates_ ;
+      else
+        assert(qclab.isNonNegIntegerArray( pos - 1 ));
+        gates = obj.gates_( pos );
+      end
     end
     
-    %> @brief Returns a copy of the gates of this quantum circuit.
-    function [gates] = gatesCopy( obj )
-      gates = copy(obj.gates_) ;
+    %> @brief Returns a copy of the gates of this quantum circuit at positions 
+    %> `pos`. Default for `pos` is all gates.
+    function [gates] = gates( obj, pos )
+      if nargin == 1
+        gates = copy(obj.gates_) ;
+      else
+        assert(qclab.isNonNegIntegerArray( pos - 1 ));
+        gates = copy(obj.gates_( pos ));
+      end
     end
-    
-    %> @brief Returns a handle to the gate at `pos` of this quantum circuit.
-    function [gate] = gateHandle(obj, pos )
-      assert( qclab.isNonNegInteger( pos ) );
-      gate = obj.gates_( pos );
-    end
-    
-    %> @brief Returns a copy of the gate at `pos` of this quantum circuit.
-    function [gate] = gateCopy(obj, pos )
-      assert( qclab.isNonNegInteger( pos ) );
-      gate = copy(obj.gates_( pos ));
-    end
-    
+
     %
     % Capacity 
     %
@@ -146,23 +171,29 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       obj.gates_ = qclab.QObject.empty;
     end
     
-    %> @brief Inserts gates at positions `pos` in this quantum circuit.
+    %> @brief Inserts `gates` at unique positions `pos` in this quantum circuit.
     function insert(obj, pos, gates)
       assert( qclab.isNonNegIntegerArray( pos - 1 ) );
       assert( length(pos) == length(gates) );
-      assert( canInsert(gates) );
-      newGates(1, length(obj.gates_) + length(obj.gates)) = ...
-        qclab.qgates.Identity;
+      assert( obj.canInsert(gates) );
+      totalGates =  length(obj.gates_) + length(gates);
+      newGates(1,totalGates) = qclab.qgates.Identity; % initialize array
       newGates(pos) = gates;
-      newGates(newGates == qclab.qgates.Identity) = obj.gates_ ;
+      j = 1;
+      for i = 1:totalGates
+        if ~ismember(i, pos) % i not in pos
+          newGates(i) = obj.gates_(j);
+          j = j + 1;
+        end
+      end
       obj.gates_ = newGates ;
     end
     
     %> @brief Erases the gates at positions `pos` from this quantum circuit.
     function erase(obj, pos)
       assert( qclab.isNonNegIntegerArray( pos - 1 ) ) ;
-      assert( max(pos) <= length(obj.gates_) );   
-      obj.gates_(pos) = [] ;      
+      assert( max( pos ) <= length(obj.gates_) );   
+      obj.gates_( pos ) = [] ;      
     end
       
     %> @brief Add a gate to the end of this quantum circuit.
@@ -176,7 +207,8 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       obj.gates_(end) = [];
     end
     
-    %> @brief Checks if the gates in `gates` can be inserted into this quantum circuit.
+    %> @brief Checks if the gates in `gates` can be inserted into this quantum 
+    %> circuit.
     function [bool] = canInsert(obj, gates)
       bool = true;
       for i = 1: length(gates)
@@ -187,17 +219,107 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
         end
       end
     end
+    
+    % ==========================================================================
+    %> @brief Draw a quantum circuit.
+    %>
+    %> @param obj 2-qubit gate of a controlled 1-qubit gate.
+    %> @param fid  file id to draw to:
+    %>              - 0  : return cell array with ascii characters as `out`
+    %>              - 1  : draw to command window (default)
+    %>              - >1 : draw to (open) file id
+    %> @param parameter 'N' don't print parameter (default), 'S' print short 
+    %>                  parameter, 'L' print long parameter.
+    %> @param offset offset applied to qubit
+    %>
+    %> @retval out if fid > 0 then out == 0 on succesfull completion, otherwise
+    %>             out contains a cell array with the drawing info.
+    % ==========================================================================
+    function [out] = draw(obj, fid, parameter, offset)
+      if nargin < 2, fid = 1; end
+      if nargin < 3, parameter = 'N'; end
+      if nargin < 4, offset = 0; end
+      qclab.drawCommands ; % load draw commands
+      
+      circuitCell = cell(3*obj.nbQubits,1); % cell array to store all strings
+      circuitCell(:) = {''};
+      charIndex = ones(obj.nbQubits, 1);    % most right character index for  
+                                            % every qubit                                                                   
+                                                                                      
+      for i = 1:obj.nbGates
+        
+        % Get the qubits and draw strings for the current gate
+        thisQubits = obj.gates_( i ).qubits ;
+        thisGateCell = obj.gates_( i ).draw( 0, parameter, 0 );
+        
+        % ensure thisQubits is a list of all qubits the gate is drawn on
+        if length( thisQubits ) ~= size( thisGateCell, 1 )/3 % CNOT, SWAP, CRX..
+          thisQubits = thisQubits(1):thisQubits(2);
+        end
+        
+        % left-most character thisGateCell can be drawn on
+        thisChar = max( charIndex( thisQubits + 1 ) ); 
+        
+        % fill up other qubits to thisChar index if required
+        for q = thisQubits
+          diffChar = thisChar - charIndex( q + 1 );
+          if diffChar > 0
+            circuitCell{ 3*q + 1 } = strcat( circuitCell{ 3*q + 1 }, ...
+                                       repmat( space, 1, diffChar ) );
+            circuitCell{ 3*q + 2 } = strcat( circuitCell{ 3*q + 2 }, ...
+                                       repmat( h, 1, diffChar ) );
+            circuitCell{ 3*q + 3 } = strcat( circuitCell{ 3*q + 3 }, ...
+                                       repmat( space, 1, diffChar ) );
+            % update charIndex on q + 1
+            charIndex( q + 1 ) = charIndex( q + 1)  + diffChar ; 
+          end
+        end
+        
+        % add thisGateCell to circuitCell
+        for q = thisQubits
+          thisq = q - thisQubits(1);
+          circuitCell{ 3*q + 1 }  = strcat( circuitCell{ 3*q + 1}, ...
+                                            thisGateCell{ 3*thisq + 1 } );
+          circuitCell{ 3*q + 2 }  = strcat( circuitCell{ 3*q + 2}, ...
+                                            thisGateCell{ 3*thisq + 2 } );
+          circuitCell{ 3*q + 3 }  = strcat( circuitCell{ 3*q + 3 }, ...
+                                            thisGateCell{ 3*thisq + 3 } );
+        end
+        
+        % update the charIndex on thisQubits
+        thisWidth = count( thisGateCell{1}, '\x' ); % charwidth of thisGate
+        charIndex( thisQubits + 1 ) = charIndex( thisQubits + 1 ) + thisWidth;
+                                 
+      end % all gates added to circuitCell --
+      
+      % fill all qubits to same maxChar to complete circuit
+      maxChar = max( charIndex );
+      for q = 0:obj.nbQubits_ - 1
+        diffChar = maxChar - charIndex( q + 1 );
+        if diffChar > 0
+            circuitCell{ 3*q + 1 } = strcat( circuitCell{ 3*q + 1 }, ...
+                                             repmat( space, 1, diffChar ) );
+            circuitCell{ 3*q + 2 } = strcat( circuitCell{ 3*q + 2 }, ...
+                                             repmat( h, 1, diffChar ) );
+            circuitCell{ 3*q + 3 } = strcat( circuitCell{ 3*q + 3 }, ...
+                                             repmat( space, 1, diffChar ) );
+        end
+      end
+      
+      if fid > 0
+        qclab.drawCellArray( fid, circuitCell, obj.qubits + offset );
+        out = 0;
+      else
+        out = circuitCell ;
+      end
+        
+    end
   end
   
   methods (Static)
     % controlled
     function [bool] = controlled
       bool = false;
-    end
-    
-    % qubit
-    function [qubit] = qubit
-      qubit = int32(0);
     end
     
     % setQubit
@@ -209,5 +331,16 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
     function setQubits(~)
       assert( false );
     end
+  end
+  
+  methods ( Access = protected )
+    
+    %> @brief Override copyElement function to allow for correct deep copy of
+    %> handles.
+    function cp = copyElement(obj)
+      cp = copyElement@matlab.mixin.Copyable( obj );
+      cp.gates_ = obj.gates() ;
+    end
+    
   end
 end % class QCircuit

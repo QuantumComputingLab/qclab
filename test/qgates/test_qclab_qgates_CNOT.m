@@ -37,10 +37,29 @@ classdef test_qclab_qgates_CNOT < matlab.unittest.TestCase
       QASMstring = 'cx q[0], q[1];';
       test.verifyEqual(T(1:length(QASMstring)), QASMstring);
       
+      % draw gate
+      [out] = cnot.draw(1, 'N');
+      test.verifyEqual( out, 0 );
+      
+      cnot.setControlState( 0 );
+      [out] = cnot.draw(1, 'S');
+      test.verifyEqual( out, 0 );
+      
+      cnot.setControl(3);
+      [out] = cnot.draw(1, 'L');
+      test.verifyEqual( out, 0 );
+      
+      cnot.setControlState(1);
+      [out] = cnot.draw(0, 'N');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [9, 1] );
+      
+      cnot.setControl(0);
+      
       % gate
       X = qclab.qgates.PauliX ;
-      test.verifyTrue( cnot.gateCopy == X );
-      test.verifyEqual( cnot.gateCopy.matrix, X.matrix );
+      test.verifyTrue( cnot.gate == X );
+      test.verifyEqual( cnot.gate.matrix, X.matrix );
       
       % operators == and ~=
       test.verifyTrue( cnot ~= X );
@@ -69,5 +88,20 @@ classdef test_qclab_qgates_CNOT < matlab.unittest.TestCase
       test.verifyFalse( cnot == cnot2 );
     end
     
+    function test_CNOT_copy(test)
+      cnot = qclab.qgates.CNOT(0, 1 ) ;
+      ccnot = copy(cnot);
+      
+      test.verifyEqual(cnot.qubits, ccnot.qubits);
+      
+      cnot.setControl(10);
+      test.verifyNotEqual(cnot.qubits, ccnot.qubits);
+      
+      ccnot.setControl(10);
+      test.verifyEqual(cnot.qubits, ccnot.qubits);
+      
+      ccnot.setTarget(5);
+      test.verifyNotEqual(cnot.qubits, ccnot.qubits);
+    end
   end
 end

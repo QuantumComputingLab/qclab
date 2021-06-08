@@ -29,6 +29,13 @@ classdef test_qclab_qgates_PauliY < matlab.unittest.TestCase
       QASMstring = 'y q[3];';
       test.verifyEqual(T(1:length(QASMstring)), QASMstring);
       
+      % draw gate
+      [out] = Y.draw(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = Y.draw(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [3, 1] );
+      
       % operators == and ~=
       Y2 = qclab.qgates.PauliY();
       test.verifyTrue( Y == Y2 );

@@ -57,7 +57,7 @@ classdef QControlledGate2 < qclab.qgates.QGate2
     function [mat] = matrix(obj)
       E0 = [1 0; 0 0]; E1 = [0 0; 0 1];
       I1 = qclab.qId(1);
-      CG = obj.gateCopy.matrix;
+      CG = obj.gate.matrix;
       if ( obj.controlState_ == 0 )
         if (obj.control_ < obj.target)
           mat = kron(E0, CG) + kron(E1, I1);
@@ -81,32 +81,34 @@ classdef QControlledGate2 < qclab.qgates.QGate2
     %>              (in quantum circuit ordering)
     %> @param op 'N', 'T' or 'C' for respectively normal, transpose or conjugate
     %>           transpose application of QControlledGate2
-    %> @param qsz qubit size of `mat`
+    %> @param nbQubits qubit size of `mat`
     %> @param mat matrix to which QControlledGate2 is applied
+    %> @param offset offset applied to qubits
     % ==========================================================================
-    function [mat] = apply(obj, side, op, qsz, mat)
-      assert( qsz >= 2 );
+    function [mat] = apply(obj, side, op, nbQubits, mat, offset)
+      if nargin == 5, offset = 0; end
+      assert( nbQubits >= 2 );
       if strcmp(side,'L')
-        assert( size(mat,2) == 2^qsz );
+        assert( size(mat,2) == 2^nbQubits );
       else
-        assert( size(mat,1) == 2^qsz );
+        assert( size(mat,1) == 2^nbQubits );
       end
-      qubits = obj.qubits;
-      assert( qubits(1) < qsz ); assert( qubits(2) < qsz );
+      qubits = obj.qubits + offset;
+      assert( qubits(1) < nbQubits ); assert( qubits(2) < nbQubits );
       % nearest neighbor qubits
       if qubits(1) + 1 == qubits(2) 
-        mat = apply@qclab.qgates.QGate2( obj, side, op, qsz, mat );
+        mat = apply@qclab.qgates.QGate2( obj, side, op, nbQubits, mat, offset );
         return
       end
       E0 = [1 0; 0 0]; E1 = [0 0; 0 1];
       I1 = qclab.qId(1);
       % operation
       if strcmp(op, 'N') % normal
-        mat1 = obj.gateCopy.matrix;
+        mat1 = obj.gate.matrix;
       elseif strcmp(op, 'T') % transpose
-        mat1 = obj.gateCopy.matrix.';
+        mat1 = obj.gate.matrix.';
       else % conjugate transpose
-        mat1 = obj.gateCopy.matrix';
+        mat1 = obj.gate.matrix';
       end
       % linear combination of Kronecker products
       s = qubits(2) - qubits(1) + 1;
@@ -125,14 +127,15 @@ classdef QControlledGate2 < qclab.qgates.QGate2
         end
       end
       % kron(Ileft, mats, Iright)
-      if ( qubits(1) == 0 && qubits(2) == qsz - 1)
+      if ( qubits(1) == 0 && qubits(2) == nbQubits - 1)
         matn = mats;
       elseif ( qubits(1) == 0 )
-        matn = kron(mats, qclab.qId(qsz - s));
-      elseif ( qubits(2) == qsz - 1 )
-        matn = kron(qclab.qId(qsz - s), mats);
+        matn = kron(mats, qclab.qId(nbQubits - s));
+      elseif ( qubits(2) == nbQubits - 1 )
+        matn = kron(qclab.qId(nbQubits - s), mats);
       else
-        matn = kron(kron(qclab.qId(qubits(1)),mats),qclab.qId(qsz - qubits(2) - 1));
+        matn = kron(kron(qclab.qId(qubits(1)),mats),...
+                         qclab.qId(nbQubits - qubits(2) - 1));
       end
       % side
       if strcmp(side, 'L') % left
@@ -165,6 +168,97 @@ classdef QControlledGate2 < qclab.qgates.QGate2
       obj.controlState_ = controlState ;
     end
     
+    % ==========================================================================
+    %> @brief draw a 2-qubit gate of a controlled 1-qubit gate.
+    %>
+    %> @param obj 2-qubit gate of a controlled 1-qubit gate.
+    %> @param fid  file id to draw to:
+    %>              - 0 : return cell array with ascii characters as `out`
+    %>              - 1 : draw to command window (default)
+    %>              - >1 : draw to (open) file id
+    %> @param parameter 'N' don't print parameter (default), 'S' print short 
+    %>                  parameter, 'L' print long parameter.
+    %> @param offset qubit offset. Default is 0.
+    %>
+    %> @retval out if fid > 0 then out == 0 on succesfull completion, otherwise
+    %>             out contains a cell array with the drawing info.
+    % ==========================================================================
+    function [out] = draw(obj, fid, parameter, offset)
+      if nargin < 2, fid = 1; end
+      if nargin < 3, parameter = 'N'; end
+      if nargin < 4, offset = 0; end
+      qclab.drawCommands ; % load draw commands
+      
+      qubits = obj.qubits ;
+      gateCell = cell( 3 * (qubits(2)-qubits(1)+1), 1 );
+      label = obj.label( parameter );
+      width = length( label );
+      if mod(width, 2) == 0
+        width = width + 1; 
+        label = [label space];
+      end
+      hwidth = floor( width/2 );
+      
+      % middle part
+      for i = 4:3:length(gateCell)-3
+        gateCell{i} = [ repmat(space, 1, hwidth + 2), v, ...
+                              repmat(space, 1, width - hwidth) ];
+        gateCell{i+1} = [ repmat(h, 1, hwidth + 2), vh, ...
+                              repmat(h, 1, width - hwidth) ];
+        gateCell{i+2} = [ repmat(space, 1, hwidth + 2), v, ...
+                              repmat(space, 1, width - hwidth) ];
+      end      
+      
+      if obj.control < obj.target
+        % draw control qubit
+        if obj.controlState == 0
+          gateCell{1} = repmat(space, 1, width + 3);
+          gateCell{2} = [ repmat(h, 1, hwidth + 2), ctrlo, ...
+                              repmat(h, 1, width - hwidth) ];
+          gateCell{3} = [ repmat(space, 1, hwidth + 2), v, ...
+                              repmat(space, 1, width - hwidth) ];
+        else
+          gateCell{1} = repmat(space, 1, width + 3);
+          gateCell{2} = [ repmat(h, 1, hwidth + 2), ctrl, ...
+                              repmat(h, 1, width - hwidth) ];
+          gateCell{3} = [ repmat(space, 1, hwidth + 2), v, ...
+                              repmat(space, 1, width - hwidth) ];
+        end
+        % draw gate
+        gateCell{end-2} = [ space, ulc, repmat(h, 1, hwidth), hu, ...
+                            repmat(h, 1, width - hwidth - 1 ), urc ];
+        gateCell{end-1} = [ h, vl, label, vr ];
+        gateCell{end} = [ space, blc, repmat(h, 1, width), brc ];
+      else
+        % draw gate
+        gateCell{1} = [ space, ulc, repmat(h, 1, width), urc ];
+        gateCell{2} = [ h, vl, label, vr ];
+        gateCell{3} = [ space, blc, repmat(h, 1, hwidth), hb, ...
+                            repmat(h, 1, width - hwidth - 1), brc ];        
+        % draw control qubit
+        if obj.controlState == 0
+          gateCell{end-2} = [ repmat(space, 1, hwidth + 2), v, ...
+                              repmat(space, 1, width - hwidth) ];
+          gateCell{end-1} = [ repmat(h, 1, hwidth + 2), ctrlo, ...
+                              repmat(h, 1, width - hwidth) ];
+          gateCell{end} =  repmat(space, 1, width + 3);
+        else
+          gateCell{end-2} = [ repmat(space, 1, hwidth + 2), v, ...
+                              repmat(space, 1, width - hwidth) ];
+          gateCell{end-1} = [ repmat(h, 1, hwidth + 2), ctrl, ...
+                              repmat(h, 1, width - hwidth) ];
+          gateCell{end} =  repmat(space, 1, width + 3);
+        end
+      end
+      if fid > 0
+        qubits = (qubits(1):qubits(2)) + offset;
+        qclab.drawCellArray( fid, gateCell, qubits );
+        out = 0;
+      else
+        out = gateCell ;
+      end
+    end
+    
   end
   
   methods (Static) 
@@ -176,7 +270,7 @@ classdef QControlledGate2 < qclab.qgates.QGate2
   
   methods (Abstract)
     %> @brief Returns a copy of the controlled 1-qubit gate of this 2-qubit gate.
-    [gate] = gateCopy(obj)
+    [gate] = gate(obj)
     %> @brief Returns the target qubit of this 2-qubit gate.
     [target] = target(obj) ;
     %> @brief Sets the target of this controlled gate to the given `target`.

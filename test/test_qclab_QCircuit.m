@@ -31,15 +31,44 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       test.verifyEqual( length(qubits), 3 );
       test.verifyEqual( qubits, int32([0, 1, 2]) );
       
-      % add 1-qubit gates
+      % 3 qubits circuit with offset 5
+      circuit = qclab.QCircuit( 3, 5 );
+      test.verifyEqual( circuit.nbQubits, int32(3) );     % nbQubits
+      test.verifyFalse( circuit.fixed );                  % fixed
+      test.verifyFalse( circuit.controlled );             % controlled
+      
+      % qubits
+      test.verifyEqual( circuit.qubit(), int32(5) );
+      qubits = circuit.qubits();
+      test.verifyEqual( length(qubits), 3 );
+      test.verifyEqual( qubits, int32([5, 6, 7]) );
+      
+      % offset 
+      test.verifyEqual( circuit.offset, int32(5) );
+      circuit.setOffset( 2 );
+      test.verifyEqual( circuit.offset, int32(2) );
+      qubits = circuit.qubits();
+      test.verifyEqual( length(qubits), 3 );
+      test.verifyEqual( qubits, int32([2, 3, 4]) );
+      
+      % 3 qubit circuit with 1 qubit gates
+      circuit = qclab.QCircuit( 3 );
+      test.verifyEqual( circuit.nbQubits, int32(3) );     % nbQubits
+      test.verifyFalse( circuit.fixed );                  % fixed
+      test.verifyFalse( circuit.controlled );             % controlled
       circuit.push_back( X(0) );
       circuit.push_back( Y(1) );
       circuit.push_back( Z(2) );
       circuit.push_back( H(1) );
-      test.verifyEqual( circuit.gateHandle( 1 ), X(0) );
-      test.verifyEqual( circuit.gateHandle( 2 ), Y(1) );
-      test.verifyEqual( circuit.gateHandle( 3 ), Z(2) );
-      test.verifyEqual( circuit.gateHandle( 4 ), H(1) );
+      test.verifyEqual( circuit.gateHandles( 1 ), X(0) );
+      test.verifyEqual( circuit.gateHandles( 2 ), Y(1) );
+      test.verifyEqual( circuit.gateHandles( 3 ), Z(2) );
+      test.verifyEqual( circuit.gateHandles( 4 ), H(1) );
+      
+      % draw the circuit
+      fprintf(1, '\n');
+      circuit.draw(1, 'N');
+      fprintf(1, '\n');
       
     end
     
@@ -86,7 +115,7 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       test.verifyEqual( circuit1.nbGates, 0 );
       test.verifyTrue( circuit1.isempty );
       
-      % apply
+      % apply (nbQubits = 1)
       circuit1.push_back( H(0) );
       circuit1.push_back( Y(0) );
       circuit1.push_back( Z(0) );
@@ -99,10 +128,20 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       mat1 = circuit1.apply( 'L', 'N', 1, mat1 );
       test.verifyEqual( mat1, mat, 'AbsTol', eps );
       
+      % apply (nbQubits = 2)
       mat2 = I2 ;
       mat2 = circuit1.apply( 'L', 'N', 2, mat2 );
       test.verifyEqual( mat2, kron(mat, I1), 'AbsTol', eps );
       
+      % apply ConjTrans (nbQubits = 1)
+      mat1 = I1;
+      mat1 = circuit1.apply( 'L', 'C', 1, mat1 ) ;
+      test.verifyEqual( mat1, mat', 'AbsTol', eps );
+      
+      % apply ConjTrans (nbQubits = 2)
+      mat2 = I2 ;
+      mat2 = circuit1.apply( 'L', 'C', 2, mat2 );
+      test.verifyEqual( mat2, kron(mat', I1), 'AbsTol', eps );
     end
     
     function test_QCircuit_QASM(test)
@@ -146,6 +185,50 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       
     end
     
+    function test_QCircuit_element_access(test)
+      X = @qclab.qgates.PauliX ;
+      Y = @qclab.qgates.PauliY ;
+      Z = @qclab.qgates.PauliZ ;
+      H = @qclab.qgates.Hadamard ;
+      
+      X0 = X(0);
+      Y1 = Y(1);
+      Z2 = Z(2);
+      H1 = H(1);
+      
+      circuit = qclab.QCircuit( 3 );
+      circuit.push_back( X0 );
+      circuit.push_back( Y1 );
+      circuit.push_back( Z2 );
+      circuit.push_back( H1 );
+      
+      test.verifyTrue( circuit.gates(1) == X(0) );
+      test.verifyTrue( circuit.gates(1) ~= Y(1) );
+      test.verifyTrue( circuit.gates(1) ~= Z(2) );
+      test.verifyTrue( circuit.gates(2) == Y(1) );
+      test.verifyTrue( circuit.gates(3) == Z(2) );
+      test.verifyTrue( circuit.gates(4) == H(1) );
+      
+      test.verifyTrue( circuit.gateHandles(1) == X(0) );
+      test.verifyTrue( circuit.gateHandles(1) ~= Y(1) );
+      test.verifyTrue( circuit.gateHandles(1) ~= Z(2) );
+      test.verifyTrue( circuit.gateHandles(2) == Y(1) );
+      test.verifyTrue( circuit.gateHandles(3) == Z(2) );
+      test.verifyTrue( circuit.gateHandles(4) == H(1) );
+      
+      test.verifySameHandle(  circuit.gateHandles(1), X0 );
+      test.verifySameHandle(  circuit.gateHandles(2), Y1 );
+      test.verifySameHandle(  circuit.gateHandles(3), Z2 );
+      test.verifySameHandle(  circuit.gateHandles(4), H1 );
+      
+      if ~verLessThan('matlab', '9.8')
+          test.verifyNotSameHandle(  circuit.gates(1), X0 );
+          test.verifyNotSameHandle(  circuit.gates(2), Y1 );
+          test.verifyNotSameHandle(  circuit.gates(3), Z2 );
+          test.verifyNotSameHandle(  circuit.gates(4), H1 );
+      end
+    end
+    
     function test_QCircuit_erase(test)
       
       X = @qclab.qgates.PauliX ;
@@ -168,7 +251,7 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       % erase all before
       circuit.erase( 1:circuit.nbGates-1 );
       test.verifyEqual( circuit.nbGates, 1 );
-      test.verifyEqual( circuit.gateHandle( 1 ), Z(2) );
+      test.verifyEqual( circuit.gateHandles( 1 ), Z(2) );
       
       circuit.clear();
       circuit.push_back( X(0) );
@@ -178,7 +261,7 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       % erase all after
       circuit.erase( 2:circuit.nbGates );
       test.verifyEqual( circuit.nbGates, 1 );
-      test.verifyEqual( circuit.gateHandle( 1 ), X(0) );
+      test.verifyEqual( circuit.gateHandles( 1 ), X(0) );
       
     end
     
@@ -195,15 +278,49 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       
       circuit.pop_back();
       test.verifyEqual( circuit.nbGates, 2 );
-      test.verifyEqual( circuit.gateHandle( 1 ), X(0) );
-      test.verifyEqual( circuit.gateHandle( 2 ), Y(1) );
+      test.verifyEqual( circuit.gateHandles( 1 ), X(0) );
+      test.verifyEqual( circuit.gateHandles( 2 ), Y(1) );
       
       circuit.pop_back();
       test.verifyEqual( circuit.nbGates, 1 );
-      test.verifyEqual( circuit.gateHandle( 1 ), X(0) );
+      test.verifyEqual( circuit.gateHandles( 1 ), X(0) );
       
       circuit.pop_back();
       test.verifyTrue( circuit.isempty );
+      
+    end
+    
+    function test_QCircuit_insert(test)
+      
+      X = @qclab.qgates.PauliX ;
+      Y = @qclab.qgates.PauliY ;
+      Z = @qclab.qgates.PauliZ ;
+      H = @qclab.qgates.Hadamard ;
+      
+      circuit = qclab.QCircuit( 3 );
+      
+      circuit.insert( 1, X(0) );
+      test.verifyEqual( circuit.nbGates, 1 );
+      test.verifyEqual( circuit.gates( 1 ), X(0) );
+      
+      circuit.insert( 1, Y(1) );
+      test.verifyEqual( circuit.nbGates, 2 );
+      test.verifyEqual( circuit.gates( 1 ), Y(1) );
+      test.verifyEqual( circuit.gates( 2 ), X(0) );
+      
+      circuit.insert( 3, Z(2) );
+      test.verifyEqual( circuit.nbGates, 3 );
+      test.verifyEqual( circuit.gates( 1 ), Y(1) );
+      test.verifyEqual( circuit.gates( 2 ), X(0) );
+      test.verifyEqual( circuit.gates( 3 ), Z(2) );
+      
+      circuit.insert( [1, 5], [H(0), H(1)] );
+      test.verifyEqual( circuit.nbGates, 5 );
+      test.verifyEqual( circuit.gates( 1 ), H(0) );
+      test.verifyEqual( circuit.gates( 2 ), Y(1) );
+      test.verifyEqual( circuit.gates( 3 ), X(0) );
+      test.verifyEqual( circuit.gates( 4 ), Z(2) );
+      test.verifyEqual( circuit.gates( 5 ), H(1) );
       
     end
     
@@ -265,6 +382,106 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       
     end
     
+    function test_QCircuit_HandleGate1( test )
+      X = @qclab.qgates.PauliX ;
+      HG1 = @qclab.qgates.HandleGate1 ;
+      
+      circuit = qclab.QCircuit( 2 );
+      circuit.push_back( HG1( X() ) );
+      
+      X0 = X( 0 );
+      I1 = qclab.qId( 1 );
+      mat2 = kron(X0.matrix, I1);
+      test.verifyEqual( circuit.matrix, mat2, 'AbsTol', eps );
+      
+      circuit.push_back( HG1( X(), 1 ) )
+      
+      mat2 = kron(X0.matrix, X0.matrix);
+      test.verifyEqual( circuit.matrix, mat2, 'AbsTol', eps );
+    end
     
+    function test_QCircuit_HandleGate2( test )
+        
+        CNOT = @qclab.qgates.CNOT ;
+        HG2 = @qclab.qgates.HandleGate2 ;
+        
+        CNOT01 = CNOT(0, 1);
+        I1 = qclab.qId( 1 );
+        
+        circuit = qclab.QCircuit( 3 );
+        circuit.push_back( HG2( CNOT01 ) );
+        
+        mat3 = kron(CNOT01.matrix, I1);
+        test.verifyEqual( circuit.matrix, mat3, 'AbsTol', eps );
+        
+        circuit.push_back( HG2( CNOT01, 1) );
+        
+        mat3 = kron(I1,CNOT01.matrix)*kron(CNOT01.matrix, I1);
+        test.verifyEqual( circuit.matrix, mat3, 'AbsTol', eps );
+        
+    end
+    
+    function test_QCircuit_Draw( test )
+      H = @qclab.qgates.Hadamard ;
+      X = @qclab.qgates.PauliX ;
+      Y = @qclab.qgates.PauliY ;
+      Z = @qclab.qgates.PauliZ ;
+      CNOT = @qclab.qgates.CNOT ;
+      SWAP = @qclab.qgates.SWAP ;
+      CRX = @qclab.qgates.CRotationX ;
+      RXX = @qclab.qgates.RotationXX ;
+      
+      circuit = qclab.QCircuit( 5 );
+      circuit.push_back( X(0) );
+      circuit.push_back( CNOT(1,3) );
+      circuit.push_back( H(4) );
+      circuit.push_back( SWAP(0, 4) );
+      circuit.push_back( RXX([0,1], pi/3) );
+      circuit.push_back( RXX([2,3], pi/4) );
+      circuit.push_back( RXX([1,2], pi/5) );
+      circuit.push_back( RXX([3,4], pi/6) );
+      
+      % draw the circuit
+      fprintf(1, '\n');
+      circuit.draw(1, 'S');
+      fprintf(1, '\n');
+    end
+    
+    function test_QCircuit_In_QCircuit( test )
+       CNOT = @qclab.qgates.CNOT ;
+       RZ = @qclab.qgates.RotationZ ;
+       c = qclab.QCircuit( 3 ); % small circuit
+       C = qclab.QCircuit( 6 ); % large circuit 
+       
+       % fill large circuit
+       c.push_back( CNOT(0, 1) );
+       c.push_back( CNOT(1, 2) );
+       c.push_back( RZ(2, pi/3) );
+       c.push_back( CNOT(1, 2) );
+       c.push_back( CNOT(0, 1) );
+       
+       cmat = c.matrix ;
+       C.push_back( c ) ;
+       mat6 = kron(cmat, qclab.qId(3));
+       test.verifyEqual( C.matrix, mat6, 'AbsTol', eps );
+       
+       cc = copy(c);
+       cc.setOffset( 3 );
+       C.push_back( cc );
+       mat6 = kron(cmat, cmat);
+       test.verifyEqual( C.matrix, mat6, 'AbsTol', eps );
+       
+       ccc = copy(cc);
+       ccc.setOffset( 2 );
+       C.push_back( ccc );
+       mat6 = kron(kron(qclab.qId(2), cmat), qclab.qId(1)) * mat6;
+       test.verifyEqual( C.matrix, mat6, 'AbsTol', eps );
+       
+       % draw the circuit
+       fprintf(1, '\n');
+       C.draw(1, 'S');
+       fprintf(1, '\n');
+    end
+        
   end
 end

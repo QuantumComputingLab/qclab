@@ -34,13 +34,23 @@ classdef RotationXX < qclab.qgates.QRotationGate2
       out = 0;
     end
     
-    % equals
-    function [bool] = equals(obj,other)
-      bool = false;
-      if isa(other,'qclab.qgates.RotationXX')
-        bool = (obj.angle_ == other.angle_) ;
+    % equalType
+    function [bool] = equalType(~, other)
+      bool = isa(other,'qclab.qgates.RotationXX');
+    end
+    
+    % label for draw function
+    function [label] = label(obj, parameter)
+      if nargin < 2, parameter = 'N'; end
+      label = 'RXX';        
+      if strcmp(parameter, 'S') % short parameter
+        label = sprintf([label, '(%.4f)'], obj.theta);
+      elseif strcmp(parameter, 'L') % long parameter
+        label = sprintf([label, '(%.8f)'], obj.theta);
       end
     end
     
   end
+  
+  
 end % RotationXX

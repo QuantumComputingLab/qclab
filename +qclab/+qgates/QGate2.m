@@ -22,22 +22,26 @@ classdef QGate2 < qclab.QObject
     % ==========================================================================
     %> @brief Apply the QGate2 to a matrix `mat`
     %>
-    %> @param obj instance of QGate1 class.
+    %> @param obj instance of QGate2 class.
     %> @param side 'L' or 'R' for respectively left or right side of application 
     %>             (in quantum circuit ordering)
     %> @param op 'N', 'T' or 'C' for respectively normal, transpose or conjugate
     %>           transpose application of QGate1
-    %> @param qsz qubit size of `mat`
-    %> @param mat matrix to which QGate1 is applied
+    %> @param nbQubits qubit size of `mat`
+    %> @param mat matrix to which QGate2 is applied
+    %> @param offset offset applied to qubits
     % ==========================================================================
-    function [mat] = apply(obj, side, op, qsz, mat)
-      assert( qsz >= 2);
+    function [mat] = apply(obj, side, op, nbQubits, mat, offset)
+      if nargin == 5, offset = 0; end
+      assert( nbQubits >= 2);
       if strcmp(side,'L') % left
-        assert( size(mat,2) == 2^qsz);
+        assert( size(mat,2) == 2^nbQubits);
       else % right
-        assert( size(mat,1) == 2^qsz);
+        assert( size(mat,1) == 2^nbQubits);
       end
-      qubits = obj.qubits;
+      qubits = obj.qubits + offset;
+      assert( qubits(1) < nbQubits ); assert( qubits(2) < nbQubits );
+      assert( qubits(1) + 1 == qubits(2) ); % nearest neighbor qubits
        % operation
       if strcmp(op, 'N') % normal
         mat2 = obj.matrix;
@@ -47,15 +51,15 @@ classdef QGate2 < qclab.QObject
         mat2 = obj.matrix';
       end
       % kron( Ileft, mat2, Iright)
-      if (qsz == 2)
+      if (nbQubits == 2)
         matn = mat2 ;
       elseif ( qubits(1) == 0 )
-        matn = kron(mat2, qclab.qId(qsz-2)) ;
-      elseif ( qubits(2) == qsz-1)
-        matn = kron(qclab.qId(qsz-2), mat2);
+        matn = kron(mat2, qclab.qId(nbQubits-2)) ;
+      elseif ( qubits(2) == nbQubits-1)
+        matn = kron(qclab.qId(nbQubits-2), mat2);
       else
         matn = kron(kron(qclab.qId(qubits(1)), mat2), ...
-          qclab.qId(qsz-qubits(2)-1)) ;
+          qclab.qId(nbQubits-qubits(2)-1)) ;
       end
       if strcmp(side, 'L') % left
         mat = mat * matn ;
@@ -63,11 +67,51 @@ classdef QGate2 < qclab.QObject
         mat = matn * mat ;
       end
     end
+    
+    % ==========================================================================
+    %> @brief draw a 2-qubit gate acting on nearest neighbor qubits
+    %>
+    %> @param obj 2-qubit gate
+    %> @param fid  file id to draw to:
+    %>              - 0  : return cell array with ascii characters as `out`
+    %>              - 1  : draw to command window (default)
+    %>              - >1 : draw to (open) file id
+    %> @param parameter 'N' don't print parameter (default), 'S' print short 
+    %>                  parameter, 'L' print long parameter.
+    %> @param offset qubit offset. Default is 0.
+    %>
+    %> @retval out if fid > 0 then out == 0 on succesfull completion, otherwise
+    %>             out contains a cell array with the drawing info.
+    % ==========================================================================
+    function [out] = draw(obj, fid, parameter, offset)
+      if nargin < 2, fid = 1; end
+      if nargin < 3, parameter = 'N'; end
+      if nargin < 4, offset = 0; end
+      qubits = obj.qubits + offset;
+      assert(qubits(1) + 1 == qubits(2)); % nearest neighbor qubits
+      qclab.drawCommands ; % load draw commands
+      gateCell = cell(6, 1);
+      label = obj.label( parameter );
+      width = length( label );
+      gateCell{1} = [ space, ulc, repmat(h, 1, width), urc ];
+      gateCell{2} = [ h, vl, repmat(space, 1, width), vr ];
+      gateCell{3} = [ space, v, label, v];
+      gateCell{4} = [ space, v, repmat(space, 1, width), v]; 
+      gateCell{5} = [ h, vl, repmat(space, 1, width), vr ];
+      gateCell{6} = [ space, blc, repmat(h, 1, width), brc ];
+      if fid > 0
+        qclab.drawCellArray( fid, gateCell, qubits );
+        out = 0;
+      else
+        out = gateCell ;
+      end
+    end
+    
   end
   methods (Static)
     % nbQubits
-    function [nQ] = nbQubits(~)
-      nQ = int32(2);
+    function [nbQubits] = nbQubits(~)
+      nbQubits = int32(2);
     end
     
     % setQubit

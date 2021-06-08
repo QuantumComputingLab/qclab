@@ -25,6 +25,13 @@ classdef test_qclab_qgates_HandleGate2 < matlab.unittest.TestCase
       QASMstring = 'swap q[0], q[1];';
       test.verifyEqual(T(1:length(QASMstring)), QASMstring);
       
+      % draw gate
+      [out] = H.draw(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = H.draw(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [6, 1] );
+      
       % offset
       H.setOffset( 3 );
       qubits = H.qubits;
@@ -35,12 +42,19 @@ classdef test_qclab_qgates_HandleGate2 < matlab.unittest.TestCase
       QASMstring = 'swap q[3], q[4];';
       test.verifyEqual(T(1:length(QASMstring)), QASMstring);
       
+      % draw gate
+      [out] = H.draw(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = H.draw(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [6, 1] );
+      
       % handle
       Hswap = H.gateHandle ;
       Hswap.setQubits( [7, 3] );
       qubits = H.qubits;
       test.verifyEqual( qubits, int32([6, 10]) );
-      CX = H.gateCopy ;
+      CX = H.gate ;
       CX.setQubits( [17, 13] );
       qubits = H.qubits;
       test.verifyEqual( qubits, int32([6, 10]) );
@@ -61,6 +75,67 @@ classdef test_qclab_qgates_HandleGate2 < matlab.unittest.TestCase
       test.verifyFalse( H ~= Hswap );
       test.verifyTrue( H ~= Hcnot );
       test.verifyFalse( H == Hcnot );
+      
+      % draw Hcnot and Hcphase
+      Hcnot.setOffset( 2 );
+      [out] = Hcnot.draw(1, 'N');
+      test.verifyEqual( out, 0 );
+      
+      cphase = qclab.qgates.CPhase( 0, 2, pi/3 );
+      Hcphase = qclab.qgates.HandleGate2 ( cphase, 1 );
+      [out] = Hcphase.draw(1, 'S');
+      test.verifyEqual( out, 0 );
     end
+    
+    function test_HandleGate2_QRotationGate1( test )
+      R = qclab.qgates.RotationXX ;
+      H = qclab.qgates.HandleGate2( R ) ;
+      
+      test.verifyEqual( H.nbQubits, int32(2) );     % nbQubits
+      test.verifyFalse( H.fixed );               % fixed
+      test.verifyFalse( H.controlled );         % controlled
+      test.verifyEqual( H.qubit, int32(0) );    % qubit
+      test.verifyEqual( H.offset, int32(0) );   % offset
+      test.verifySameHandle( H.gateHandle, R );  % gateHandle
+      if ~verLessThan('matlab', '9.8')
+          test.verifyNotSameHandle( H.gate, R ); % gate
+      end
+      
+      CR = H.gate ;
+      HR = H.gateHandle ;
+      
+      test.verifyEqual( CR.theta, R.theta );
+      test.verifyEqual( HR.theta, R.theta );
+      
+      R.update( 0.1 ); 
+      
+      test.verifyNotEqual( CR.theta, R.theta );
+      test.verifyEqual( HR.theta, R.theta );
+      
+      % draw gate
+      fprintf('\n') % because of Matlab dot
+      H.setOffset( 3 );
+      [out] = H.draw(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = H.draw(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [6, 1] );
+      
+    end
+    
+    function test_HandleGate2_Copy( test )
+      R = qclab.qgates.RotationXX ;
+      H = qclab.qgates.HandleGate2( R ) ;
+      
+      CH = copy(H);
+      
+      test.verifyEqual( H.gate.theta, CH.gate.theta );
+      
+      R.update( 0.1 );
+      
+      test.verifyNotEqual( H.gate.theta, CH.gate.theta );
+      
+    end
+    
   end
 end

@@ -60,27 +60,21 @@ classdef SWAP < qclab.qgates.QGate2
     end
     
     % apply
-    function [mat] = apply(obj, side, op, qsz, mat)
-      assert( qsz >= 2 );
+    function [mat] = apply(obj, side, op, nbQubits, mat, offset)
+      if nargin == 5, offset = 0; end
+      assert( nbQubits >= 2 );
       if strcmp(side,'L') % left
-        assert( size(mat,2) == 2^qsz);
+        assert( size(mat,2) == 2^nbQubits);
       else % right
-        assert( size(mat,1) == 2^qsz);
+        assert( size(mat,1) == 2^nbQubits);
       end
-      qubits = obj.qubits; 
-      assert( qubits(1) < qsz && qubits(2) < qsz ); 
+      qubits = obj.qubits + offset; 
+      assert( qubits(1) < nbQubits && qubits(2) < nbQubits ); 
       cnot01 = qclab.qgates.CNOT( qubits(1), qubits(2) );
       cnot10 = qclab.qgates.CNOT( qubits(2), qubits(1) );
-      matn = qclab.qId( qsz );
-      matn = cnot01.apply( side, op, qsz, matn );
-      matn = cnot10.apply( side, op, qsz, matn );
-      matn = cnot01.apply( side, op, qsz, matn );
-      % side
-      if strcmp(side, 'L') % left
-        mat = mat * matn ;
-      else % right
-        mat = matn * mat ;
-      end
+      mat = cnot01.apply( side, op, nbQubits, mat, offset );
+      mat = cnot10.apply( side, op, nbQubits, mat, offset );
+      mat = cnot01.apply( side, op, nbQubits, mat, offset );
     end
      
     % toQASM
@@ -96,7 +90,56 @@ classdef SWAP < qclab.qgates.QGate2
       bool = false;
       if isa(other, 'qclab.qgates.SWAP'), bool = true; end
     end
-  end
+    
+    % ==========================================================================
+    %> @brief draw a 2-qubit SWAP gate.
+    %>
+    %> @param obj 2-qubit SWAP gate 
+    %> @param fid  file id to draw to:
+    %>              - 0 : return cell array with ascii characters as `out`
+    %>              - 1 : draw to command window (default)
+    %>              - >1 : draw to (open) file id
+    %> @param parameter 'N' don't print parameter (default), 'S' print short 
+    %>                  parameter, 'L' print long parameter.
+    %> @param offset qubit offset. Default is 0.
+    %>
+    %> @retval out if fid > 0 then out == 0 on succesfull completion, otherwise
+    %>             out contains a cell array with the drawing info.
+    % ==========================================================================
+    function [out] = draw(obj, fid, parameter, offset)
+      if nargin < 2, fid = 1; end
+      if nargin < 3, parameter = 'N'; end
+      if nargin < 4, offset = 0; end
+      qclab.drawCommands ; % load draw commands
+      
+      qubits = obj.qubits ;
+      gateCell = cell( 3 * (qubits(2)-qubits(1)+1), 1 );
+      
+      % middle part
+      for i = 4:3:length(gateCell)-3
+        gateCell{i} = [ space, v ];
+        gateCell{i+1} = [ h, vh ];
+        gateCell{i+2} = [ space, v ];
+      end      
+      
+      gateCell{1} = [ space, space ];
+      gateCell{2} = [ h, sw ];
+      gateCell{3} = [ space, v ];
+      
+      gateCell{end-2} = [ space, v ];
+      gateCell{end-1} = [ h, sw ];
+      gateCell{end} = [ space, space ];
+      
+      if fid > 0
+        qubits = (qubits(1):qubits(2)) + offset;
+        qclab.drawCellArray( fid, gateCell, qubits );
+        out = 0;
+      else
+        out = gateCell ;
+      end
+    end
+    
+  end %methods
   
   methods (Static)
     % fixed
@@ -116,5 +159,5 @@ classdef SWAP < qclab.qgates.QGate2
              0, 1, 0, 0;
              0, 0, 0, 1];
     end
-  end
-end
+  end %static methods
+end %SWAP

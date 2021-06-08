@@ -8,7 +8,9 @@
 %
 % (C) Copyright Daan Camps and Roel Van Beeumen 2021.  
 % ==============================================================================
-classdef QAdjustable < handle
+classdef QAdjustable < handle & ...
+                       matlab.mixin.Copyable
+                     
   properties (Access = private)
     fixed_ logical
   end

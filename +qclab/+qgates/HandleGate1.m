@@ -73,6 +73,14 @@ classdef HandleGate1 < qclab.qgates.QGate1
       end
     end
     
+    % draw
+    function [out] = draw(obj, fid, parameter, offset)
+      if nargin < 2, fid = 1; end
+      if nargin < 3, parameter = 'N'; end
+      if nargin < 4, offset = 0; end
+      out = obj.gate_.draw(fid, parameter, obj.offset_ + offset );
+    end
+    
     %> @brief Returns the qubit offset of this 1-qubit handle gate.
     function [offset] = offset(obj)
       offset = obj.offset_ ;
@@ -89,7 +97,7 @@ classdef HandleGate1 < qclab.qgates.QGate1
     end
     
     %> @brief Returns a copy of the gate of this 1-qubit handle gate.
-    function [gate] = gateCopy(obj)
+    function [gate] = gate(obj)
       gate = copy(obj.gate_) ;
     end
     
@@ -97,6 +105,18 @@ classdef HandleGate1 < qclab.qgates.QGate1
     function setGate(obj, gate)
       obj.gate_ = gate;
     end
+    
+  end
+  
+  methods ( Access = protected )
+    
+    %> @brief Override copyElement function to allow for correct deep copy of
+    %> handle property.
+    function cp = copyElement(obj)
+      cp = copyElement@matlab.mixin.Copyable( obj );
+      cp.gate_ = obj.gate() ;
+    end
+    
   end
   
 end %HandleGate1

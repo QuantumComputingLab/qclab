@@ -2,6 +2,10 @@
 %> @brief Implements qft example circuit.
 % ==============================================================================
 %
+%> Reference: 
+%>    Quantum Fourier transform revisited. D. Camps, R. Van Beeumen, and C. Yang
+%>    Numer Linear Algebra Appl. 2021;28:2331. DOI: 10.1002/nla.2331
+%
 % (C) Copyright Roel Van Beeumen and Daan Camps 2021.  
 % ==============================================================================
 
@@ -19,11 +23,14 @@ end
 
 % QASM
 fID = 1;
-fprintf( fID, 'QASM output:\n\n' );
-fprintf(fID, 'OPENQASM 2.0;\ninclude "qelib1.inc";\n\n');
-fprintf(fID, 'qreg q[%d];\n',nbQubits);
+fprintf( fID, '\n\nQASM output:\n\n' );
+fprintf( fID, 'OPENQASM 2.0;\ninclude "qelib1.inc";\n\n');
+fprintf( fID, 'qreg q[%d];\n',nbQubits);
 circuit.toQASM( fID );
 
+% Draw circuit
+fprintf( fID, '\n\nCircuit diagram:\n\n' );
+circuit.draw(1,'S');
 
 function qftCircuit( circuit )
   H = @qclab.qgates.Hadamard ;
@@ -39,7 +46,7 @@ function qftCircuit( circuit )
     for j = 2 : n-i
       control = j + i - 1 ;
       theta = -2*pi/2^j ;
-      circuit.push_back( CP( control, i, 1, theta ) ) ;
+      circuit.push_back( CP( control, i, theta ) ) ;
     end
   end
   

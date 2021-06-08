@@ -25,6 +25,11 @@ classdef Hadamard < qclab.qgates.QGate1
              sqrt2, -sqrt2];
     end
     
+    % label for draw function
+    function [label] = label(obj, parameter)
+      label = 'H';
+    end
+    
   end
   
   methods

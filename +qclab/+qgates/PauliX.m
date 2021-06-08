@@ -23,6 +23,11 @@ classdef PauliX < qclab.qgates.QGate1
       mat = [0 1; 1 0];
     end
     
+    % label for draw function
+    function [label] = label(obj, parameter)
+      label = 'X';
+    end
+    
   end
   
   methods

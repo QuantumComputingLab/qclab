@@ -7,7 +7,9 @@
 %
 % (C) Copyright Daan Camps and Roel Van Beeumen 2021.  
 % ==============================================================================
-classdef QAngle < handle & matlab.mixin.Copyable
+classdef QAngle < handle & ...
+                  matlab.mixin.Copyable
+  
   properties (Access = protected)
     %> Cosine value of this quantum angle
     cos_(1,1) double
@@ -47,7 +49,7 @@ classdef QAngle < handle & matlab.mixin.Copyable
       else
         obj.cos_ = varargin{1};
         obj.sin_ = varargin{2};
-        assert(obj.cos_^2 + obj.sin_^2 - 1 < 10*eps);
+        assert(abs( obj.cos_^2 + obj.sin_^2 - 1 ) < 10*eps);
       end
     end
     
@@ -108,6 +110,24 @@ classdef QAngle < handle & matlab.mixin.Copyable
     function [bool] = ne(obj, other)
       bool = ((obj.cos_ ~= other.cos_) || (obj.sin_ ~= other.sin_));
     end
+    
+    %> @brief Computes sum of this and `other` quantum angle.
+    function [out] = plus(obj, other)
+      out = qclab.QAngle(obj.cos_ * other.cos_ - obj.sin_ * other.sin_, ...
+                        obj.sin_ * other.cos_ + obj.cos_ * other.sin_);
+    end
+    
+    %> @brief Computes difference of this and `other` quantum angle.
+    function [out] = minus(obj, other)
+      out = qclab.QAngle(obj.cos_ * other.cos_ + obj.sin_ * other.sin_, ...
+                         obj.sin_ * other.cos_ - obj.cos_ * other.sin_);
       
+    end
+    
+    %> @brief Unary minus of this quantum angle
+    function [out] = uminus(obj)
+      out = qclab.QAngle( obj.cos, -obj.sin ) ;
+    end
+    
   end
 end % class QAngle

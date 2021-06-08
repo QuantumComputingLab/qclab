@@ -30,6 +30,12 @@ classdef Identity < qclab.qgates.QGate1
       % do nothing
       out = 0;
     end
+    
+    % label for draw function
+    function [label] = label(obj, parameter)
+      label = 'I';
+    end
+    
   end
   
   methods 

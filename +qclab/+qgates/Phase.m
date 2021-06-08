@@ -1,5 +1,5 @@
 %> @file Phase.m
-%> @brief Implements Phase class.
+%> @brief Implements Phase gate class.
 % ==============================================================================
 %> @class Phase
 %> @brief 1-qubit phase gate.
@@ -16,6 +16,7 @@
 classdef Phase < qclab.qgates.QGate1 & qclab.QAdjustable
   
   properties (Access = protected)
+    %> The quantum angle of this Phase gate.
     angle_(1,1)   qclab.QAngle
   end
   
@@ -41,7 +42,7 @@ classdef Phase < qclab.qgates.QGate1 & qclab.QAdjustable
     %>    `fixed`. The default of `fixed` is false.
     %>
     %> 5. Phase(qubit, cos,sin, fixed) : Constructs an adjustable 1-qubit phase
-    %>    gae with the given values `cos` = \f$\cos(\theta)\f$ and 
+    %>    gate with the given values `cos` = \f$\cos(\theta)\f$ and 
     %>    `sin` = \f$\sin(\theta)\f$ and the flag `fixed`. The default of 
     %>     `fixed` is false.
     %>
@@ -60,7 +61,7 @@ classdef Phase < qclab.qgates.QGate1 & qclab.QAdjustable
       end
       obj@qclab.qgates.QGate1( qubit );
       obj@qclab.QAdjustable(false); 
-      if nargin == 1 % empty default constructor
+      if nargin < 2 % empty default constructor
         obj.angle_ = qclab.QAngle();
       elseif nargin == 2 % either angle, or theta
         if isa(varargin{1},'qclab.QAngle')
@@ -94,7 +95,7 @@ classdef Phase < qclab.qgates.QGate1 & qclab.QAdjustable
     % toQASM
     function [out] = toQASM(obj, fid, offset)
       if nargin == 2, offset = 0; end
-      fprintf(fid,'p(%.15f) q[%d];\n', obj.theta, obj.qubit_ + offset);
+      fprintf(fid,'rz(%.15f) q[%d];\n', obj.theta, obj.qubit_ + offset);
       out = 0;
     end
     
@@ -107,7 +108,7 @@ classdef Phase < qclab.qgates.QGate1 & qclab.QAdjustable
     end
     
     %> @brief Returns a copy of the quantum angle \f$\theta\f$ of this phase gate.
-    function angle = angleCopy(obj)
+    function angle = angle(obj)
       angle = copy(obj.angle_);
     end
     
@@ -133,12 +134,12 @@ classdef Phase < qclab.qgates.QGate1 & qclab.QAdjustable
     %> the quantum angle. 
     %>
     %> The update function supports 3 ways of updating a phase gate:
-    %> 1. `obj.update(angle)` : where angle is a quantum angle, updates
-    %> cosine and sine of obj.angle_ to values of other
-    %> 2. `obj.update(theta)` : updates cosine and sine of obj.anle_based on 
-    %> `theta`
-    %> 3. `obj.update(cos, sin)` : updates cosine and sine of obj.angle_ 
-    %> with `cos`, `sin` values
+    %> 1. obj.update(angle) : where angle is a quantum angle, updates
+    %>    cosine and sine of obj.angle_ to values of other
+    %> 2. obj.update(theta) : updates cosine and sine of obj.anle_based on 
+    %>    `theta`
+    %> 3. obj.update(cos, sin) : updates cosine and sine of obj.angle_ 
+    %>    with `cos`, `sin` values
     %>
     %> @param obj   1-qubit phase gate object
     %> @param varargin Variable input argument, being either:
@@ -153,6 +154,28 @@ classdef Phase < qclab.qgates.QGate1 & qclab.QAdjustable
       else
         obj.angle_.update(varargin{:});
       end
+    end
+    
+    % label for draw function
+    function [label] = label(obj, parameter)
+      if nargin < 2, parameter = 'N'; end
+      label = 'P';        
+      if strcmp(parameter, 'S') % short parameter
+        label = sprintf([label, '(%.4f)'], obj.theta);
+      elseif strcmp(parameter, 'L') % long parameter
+        label = sprintf([label, '(%.8f)'], obj.theta);
+      end
+    end
+    
+  end
+  
+  methods ( Access = protected )
+    
+    %> @brief Override copyElement function to allow for correct deep copy of
+    %> handle property.
+    function cp = copyElement(obj)
+      cp = copyElement@matlab.mixin.Copyable( obj );
+      cp.angle_ = obj.angle() ;
     end
     
   end

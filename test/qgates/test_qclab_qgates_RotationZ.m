@@ -54,6 +54,15 @@ classdef test_qclab_qgates_RotationZ < matlab.unittest.TestCase
       QASMstring = sprintf('rz(%.15f) q[3];',Rz.theta);
       test.verifyEqual(T(1:length(QASMstring)), QASMstring);
       
+      % draw gate
+      [out] = Rz.draw(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = Rz.draw(1, 'S');
+      test.verifyEqual( out, 0 );
+      [out] = Rz.draw(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [3, 1] );
+      
       % update(cos, sin)
       Rz.update( cos(pi/3), sin(pi/3) );
       test.verifyEqual( Rz.theta, 2*pi/3, 'AbsTol', eps );
@@ -67,6 +76,47 @@ classdef test_qclab_qgates_RotationZ < matlab.unittest.TestCase
       Rz2.update( 1 );
       test.verifyTrue( Rz ~= Rz2 );
       test.verifyFalse( Rz == Rz2 );
+            
+      % equalType
+      Ry = qclab.qgates.RotationY();
+      Rx = qclab.qgates.RotationX();
+      test.verifyTrue( Rz.equalType( Rz2 ) );
+      test.verifyFalse( Rz.equalType( Ry ) );
+      test.verifyFalse( Rz.equalType( Rx ) );
+      
+      % mtimes
+      Rz2.setQubit(3);
+      Rz1t2 = Rz * Rz2 ;
+      Rz2t1 = Rz2 * Rz ;
+      test.verifyEqual( Rz1t2.theta, 2*pi/3 + 1, 'AbsTol', eps );
+      test.verifyEqual( Rz2t1.theta, 2*pi/3 + 1, 'AbsTol', eps );
+      test.verifyTrue( Rz1t2 == Rz2t1 );
+      test.verifyEqual( Rz1t2.matrix, Rz.matrix * Rz2.matrix, 'AbsTol', eps );
+      
+      % mrdivide
+      Rz1mr2 = Rz / Rz2 ;
+      Rz2mr1 = Rz2 / Rz ;
+      test.verifyEqual( Rz1mr2.theta, 2*pi/3 - 1, 'AbsTol', eps );
+      test.verifyEqual( Rz2mr1.theta, 1 -2*pi/3, 'AbsTol', eps );
+      test.verifyEqual( Rz1mr2.matrix, Rz.matrix / Rz2.matrix, 'AbsTol', eps );
+      test.verifyEqual( Rz2mr1.matrix, Rz2.matrix / Rz.matrix, 'AbsTol', eps );
+      
+      % mldivide
+      Rz1ml2 = Rz \ Rz2 ;
+      Rz2ml1 = Rz2 \ Rz ;
+      test.verifyEqual( Rz1ml2.theta, 1 - 2*pi/3, 'AbsTol', eps );
+      test.verifyEqual( Rz2ml1.theta, 2*pi/3 - 1, 'AbsTol', eps );
+      test.verifyEqual( Rz1ml2.matrix, Rz.matrix \ Rz2.matrix, 'AbsTol', eps );
+      test.verifyEqual( Rz2ml1.matrix, Rz2.matrix \ Rz.matrix, 'AbsTol', eps );
+      
+      % inv
+      Ri1 = qclab.qgates.RotationZ( 0, cos(-pi/3), sin(-pi/3) );
+      iRi1 = inv(Ri1);
+      test.verifyEqual( iRi1.theta, 2*pi/3, 'AbsTol', eps );
+      test.verifyTrue( Ri1 == inv(Rz) );
+      iRz = inv(Rz);
+      test.verifyEqual( iRz.matrix, inv(Rz.matrix), 'AbsTol', eps );
+      
     end
     
   end
