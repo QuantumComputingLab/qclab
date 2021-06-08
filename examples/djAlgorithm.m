@@ -24,9 +24,10 @@ H = @qclab.qgates.Hadamard ;
 X = @qclab.qgates.PauliX ;
 CNOT = @qclab.qgates.CNOT ;
 
-nbQubits = 4 ; % the length of the input string
+nbQubits = 5 ; % the length of the input string
 
 % Constant Oracle
+% ------------------------------------------------------------------------------
 constantOracle = qclab.QCircuit( nbQubits + 1 );
 
 output = randi([0 1]); % generate random 0 or 1
@@ -39,6 +40,7 @@ fprintf( 1, '\n\nConstant oracle:\n\n' );
 constantOracle.draw ;
 
 % Balanced Oracle
+% ------------------------------------------------------------------------------
 balancedOracle = qclab.QCircuit( nbQubits + 1 );
 
 bitString = sprintf('%d', randi([0 1], 1, nbQubits) )
@@ -67,7 +69,7 @@ fprintf( 1, '\n\nBalanced oracle:\n\n' );
 balancedOracle.draw ;
 
 % Complete Deutsch-Josza circuit
-
+% ------------------------------------------------------------------------------
 djCircuit = qclab.QCircuit( nbQubits + 1 );
 
 % Initial superposition

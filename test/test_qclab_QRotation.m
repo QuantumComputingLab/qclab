@@ -2,16 +2,9 @@ classdef test_qclab_QRotation < matlab.unittest.TestCase
   methods (Test)
     function test_QRotation(test)
       R = qclab.QRotation ;
-      test.verifyFalse( R.fixed );             % fixed
       test.verifyEqual( R.cos, 1.0 );          % cos
       test.verifyEqual( R.sin, 0.0 );          % sin
       test.verifyEqual( R.theta, 0.0 );        % theta
-      
-      % fixed
-      R.makeFixed();
-      test.verifyTrue( R.fixed );
-      R.makeVariable();
-      test.verifyFalse( R.fixed );
       
       % update(angle)
       new_angle = qclab.QAngle( 0.5 );

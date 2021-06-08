@@ -127,9 +127,9 @@ classdef U3 < qclab.qgates.QGate1 & qclab.QAdjustable
       angles = copy(obj.angles_);
     end
     
-    %> @brief Returns the numerical value \f$\theta\f$ of this U3 gate.
-    function phi = theta(obj)
-      phi = obj.rotation_.theta ;
+    %> @brief Returns the numerical value \f$\theta/2\f$ of this U3 gate.
+    function theta = theta(obj)
+      theta = obj.rotation_.theta ;
     end
     
     %>  @brief Returns the cosine \f$\cos(\theta/2)\f$ of this U3 gate.

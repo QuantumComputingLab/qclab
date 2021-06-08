@@ -7,12 +7,15 @@
 % (C) Copyright Daan Camps and Roel Van Beeumen 2021.  
 % ==============================================================================
 classdef QRotationGate2 < qclab.qgates.QGate2 & ...
-                          qclab.QRotation
+                          qclab.QAdjustable
                         
   properties (Access = protected)
     %> Qubits of this 2-qubit rotation gate
-    qubits_(1,2) int32
+    qubits_(1,2)    int32
+    %> Quantum rotation of this rotation gate.
+    rotation_(1,1)  qclab.QRotation
   end
+  
   methods
     
     % Class constructor  =======================================================
@@ -61,11 +64,24 @@ classdef QRotationGate2 < qclab.qgates.QGate2 & ...
       if nargin == 0
         qubits = [0, 1];
       end
-      if nargin < 2
-        varargin = {};
-      end
-      obj@qclab.QRotation( varargin{:} );
+      obj@qclab.QAdjustable(false); 
       obj.setQubits( qubits );
+      if nargin < 2 % empty or default constructor
+        obj.rotation_ = qclab.QRotation();
+      elseif nargin == 2 % either angle, rotation, theta
+        obj.rotation_ = qclab.QRotation( varargin{1} );
+      elseif nargin == 3 % either angle, rotation, theta + fixed or cos, sin
+        if isa( varargin{2}, 'logical' )
+          obj.rotation_ = qclab.QRotation( varargin{1} );
+          if varargin{3}, obj.makeFixed; end
+        else
+          obj.rotation_ = qclab.QRotation( varargin{1}, varargin{2} );
+        end
+      else % cos, sin + fixed
+        obj.rotation_ = qclab.QRotation( varargin{1}, varargin{2} );
+        if varargin{3}, obj.makeFixed; end
+      end
+      
     end
     
     % qubit
@@ -89,7 +105,7 @@ classdef QRotationGate2 < qclab.qgates.QGate2 & ...
     function [bool] = equals(obj,other)
       bool = false;
       if obj.equalType(other)
-        bool = (obj.angle_ == other.angle_) ;
+        bool = (obj.rotation_ == other.rotation_) ;
       end
     end
     
@@ -103,25 +119,102 @@ classdef QRotationGate2 < qclab.qgates.QGate2 & ...
       bool = ~obj.equals(other);
     end
     
-    %> @brief Multiplication of two QRotationGate1 objects of equal type
+    %> @brief Returns a copy of the quantum rotation \f$\theta/2\f$ 
+    %> of this rotation gate.
+    function rotation = rotation(obj)
+      rotation = copy( obj.rotation_ );
+    end
+    
+    %> @brief Returns a copy of the quantum angle \f$\theta/2\f$ 
+    %> of this rotation gate.
+    function angle = angle(obj)
+      angle = obj.rotation_.angle;
+    end
+    
+    %> @brief Returns the numerical value \f$\theta/2\f$ of this rotation gate.
+    function theta = theta(obj)
+      theta = obj.rotation_.theta ;
+    end
+    
+    %>  @brief Returns the cosine \f$\cos(\theta/2)\f$ of this rotation gate.
+    function cos = cos(obj)
+      cos = obj.rotation_.cos ;
+    end
+    
+    %> @brief Returns the sine \f$\sin(\theta/2)\f$ of this rotation gate.
+    function sin = sin(obj)
+      sin = obj.rotation_.sin ;
+    end
+    
+    % ==========================================================================
+    %> @brief Update this rotation gate
+    %>
+    %>
+    %> The update function supports 4 ways of updating a rotation gate:
+    %>
+    %> 1. obj.update(angle) : where angle is a quantum angle, updates
+    %>    cosine and sine of obj.rotation_ to values of angle.
+    %>
+    %> 2. obj.update(rotation) : where rotation is a quantum rotation, updates
+    %>    cosine and sine of obj.rotation_ to rotation.
+    %>
+    %> 3. obj.update(theta) : updates cosine and sine of obj.rotation_ based on 
+    %>    `theta`.
+    %>
+    %> 4. obj.update(cos, sin) : updates cosine and sine of obj.rotation_ 
+    %>    with `cos`, `sin` values.
+    %>
+    %> @param obj QRotationGate2 object
+    %> @param varargin Variable input argument, being either:
+    %>  - QAngle object
+    %>  - theta value
+    %>  - cos, sin values
+    % ==========================================================================
+    function update(obj, varargin)
+      assert( ~obj.fixed );
+      obj.rotation_.update( varargin{:} );
+    end
+    
+    %> @brief Multiplication of two QRotationGate2 objects of equal type
     %> on same qubits:  -[ out ]- = -[ obj ]--[ other ]-
     function [out] = mtimes(obj,other)
-      assert( isequal(obj.qubits, other.qubits) );
-      out = mtimes@qclab.QRotation(obj, other) ;
+      assert( obj.equalType(other) && obj.qubit == other.qubit );
+      out = copy(obj);
+      out.update( obj.angle + other.angle );
     end
     
-    %> @brief Right division of two QRotationGate1 objects of equal type
+    %> @brief Right division of two QRotationGate2 objects of equal type
     %> on same qubits: -[ out ]- = -[ obj ]--[ other ]'-
     function [out] = mrdivide(obj,other)
-      assert( isequal(obj.qubits, other.qubits) );
-      out = mrdivide@qclab.QRotation(obj, other) ;
+      assert( obj.equalType(other) && obj.qubit == other.qubit );
+      out = copy(obj);
+      out.update( obj.angle - other.angle );
     end
     
-    %> @brief Left division of two QRotationGate1 objects of equal type
+    %> @brief Left division of two QRotationGate2 objects of equal type
     %> on same qubits: -[ out ]- = -[ obj ]'--[ other ]-
     function [out] = mldivide(obj,other)
-      assert( isequal(obj.qubits, other.qubits) );
-      out = mldivide@qclab.QRotation(obj, other) ;
+      assert( obj.equalType(other) && obj.qubit == other.qubit );
+      out = copy(obj);
+      out.update( other.angle - obj.angle )
+    end
+    
+    %> @brief Inverse of this QRotationGate2 that results in a QRotationGate2
+    %> `out`: -[ out ]- = -[ obj ]'-
+    function [out] = inv(obj)
+      out = copy( obj );
+      out.update( -obj.angle );
+    end
+    
+  end
+  
+  methods ( Access = protected )
+    
+    %> @brief Override copyElement function to allow for correct deep copy of
+    %> handle
+    function cp = copyElement(obj)
+      cp = copyElement@matlab.mixin.Copyable( obj );
+      cp.rotation_ = obj.rotation ;
     end
     
   end

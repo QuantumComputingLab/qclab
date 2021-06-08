@@ -30,7 +30,7 @@ circuit.toQASM( fID );
 
 % Draw circuit
 fprintf( fID, '\n\nCircuit diagram:\n\n' );
-circuit.draw(1,'S');
+circuit.draw( fID, 'S' );
 
 function qftCircuit( circuit )
   H = @qclab.qgates.Hadamard ;

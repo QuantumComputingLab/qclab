@@ -1,18 +1,19 @@
 %> @file QRotation.m
-%> @brief Class for representing an adjustable quantum rotation.
+%> @brief Class for representing a quantum rotation.
 % ==============================================================================
 %> @class QRotation
-%> @brief Class for representing an adjustable quantum rotation.
+%> @brief Class for representing a quantum rotation.
 %>
 %> This class stores the quantum angle \f$\theta/2\f$, i.e., the cosine and
-%> sine of half the adjustable quantum rotation parameter \f$\theta\f$.
+%> sine of half the quantum rotation parameter \f$\theta\f$.
 %>
 %> Where quantum angles can be added and substracted, quantum rotations can be
 %> multiplied and divided with each other.
 %
 % (C) Copyright Daan Camps and Roel Van Beeumen 2021.  
 % ==============================================================================
-classdef QRotation < qclab.QAdjustable
+classdef QRotation < handle & ...
+                     matlab.mixin.Copyable
   
   properties (Access = protected)
     %> Quantum angle of this quantum rotation.
@@ -27,63 +28,42 @@ classdef QRotation < qclab.QAdjustable
     %> The QRotation class constructor supports 5 ways of constructing a quantum
     %> rotation:
     %>
-    %> 1. QRotation() : Default Constructor. Constructs an adjustable quantum 
+    %> 1. QRotation() : Default Constructor. Constructs a quantum 
     %>     rotation with \f$\theta = 0\f$.
     %>
-    %> 2. QRotation(angle, fixed) : Constructs an adjustable quantum rotation 
-    %>     with the given quantum angle `angle` and the flag `fixed`. The 
-    %>     default of `fixed` is false.
+    %> 2. QRotation( angle ) : Constructs a quantum rotation 
+    %>     with the given quantum angle `angle`.
     %>
-    %> 3. QRotation(rotation, fixed) : Constructs an adjustable quantum rotation 
-    %>     with the given quantum rotation `rotation` and the flag `fixed`. The 
-    %>     default of `fixed` is false.
+    %> 3. QRotation( rotation) : Constructs a quantum rotation 
+    %>     with the given quantum rotation `rotation`.
     %>
-    %> 4. QRotation(theta, fixed) : Constructs an adjustable quantum rotation 
-    %>     with the given quantum angle `angle` = \f$\theta/2\f$ and the flag 
-    %>     `fixed`. The default of `fixed` is false.
+    %> 4. QRotation( theta ) : Constructs a quantum rotation 
+    %>     with the given quantum angle `angle` = \f$\theta/2\f$.
     %>
-    %> 5. QRotation(cos, sin, fixed) : Constructs an adjustable quantum rotation 
+    %> 5. QRotation( cos, sin ) : Constructs a quantum rotation 
     %>    with the given values `cos` = \f$\cos(\theta/2)\f$ and 
-    %>    `sin` = \f$\sin(\theta/2)\f$ and the flag `fixed`. The default of 
-    %>     `fixed` is false.
-    %>
-    %> If `fixed` is provided, it must be of `logical` type.
+    %>    `sin` = \f$\sin(\theta/2)\f$.
     %>
     %> @param varargin Variable input argument, being either:
     %>  - empty
-    %>  - angle, (fixed)
-    %>  - rotation, fixed
-    %>  - theta, (fixed)
-    %>  - cos, sin, (fixed)
+    %>  - angle
+    %>  - rotation
+    %>  - theta
+    %>  - cos, sin
     % ==========================================================================
     function obj = QRotation(varargin)
-      obj@qclab.QAdjustable(false); 
       if nargin == 0 % empty default constructor
         obj.angle_ = qclab.QAngle();
       elseif nargin == 1 % either angle, rotation or theta
-        if isa(varargin{1},'qclab.QAngle')
+        if isa(varargin{1},'qclab.QAngle') % QAngle
           obj.angle_ = varargin{1} ;
-        elseif isa(varargin{1},'qclab.QRotation')
+        elseif isa(varargin{1},'qclab.QRotation') % QRotation
           obj.angle_ = varargin{1}.angle ;
-        else
+        else % theta
           obj.angle_ = qclab.QAngle(varargin{1}/2);
         end
-      elseif nargin == 2 % either angle or theta + fixed, or cos and sin
-        if isa(varargin{2},'logical') % second is logical
-         if isa(varargin{1},'qclab.QAngle') % first is angle
-            obj.angle_ = varargin{1} ;
-         elseif isa(varargin{1},'qclab.QRotation') 
-            obj.angle_ = varargin{1}.angle ;
-          else
-            obj.angle_ = qclab.QAngle(varargin{1}/2);
-         end
-          if varargin{2}, obj.makeFixed; end
-        else
-          obj.angle_ = qclab.QAngle(varargin{1}, varargin{2});
-        end
-      elseif nargin == 3 % cos, sin and fixed
+      elseif nargin == 2 % cos, sin
         obj.angle_ = qclab.QAngle(varargin{1}, varargin{2});
-        if varargin{3}, obj.makeFixed; end
       end
     end
     
@@ -110,8 +90,6 @@ classdef QRotation < qclab.QAdjustable
     % ==========================================================================
     %> @brief Update this quantum rotation
     %>
-    %> If the quantum rotation is not fixed, the update function is called on
-    %> the quantum angle. 
     %>
     %> The update function supports 4 ways of updating a quantum rotation:
     %>
@@ -134,7 +112,6 @@ classdef QRotation < qclab.QAdjustable
     %>  - cos, sin values
     % ==========================================================================
     function update(obj, varargin)
-      assert(~obj.fixed)
       if nargin == 2
         if isa(varargin{1},'qclab.QAngle') % angle provided
           obj.angle_ = varargin{1} ;

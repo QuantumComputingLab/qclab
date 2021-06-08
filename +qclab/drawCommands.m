@@ -11,12 +11,12 @@ blc = '\x2517';   % below left corner
 brc = '\x251B';   % below right corner
 vh = '\x254B';    % vertical and horizontal cross
 
-targ = '\x2295';  % target ( not, otimes )
+targ = '\x2295';  % target ( oplus )
 
 ctrl = '\x25CF';  % filled control 
 ctrlo = '\x25CB'; % open control
 
 sw = '\x2A2F';    % swap cross
-isw = '\x2295';   % iswap otimes
+isw = '\x2297';   % iswap otimes
 
 space = '\x0020'; % 1 whitespace

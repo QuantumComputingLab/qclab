@@ -223,7 +223,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
     % ==========================================================================
     %> @brief Draw a quantum circuit.
     %>
-    %> @param obj 2-qubit gate of a controlled 1-qubit gate.
+    %> @param obj quantum circuit object.
     %> @param fid  file id to draw to:
     %>              - 0  : return cell array with ascii characters as `out`
     %>              - 1  : draw to command window (default)
