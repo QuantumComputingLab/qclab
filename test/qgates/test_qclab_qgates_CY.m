@@ -86,6 +86,14 @@ classdef test_qclab_qgates_CY < matlab.unittest.TestCase
       cy.setControlState(0);
       test.verifyTrue( cy ~= cy2 );
       test.verifyFalse( cy == cy2 );
+      
+      % ctranspose
+      cy = qclab.qgates.CY() ;
+      cyp = cy';
+      test.verifyEqual( cyp.nbQubits, int32(2) );
+      test.verifyEqual( cyp.control, int32(0) );
+      test.verifyEqual( cyp.target, int32(1) );
+      test.verifyEqual(cyp.matrix, cy.matrix' );
     end
     
     function test_CY_copy(test)

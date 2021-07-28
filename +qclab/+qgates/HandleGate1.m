@@ -73,6 +73,12 @@ classdef HandleGate1 < qclab.qgates.QGate1
       end
     end
     
+    % ctranspose
+    function [objprime] = ctranspose( obj )
+      objprime = ctranspose@qclab.qgates.QGate1( obj );
+      objprime.setGate( ctranspose( obj.gate_ ) );
+    end
+    
     % draw
     function [out] = draw(obj, fid, parameter, offset)
       if nargin < 2, fid = 1; end

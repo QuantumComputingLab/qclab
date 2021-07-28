@@ -93,15 +93,26 @@ classdef iSWAP < qclab.qgates.QGate2
     % toQASM
     function [out] = toQASM(obj, fid, offset)
       if nargin == 2, offset  = 0; end
-      fprintf(fid,'iswap q[%d], q[%d];\n', obj.qubits_(1) + offset, ...
-          obj.qubits_(2) + offset);
-       out = 0;
+      qclab.IO.qasmiSWAP( fid, obj.qubits + offset );  
+      out = 0;
     end
     
     % equals
     function [bool] = equals(obj, other)
       bool = false;
       if isa(other, 'qclab.qgates.iSWAP'), bool = true; end
+    end
+    
+    % ctranspose
+    function [objprime] = ctranspose( obj )
+      qubits = obj.qubits ;
+      objprime = qclab.QCircuit( qubits(2) + 1 );
+      objprime.push_back( qclab.qgates.Hadamard( qubits(2) ) );
+      objprime.push_back( qclab.qgates.CNOT( qubits(2), qubits(1) ) );
+      objprime.push_back( qclab.qgates.CNOT( qubits(1), qubits(2) ) );
+      objprime.push_back( qclab.qgates.Hadamard( qubits(1) ) );
+      objprime.push_back( ctranspose( qclab.qgates.Phase90( qubits(1) ) ) );
+      objprime.push_back( ctranspose( qclab.qgates.Phase90( qubits(2) ) ) );
     end
     
     % ==========================================================================

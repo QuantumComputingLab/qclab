@@ -134,6 +134,14 @@ classdef test_qclab_qgates_CRotationX < matlab.unittest.TestCase
       mat2 = kron(E1,eye(2)) + kron(E0,RX.matrix);
       test.verifyEqual( crotx.matrix, mat2, 'AbsTol', eps );
       
+      % ctranspose
+      crotx = qclab.qgates.CRotationX(1, 2, pi/3 ) ;
+      crotxp = crotx';
+      test.verifyEqual( crotxp.nbQubits, int32(2) );
+      test.verifyEqual( crotxp.control, int32(1) );
+      test.verifyEqual( crotxp.target, int32(2) );
+      test.verifyEqual(crotxp.matrix, crotx.matrix', 'AbsTol', eps );
+      
     end
     
     function test_CRotationX_constructors( test )

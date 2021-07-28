@@ -34,7 +34,7 @@ classdef PauliX < qclab.qgates.QGate1
     % toQASM
     function [out] = toQASM(obj, fid, offset)
       if nargin == 2, offset = 0; end
-      fprintf(fid, 'x q[%d];\n', obj.qubit + offset);
+      qclab.IO.qasmPauliX( fid, obj.qubit + offset );
       out = 0;
     end
     

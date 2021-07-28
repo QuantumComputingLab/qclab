@@ -95,7 +95,7 @@ classdef Phase < qclab.qgates.QGate1 & qclab.QAdjustable
     % toQASM
     function [out] = toQASM(obj, fid, offset)
       if nargin == 2, offset = 0; end
-      fprintf(fid,'rz(%.15f) q[%d];\n', obj.theta, obj.qubit_ + offset);
+      qclab.IO.qasmPhase( fid, obj.qubit + offset, obj.theta );
       out = 0;
     end
     
@@ -105,6 +105,12 @@ classdef Phase < qclab.qgates.QGate1 & qclab.QAdjustable
       if isa(other,'qclab.qgates.Phase')
         bool = (obj.angle_ == other.angle_) ;
       end
+    end
+    
+    % ctranspose
+    function objprime = ctranspose( obj )
+      objprime = ctranspose@qclab.qgates.QGate1( obj );
+      objprime.update( -obj.angle );
     end
     
     %> @brief Returns a copy of the quantum angle \f$\theta\f$ of this phase gate.

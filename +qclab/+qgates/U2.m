@@ -86,9 +86,14 @@ classdef U2 < qclab.qgates.QGate1 & qclab.QAdjustable
     % toQASM
     function [out] = toQASM(obj, fid, offset)
       if nargin == 2, offset = 0; end
-      fprintf(fid,'u2(%.15f, %.15f) q[%d];\n', obj.phi, obj.lambda, ...
-              obj.qubit_ + offset);
+      qclab.IO.qasmU2( fid, obj.qubit + offset, obj.phi, obj.lambda );
       out = 0;
+    end
+    
+    % ctranspose
+    function [objprime] = ctranspose( obj )
+      objprime = ctranspose@qclab.qgates.QGate1( obj );
+      objprime.update( -obj.lambda + pi, -obj.phi + pi );
     end
     
     % equals

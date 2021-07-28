@@ -12,7 +12,27 @@
 % (C) Copyright Daan Camps and Roel Van Beeumen 2021.  
 % ==============================================================================
 classdef Phase90 < qclab.qgates.QGate1
-   methods (Static)
+  
+  methods
+    % toQASM
+    function [out] = toQASM(obj, fid, offset)
+      if nargin == 2, offset = 0; end
+      qclab.IO.qasmPhase90( fid, obj.qubit + offset );
+      out = 0;
+    end
+    
+    % equals
+    function [bool] = equals(~,other)
+      bool = isa(other, 'qclab.qgates.Phase90');
+    end
+    
+    % ctranspose
+    function objprime = ctranspose( obj )
+      objprime = qclab.qgates.Phase( obj.qubit, -pi/2 );
+    end
+  end
+  
+  methods (Static)
     % fixed
     function [bool] = fixed
       bool = true;
@@ -30,19 +50,4 @@ classdef Phase90 < qclab.qgates.QGate1
     end
     
    end
-  
-    methods
-    % toQASM
-    function [out] = toQASM(obj, fid, offset)
-      if nargin == 2, offset = 0; end
-      fprintf(fid, 's q[%d];\n', obj.qubit + offset);
-      out = 0;
-    end
-    
-    % equals
-    function [bool] = equals(~,other)
-      bool = isa(other, 'qclab.qgates.Phase90');
-    end
-  end
-  
 end

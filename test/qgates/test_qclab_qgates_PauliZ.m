@@ -40,6 +40,12 @@ classdef test_qclab_qgates_PauliZ < matlab.unittest.TestCase
       Z2 = qclab.qgates.PauliZ();
       test.verifyTrue( Z == Z2 );
       test.verifyFalse( Z ~= Z2 );
+      
+      % ctranspose
+      Z = qclab.qgates.PauliZ();
+      Zp = Z';
+      test.verifyEqual( Zp.nbQubits, int32(1) );
+      test.verifyEqual(Zp.matrix, Z.matrix' );
     end
   end
 end

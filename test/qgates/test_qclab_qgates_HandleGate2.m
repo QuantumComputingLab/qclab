@@ -85,9 +85,14 @@ classdef test_qclab_qgates_HandleGate2 < matlab.unittest.TestCase
       Hcphase = qclab.qgates.HandleGate2 ( cphase, 1 );
       [out] = Hcphase.draw(1, 'S');
       test.verifyEqual( out, 0 );
+      
+      % ctranspose
+      Hp = Hcphase';
+      cphasep = cphase';
+      test.verifyEqual(Hp.matrix, cphasep.matrix );
     end
     
-    function test_HandleGate2_QRotationGate1( test )
+    function test_HandleGate2_QRotationGate2( test )
       R = qclab.qgates.RotationXX ;
       H = qclab.qgates.HandleGate2( R ) ;
       
@@ -120,6 +125,11 @@ classdef test_qclab_qgates_HandleGate2 < matlab.unittest.TestCase
       [out] = H.draw(0, 'L');
       test.verifyTrue( isa(out, 'cell') );
       test.verifySize( out, [6, 1] );
+      
+      % ctranspose
+      Hp = H';
+      Rp = R';
+      test.verifyEqual(Hp.matrix, Rp.matrix );
       
     end
     

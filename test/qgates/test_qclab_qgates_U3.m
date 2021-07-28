@@ -115,6 +115,12 @@ classdef test_qclab_qgates_U3 < matlab.unittest.TestCase
       test.verifyTrue( u3 ~= u32 );
       test.verifyFalse( u3 == u32 );
       
+      % ctranspose
+      u3 = qclab.qgates.U3( 0, 1.2, -0.7, 2.83 ) ;
+      u3.setGlobalPhase( exp(1i/7) );
+      u3p = u3';
+      test.verifyEqual(u3p.matrix, u3.matrix', 'AbsTol', 10*eps );
+      
     end
     
     function test_U3_constructors( test )

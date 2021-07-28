@@ -92,14 +92,8 @@ classdef CPhase < qclab.qgates.QControlledGate2
     % toQASM
     function [out] = toQASM(obj, fid, offset)
       if nargin == 2, offset = 0; end
-      if (obj.controlState == 0)
-        fprintf(fid, 'x q[%d];\n', obj.control + offset);
-      end
-      fprintf(fid,'cp(%.15f) q[%d], q[%d];\n', obj.theta, ...
-        obj.control + offset, obj.target + offset);
-      if (obj.controlState == 0)
-        fprintf(fid, 'x q[%d];\n', obj.control + offset);
-      end
+      qclab.IO.qasmCPhase( fid, obj.control + offset, obj.target + offset, ...
+                       obj.controlState, obj.theta );
       out = 0; 
     end
     
@@ -112,6 +106,12 @@ classdef CPhase < qclab.qgates.QControlledGate2
         bool = ((obj.control < obj.target) && (other.control < other.target))...
           || ((obj.control > obj.target) && (other.control > other.target)) ;
       end
+    end
+    
+    % ctranspose
+    function objprime = ctranspose( obj )
+      objprime = ctranspose@qclab.qgates.QControlledGate2( obj );
+      objprime.update( -obj.angle );
     end
     
     %> Makes this controlled phase gate fixed.

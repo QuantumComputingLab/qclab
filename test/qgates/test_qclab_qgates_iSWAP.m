@@ -56,6 +56,11 @@ classdef test_qclab_qgates_iSWAP < matlab.unittest.TestCase
       test.verifyTrue( iswap == iswap2 );
       test.verifyFalse( iswap ~= iswap2 );
       
+      % ctranspose
+      iswap = qclab.qgates.iSWAP();
+      iswapp = iswap';
+      test.verifyEqual( iswapp.nbQubits, int32(2) );
+      test.verifyEqual(iswapp.matrix, iswap.matrix', 'AbsTol', 10*eps );
     end
     
     function test_iSWAP_apply(test)

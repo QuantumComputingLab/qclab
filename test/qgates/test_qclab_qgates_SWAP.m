@@ -56,6 +56,12 @@ classdef test_qclab_qgates_SWAP < matlab.unittest.TestCase
       test.verifyTrue( swap == swap2 );
       test.verifyFalse( swap ~= swap2 );
       
+      % ctranspose
+      swap = qclab.qgates.SWAP();
+      swapp = swap';
+      test.verifyEqual( swapp.nbQubits, int32(2) );
+      test.verifyEqual(swapp.matrix, swap.matrix' );
+      
     end
     
     function test_SWAP_apply(test)

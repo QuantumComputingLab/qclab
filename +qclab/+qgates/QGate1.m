@@ -107,6 +107,11 @@ classdef QGate1 < qclab.QObject
       end
     end
     
+    % ctranspose
+    function objprime = ctranspose( obj )
+      objprime = copy( obj );
+    end
+    
     % ==========================================================================
     %> @brief draw a 1-qubit gate
     %>

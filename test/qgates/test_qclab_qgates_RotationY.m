@@ -117,7 +117,265 @@ classdef test_qclab_qgates_RotationY < matlab.unittest.TestCase
       iRy = inv(Ry);
       test.verifyEqual( iRy.matrix, inv(Ry.matrix), 'AbsTol', eps );
       
+      % ctranspose
+      Ry = qclab.qgates.RotationY(0, pi/3);
+      Ryp = Ry';
+      test.verifyEqual( Ryp.nbQubits, int32(1) );
+      test.verifyEqual(Ryp.matrix, Ry.matrix', 'AbsTol', eps );
+      
     end
     
+    function test_fuse( test )
+      tol = 10*eps;
+      RY = @qclab.qgates.RotationY ;
+      G1 = RY() ;
+      G1.update( pi/4 );
+      G2 = RY() ;
+      G2.update( pi/7 );
+      G1c = copy(G1);
+      G1.fuse( G2 );
+      test.verifyEqual( G1.matrix, G2.matrix * G1c.matrix, 'AbsTol', tol );
+      G12 = G1c * G2;
+      test.verifyEqual( G1.matrix, G12.matrix , 'AbsTol', tol );
+    end
+
+    function test_turnover( test )
+      tol = 10*eps;
+      RX = @qclab.qgates.RotationX ;
+      RY = @qclab.qgates.RotationY ;
+      RZ = @qclab.qgates.RotationZ ;
+      RXX = @qclab.qgates.RotationXX ;
+      RZZ = @qclab.qgates.RotationZZ ;
+      
+      Circuit = @qclab.QCircuit ;
+      
+      % (A) test Y - Z - Y to Z - Y - Z
+      theta1 = 5.33;
+      qubit = int32(0);
+      G1 = RY(qubit, theta1 );
+      theta2 = -2.21;
+      G2 = RZ(qubit, theta2 );
+      theta3 = pi/5;
+      G3 = RY(qubit, theta3 );
+      
+      C = Circuit(1);
+      C.push_back( G1 );
+      C.push_back( G2 );
+      C.push_back( G3 );
+      Mat = C.matrix ;
+      
+      [GA, GB, GC] = turnover( G1, G2, G3 );
+      
+      C.replace( 1, GA );
+      C.replace( 2, GB );
+      C.replace( 3, GC );
+      
+      % check qubits and types after turnover
+      qubitsA = GA.qubits;
+      test.verifyEqual( qubitsA, qubit );
+      test.verifyTrue( GA.equalType( G2 ) );
+      
+      qubitsB = GB.qubits;
+      test.verifyEqual( qubitsB, qubit );
+      test.verifyTrue( GB.equalType( G1 ) );
+      
+      qubitsC = GC.qubits;
+      test.verifyEqual( qubitsC, qubit );
+      test.verifyTrue( GC.equalType( G2 ) );
+      
+      % check circuit after turnover and compare with before
+      test.verifyEqual( C.matrix, Mat, 'AbsTol', tol ) ;
+      
+      % (B) test Y - X - Y to X - Y - X
+      theta1 = 5.33;
+      qubit = int32(0);
+      G1 = RY(qubit, theta1 );
+      theta2 = -2.21;
+      G2 = RX(qubit, theta2 );
+      theta3 = pi/5;
+      G3 = RY(qubit, theta3 );
+      
+      C = Circuit(1);
+      C.push_back( G1 );
+      C.push_back( G2 );
+      C.push_back( G3 );
+      Mat = C.matrix ;
+      
+      [GA, GB, GC] = turnover( G1, G2, G3 );
+      
+      C.replace( 1, GA );
+      C.replace( 2, GB );
+      C.replace( 3, GC );
+      
+      % check qubits and types after turnover
+      qubitsA = GA.qubits;
+      test.verifyEqual( qubitsA, qubit );
+      test.verifyTrue( GA.equalType( G2 ) );
+      
+      qubitsB = GB.qubits;
+      test.verifyEqual( qubitsB, qubit );
+      test.verifyTrue( GB.equalType( G1 ) );
+      
+      qubitsC = GC.qubits;
+      test.verifyEqual( qubitsC, qubit );
+      test.verifyTrue( GC.equalType( G2 ) );
+      
+      % check circuit after turnover and compare with before
+      test.verifyEqual( C.matrix, Mat, 'AbsTol', tol ) ;
+      
+      % (C) test YI - ZZ - YI to ZZ - YI - ZZ
+      theta1 = 5.33;
+      qubit = int32(0);
+      G1 = RY(qubit, theta1 );
+      theta2 = -2.21;
+      qubits2 = int32([0,1]);
+      G2 = RZZ(qubits2, theta2 );
+      theta3 = pi/5;
+      G3 = RY(qubit, theta3 );
+      
+      C = Circuit(2);
+      C.push_back( G1 );
+      C.push_back( G2 );
+      C.push_back( G3 );
+      Mat = C.matrix ;
+      
+      [GA, GB, GC] = turnover( G1, G2, G3 );
+      
+      C.replace( 1, GA );
+      C.replace( 2, GB );
+      C.replace( 3, GC );
+      
+      % check qubits and types after turnover
+      qubitsA = GA.qubits;
+      test.verifyEqual( qubitsA, qubits2 );
+      test.verifyTrue( GA.equalType( G2 ) );
+      
+      qubitsB = GB.qubits;
+      test.verifyEqual( qubitsB, qubit );
+      test.verifyTrue( GB.equalType( G1 ) );
+      
+      qubitsC = GC.qubits;
+      test.verifyEqual( qubitsC, qubits2 );
+      test.verifyTrue( GC.equalType( G2 ) );
+      
+      % check circuit after turnover and compare with before
+      test.verifyEqual( C.matrix, Mat, 'AbsTol', tol ) ;
+      
+      % (D) test IY - ZZ - IY to ZZ - IY - ZZ
+      theta1 = 5.33;
+      qubit = int32(1);
+      G1 = RY(qubit, theta1 );
+      theta2 = -2.21;
+      qubits2 = int32([0,1]);
+      G2 = RZZ(qubits2, theta2 );
+      theta3 = pi/5;
+      G3 = RY(qubit, theta3 );
+      
+      C = Circuit(2);
+      C.push_back( G1 );
+      C.push_back( G2 );
+      C.push_back( G3 );
+      Mat = C.matrix ;
+      
+      [GA, GB, GC] = turnover( G1, G2, G3 );
+      
+      C.replace( 1, GA );
+      C.replace( 2, GB );
+      C.replace( 3, GC );
+      
+      % check qubits and types after turnover
+      qubitsA = GA.qubits;
+      test.verifyEqual( qubitsA, qubits2 );
+      test.verifyTrue( GA.equalType( G2 ) );
+      
+      qubitsB = GB.qubits;
+      test.verifyEqual( qubitsB, qubit );
+      test.verifyTrue( GB.equalType( G1 ) );
+      
+      qubitsC = GC.qubits;
+      test.verifyEqual( qubitsC, qubits2 );
+      test.verifyTrue( GC.equalType( G2 ) );
+      
+      % check circuit after turnover and compare with before
+      test.verifyEqual( C.matrix, Mat, 'AbsTol', tol ) ;
+      
+      % (E) test YI - XX - YI to XX - YI - XX
+      theta1 = 5.33;
+      qubit = int32(0);
+      G1 = RY(qubit, theta1 );
+      theta2 = -2.21;
+      qubits2 = int32([0,1]);
+      G2 = RXX(qubits2, theta2 );
+      theta3 = pi/5;
+      G3 = RY(qubit, theta3 );
+      
+      C = Circuit(2);
+      C.push_back( G1 );
+      C.push_back( G2 );
+      C.push_back( G3 );
+      Mat = C.matrix ;
+      
+      [GA, GB, GC] = turnover( G1, G2, G3 );
+      
+      C.replace( 1, GA );
+      C.replace( 2, GB );
+      C.replace( 3, GC );
+      
+      % check qubits and types after turnover
+      qubitsA = GA.qubits;
+      test.verifyEqual( qubitsA, qubits2 );
+      test.verifyTrue( GA.equalType( G2 ) );
+      
+      qubitsB = GB.qubits;
+      test.verifyEqual( qubitsB, qubit );
+      test.verifyTrue( GB.equalType( G1 ) );
+      
+      qubitsC = GC.qubits;
+      test.verifyEqual( qubitsC, qubits2 );
+      test.verifyTrue( GC.equalType( G2 ) );
+      
+      % check circuit after turnover and compare with before
+      test.verifyEqual( C.matrix, Mat, 'AbsTol', tol ) ;
+      
+      % (F) test IY - XX - IY to XX - IY - XX
+      theta1 = 5.33;
+      qubit = int32(1);
+      G1 = RY(qubit, theta1 );
+      theta2 = -2.21;
+      qubits2 = int32([0,1]);
+      G2 = RXX(qubits2, theta2 );
+      theta3 = pi/5;
+      G3 = RY(qubit, theta3 );
+      
+      C = Circuit(2);
+      C.push_back( G1 );
+      C.push_back( G2 );
+      C.push_back( G3 );
+      Mat = C.matrix ;
+      
+      [GA, GB, GC] = turnover( G1, G2, G3 );
+      
+      C.replace( 1, GA );
+      C.replace( 2, GB );
+      C.replace( 3, GC );
+      
+      % check qubits and types after turnover
+      qubitsA = GA.qubits;
+      test.verifyEqual( qubitsA, qubits2 );
+      test.verifyTrue( GA.equalType( G2 ) );
+      
+      qubitsB = GB.qubits;
+      test.verifyEqual( qubitsB, qubit );
+      test.verifyTrue( GB.equalType( G1 ) );
+      
+      qubitsC = GC.qubits;
+      test.verifyEqual( qubitsC, qubits2 );
+      test.verifyTrue( GC.equalType( G2 ) );
+      
+      % check circuit after turnover and compare with before
+      test.verifyEqual( C.matrix, Mat, 'AbsTol', tol ) ;
+
+    end
+
   end
 end

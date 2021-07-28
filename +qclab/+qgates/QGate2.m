@@ -68,6 +68,11 @@ classdef QGate2 < qclab.QObject
       end
     end
     
+    % ctranspose
+    function objprime = ctranspose( obj )
+      objprime = copy( obj );
+    end
+    
     % ==========================================================================
     %> @brief draw a 2-qubit gate acting on nearest neighbor qubits
     %>

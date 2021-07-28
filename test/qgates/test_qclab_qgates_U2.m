@@ -91,6 +91,11 @@ classdef test_qclab_qgates_U2 < matlab.unittest.TestCase
       test.verifyTrue( u2 ~= u22 );
       test.verifyFalse( u2 == u22 );
       
+      % ctranspose
+      u2 = qclab.qgates.U2( 0, 1.2, -0.7 ) ;
+      u2p = u2';
+      test.verifyEqual(u2p.matrix, u2.matrix', 'AbsTol', 10*eps );
+      
     end
     
     function test_U2_constructors( test )

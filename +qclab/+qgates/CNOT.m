@@ -51,14 +51,8 @@ classdef CNOT < qclab.qgates.QControlledGate2
     % toQASM
     function [out] = toQASM(obj, fid, offset)
       if nargin == 2, offset = 0; end
-      if (obj.controlState == 0)
-        fprintf(fid, 'x q[%d];\n', obj.control + offset);
-      end
-      fprintf(fid,'cx q[%d], q[%d];\n', obj.control + offset, ...
-          obj.target + offset);
-      if (obj.controlState == 0)
-        fprintf(fid, 'x q[%d];\n', obj.control + offset);
-      end
+      qclab.IO.qasmCNOT( fid, obj.control + offset, obj.target + offset, ...
+                       obj.controlState );
       out = 0;
     end
     

@@ -86,6 +86,14 @@ classdef test_qclab_qgates_CZ < matlab.unittest.TestCase
       cz.setControlState(0);
       test.verifyTrue( cz ~= cz2 );
       test.verifyFalse( cz == cz2 );
+      
+      % ctranspose
+      cz = qclab.qgates.CZ() ;
+      czp = cz';
+      test.verifyEqual( czp.nbQubits, int32(2) );
+      test.verifyEqual( czp.control, int32(0) );
+      test.verifyEqual( czp.target, int32(1) );
+      test.verifyEqual(czp.matrix, cz.matrix' );
     end
     
     function test_CZ_copy(test)

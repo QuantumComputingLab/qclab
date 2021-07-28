@@ -97,7 +97,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
     % toQASM
     function [out] = toQASM(obj, fid, offset)
       if nargin == 2, offset = 0; end
-      for i= 1:length(obj.gates_)
+      for i = 1:length(obj.gates_)
         [out] = obj.gates_(i).toQASM( fid, obj.offset_ + offset ) ;
         if ( out ~= 0 ), return; end
       end
@@ -122,6 +122,16 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       obj.offset_ = offset ;
     end
     
+    % ctranspose
+    function circprime = ctranspose( obj )
+      circprime = copy( obj );
+      myGates = circprime.gates ;
+      nbGates = circprime.nbGates ;
+      for i = 1 : nbGates
+        circprime.gates_( i ) = ctranspose( myGates( nbGates - i + 1 ) );
+      end
+    end
+    
     %
     % Element Access : 
     %
@@ -129,7 +139,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
     %> @brief Returns array of handles to the gates of this quantum circuit at
     %> postions `pos`. Default for `pos` is all gates.
     function [gates] = gateHandles( obj, pos )
-      if nargin == 0
+      if nargin == 1
         gates = obj.gates_ ;
       else
         assert(qclab.isNonNegIntegerArray( pos - 1 ));
@@ -192,13 +202,22 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
     %> @brief Erases the gates at positions `pos` from this quantum circuit.
     function erase(obj, pos)
       assert( qclab.isNonNegIntegerArray( pos - 1 ) ) ;
-      assert( max( pos ) <= length(obj.gates_) );   
+      assert( max( pos ) <= obj.nbGates );   
       obj.gates_( pos ) = [] ;      
+    end
+
+    %> @brief Replace the gate at position `pos` with `gate`
+    function replace( obj, pos, gate )
+      assert( qclab.isNonNegInteger( pos - 1 ) );
+      assert( pos <= obj.nbGates );
+      assert( length(gate) == 1 );
+      assert( obj.canInsert( gate ) );
+      obj.gates_( pos ) = gate ;
     end
       
     %> @brief Add a gate to the end of this quantum circuit.
     function push_back( obj, gate )
-      assert( obj.canInsert( gate ) );
+      assert( obj.canInsert( gate ) && isscalar( gate ) );
       obj.gates_(end+1) = gate ;
     end
     

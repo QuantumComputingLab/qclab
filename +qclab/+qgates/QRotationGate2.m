@@ -109,6 +109,12 @@ classdef QRotationGate2 < qclab.qgates.QGate2 & ...
       end
     end
     
+    % ctranspose
+    function objprime = ctranspose( obj )
+      objprime = ctranspose@qclab.qgates.QGate2( obj );
+      objprime.update( -obj.angle );
+    end
+    
     %> @brief Checks if `other` is equal to this QRotationGate2.
     function [bool] = eq(obj,other)
       bool = obj.equals(other);
@@ -173,6 +179,71 @@ classdef QRotationGate2 < qclab.qgates.QGate2 & ...
     function update(obj, varargin)
       assert( ~obj.fixed );
       obj.rotation_.update( varargin{:} );
+    end
+    
+    %>  Turnover of pattern of three QRotationGate gates where the first and
+    %>  third are QRotationGate2 objects of the same type.
+    %>  
+    %>  IN: -[obj]-[G2]-[G3]-     OUT: -[GA]-[GB]-[GC]-
+    %> 
+    %>  obj and G3 of same type (XX, YY, ZZ) on same nearest neighbor qubits
+    %>  G2 of different type (X, Y, Z, XX, YY, ZZ) on overlapping qubits
+    %>
+    %>  GA and GC are of same type as G2 and act on same qubits
+    %>  GB is of same type as obj and G3 and acts on same qubits
+    function [GA, GB, GC] = turnover(obj, G2, G3)
+      
+      % Check qubits and type
+      assert( ~obj.equalType(G2) && obj.equalType(G3) );
+
+      % nearest neighbor
+      qubits1 = obj.qubits;
+      assert( qubits1(1) + 1 == qubits1(2) );
+      
+      qubits3 = G3.qubits;
+      assert( qubits3(1) + 1 == qubits3(2) );
+
+      assert( isequal(qubits1, qubits3) );
+  
+      qubits2 = G2.qubits;
+      if isa( G2, 'qclab.qgates.QRotationGate2' )
+        assert( qubits2(1) + 1 == qubits2(2) );
+        assert( abs(qubits1(1) - qubits2(1)) == 1 );
+      elseif isa( G2, 'qclab.qgates.QRotationGate1' )
+        assert( max( abs(qubits1 - qubits2) ) == 1 );
+      else
+        error('unsupported input');
+      end      
+
+      % Create output objects of correct type
+      GA = feval( class(G2) );
+      GB = feval( class(obj) );
+      GC = feval( class(G2) );
+      
+      [rGA, rGB, rGC] = ...
+       qclab.turnoverSU2( obj.rotation, G2.rotation, G3.rotation );
+     
+      % update rotations
+      GA.update( rGA );
+      GB.update( rGB );
+      GC.update( rGC );
+
+      % update qubits
+      GA.setQubits( qubits2 );
+      GB.setQubits( qubits1 );
+      GC.setQubits( qubits2 );
+
+    end
+    
+    %> @brief Fuse two QRotationGate2 gates.
+    %> side = 'R': -[obj]-[other]-
+    %> side = 'L': -[other]-[obj]-
+    %> Result is independent of side.
+    function fuse(obj, other, side)
+      if nargin == 2, side = 'R'; end
+      assert(obj.equalType(other) && ~other.fixed && ...
+             ~obj.fixed && isequal(obj.qubits,other.qubits));
+      obj.update( obj.angle + other.angle ) ;
     end
     
     %> @brief Multiplication of two QRotationGate2 objects of equal type

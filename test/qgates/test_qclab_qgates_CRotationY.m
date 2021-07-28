@@ -134,6 +134,14 @@ classdef test_qclab_qgates_CRotationY < matlab.unittest.TestCase
       mat2 = kron(E1,eye(2)) + kron(E0,RY.matrix);
       test.verifyEqual( croty.matrix, mat2, 'AbsTol', eps );
       
+      % ctranspose
+      croty = qclab.qgates.CRotationY(1, 2, pi/3 ) ;
+      crotyp = croty';
+      test.verifyEqual( crotyp.nbQubits, int32(2) );
+      test.verifyEqual( crotyp.control, int32(1) );
+      test.verifyEqual( crotyp.target, int32(2) );
+      test.verifyEqual(crotyp.matrix, croty.matrix', 'AbsTol', eps );
+      
     end
     
     function test_CRotationY_constructors( test )

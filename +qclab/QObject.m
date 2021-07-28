@@ -37,6 +37,8 @@ classdef (Abstract) QObject < handle & ...
     [out] = toQASM(obj,fid, offset)
     %> @brief Checks if other equals this quantum object.
     [bool] = equals(obj,other)
+    %> @brief Return conjugate transpose of this quantum object.
+    [outprime] = ctranspose(obj)
   end
   % --------------------------------------------------------------------------
   
@@ -55,6 +57,34 @@ classdef (Abstract) QObject < handle & ...
     %> Default object to place in arrays of quantum objects
     function defaultQObject = getDefaultScalarElement
       defaultQObject = qclab.qgates.Identity ;
+    end
+  end
+  
+  methods (Sealed, Access = protected )
+    %> display Heterogeneous header
+    function header = getHeader(obj)
+         header = getHeader@matlab.mixin.CustomDisplay(obj);
+    end
+    
+    %> Property groups
+    function groups = getPropertyGroups(obj)
+         groups = getPropertyGroups@matlab.mixin.CustomDisplay(obj);
+    end
+    
+    %> display Heterogeneous footer
+    function footer = getFooter(obj)
+         footer = getFooter@matlab.mixin.CustomDisplay(obj);
+    end
+      
+    %> display Heterogeneous Arrays
+    function displayNonScalarObject(obj)
+      if length( obj ) ==  numel(obj) % vector
+        for i = 1:length( obj )
+         displayScalarObject( obj(i) ); 
+        end
+      else
+         displayNonScalarObject@matlab.mixin.CustomDisplay(obj);
+      end
     end
   end
 end % class QObject

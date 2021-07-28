@@ -34,7 +34,7 @@ classdef PauliY < qclab.qgates.QGate1
     % toQASM
     function [out] = toQASM(obj, fid, offset)
       if nargin == 2, offset = 0; end
-      fprintf(fid, 'y q[%d];\n', obj.qubit + offset);
+      qclab.IO.qasmPauliY( fid, obj.qubit + offset );
       out = 0;
     end
     

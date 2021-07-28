@@ -86,6 +86,14 @@ classdef test_qclab_qgates_CNOT < matlab.unittest.TestCase
       cnot.setControlState(0);
       test.verifyTrue( cnot ~= cnot2 );
       test.verifyFalse( cnot == cnot2 );
+      
+      % ctranspose
+       cnot = qclab.qgates.CNOT() ;
+       cnotp = cnot';
+       test.verifyEqual( cnotp.nbQubits, int32(2) );
+       test.verifyEqual( cnotp.control, int32(0) );
+       test.verifyEqual( cnotp.target, int32(1) );
+       test.verifyEqual(cnotp.matrix, cnot.matrix' );
     end
     
     function test_CNOT_copy(test)

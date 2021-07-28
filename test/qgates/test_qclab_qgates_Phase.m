@@ -77,6 +77,12 @@ classdef test_qclab_qgates_Phase < matlab.unittest.TestCase
       test.verifyTrue( Ph ~= Ph2 );
       test.verifyFalse( Ph == Ph2 );
       
+      % ctranspose
+      Ph = qclab.qgates.Phase(0, pi/3);
+      Php = Ph';
+      test.verifyEqual( Php.nbQubits, int32(1) );
+      test.verifyEqual(Php.matrix, Ph.matrix', 'AbsTol', eps );
+      
     end
     
     function test_Phase_constructors( test )

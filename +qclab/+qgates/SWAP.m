@@ -80,9 +80,8 @@ classdef SWAP < qclab.qgates.QGate2
     % toQASM
     function [out] = toQASM(obj, fid, offset)
       if nargin == 2, offset  = 0; end
-      fprintf(fid,'swap q[%d], q[%d];\n', obj.qubits_(1) + offset, ...
-          obj.qubits_(2) + offset);
-       out = 0;
+      qclab.IO.qasmSWAP( fid, obj.qubits + offset );  
+      out = 0;
     end
     
     % equals

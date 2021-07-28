@@ -40,6 +40,12 @@ classdef test_qclab_qgates_Phase90 < matlab.unittest.TestCase
       S2 = qclab.qgates.Phase90();
       test.verifyTrue( S == S2 );
       test.verifyFalse( S ~= S2 );
+      
+      % ctranspose
+      S = qclab.qgates.Phase90();
+      Sp = S';
+      test.verifyEqual( Sp.nbQubits, int32(1) );
+      test.verifyEqual(Sp.matrix, S.matrix', 'AbsTol', eps );
     end
   end
 end

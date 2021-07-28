@@ -101,9 +101,15 @@ classdef U3 < qclab.qgates.QGate1 & qclab.QAdjustable
     % toQASM
     function [out] = toQASM(obj, fid, offset)
       if nargin == 2, offset = 0; end
-      fprintf(fid,'u3(%.15f, %.15f, %.15f) q[%d];\n', obj.theta, obj.phi, ...
-              obj.lambda, obj.qubit_ + offset);
+      qclab.IO.qasmU3( fid, obj.qubit + offset, obj.theta, obj.phi, obj.lambda );
       out = 0;
+    end
+    
+    % ctranspose
+    function [objprime] = ctranspose( obj )
+      objprime = ctranspose@qclab.qgates.QGate1( obj );
+      objprime.setGlobalPhase( conj( obj.globalPhase ) );
+      objprime.update( -obj.theta, -obj.lambda, -obj.phi );
     end
     
     % equals

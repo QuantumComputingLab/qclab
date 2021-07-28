@@ -29,8 +29,7 @@ classdef RotationXX < qclab.qgates.QRotationGate2
     % toQASM
     function [out] = toQASM(obj,fid, offset)
       if nargin == 2, offset = 0; end
-      fprintf(fid,'rxx(%.15f) q[%d], q[%d];', obj.theta, ... 
-        obj.qubits_(1) + offset, obj.qubits_(2) + offset);
+      qclab.IO.qasmRotationXX( fid, obj.qubits + offset, obj.theta );
       out = 0;
     end
     
@@ -50,6 +49,15 @@ classdef RotationXX < qclab.qgates.QRotationGate2
       end
     end
     
+    %> convert XX rotation to YY rotation with same parameters
+    function G = qclab.qgates.RotationYY( obj )
+      G = qclab.qgates.RotationYY( obj.qubits, obj.angle );
+    end
+    
+    %> convert XX rotation to ZZ rotation with same parameters
+    function G = qclab.qgates.RotationZZ( obj )
+      G = qclab.qgates.RotationZZ( obj.qubits, obj.angle );
+    end
   end
   
   

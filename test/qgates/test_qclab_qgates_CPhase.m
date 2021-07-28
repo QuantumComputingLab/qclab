@@ -134,6 +134,15 @@ classdef test_qclab_qgates_CPhase < matlab.unittest.TestCase
       mat2 = kron(E1,eye(2)) + kron(E0,P.matrix);
       test.verifyEqual( cphase.matrix, mat2, 'AbsTol', eps );
       
+      % ctranspose
+      cphase = qclab.qgates.CPhase(1, 2, pi/3 ) ;
+      cphasep = cphase';
+      test.verifyEqual( cphasep.nbQubits, int32(2) );
+      test.verifyEqual( cphasep.control, int32(1) );
+      test.verifyEqual( cphasep.target, int32(2) );
+      test.verifyEqual(cphasep.matrix, cphase.matrix', 'AbsTol', eps );
+      
+      
     end
     
     function test_CPhase_constructors( test )

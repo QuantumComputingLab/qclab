@@ -75,6 +75,11 @@ classdef test_qclab_qgates_HandleGate1 < matlab.unittest.TestCase
       test.verifyFalse( H ~= HX );
       test.verifyTrue( H ~= HZ );
       test.verifyFalse( H == HZ );
+      
+      % ctranspose
+      Hp = H';
+      Xp = X';
+      test.verifyEqual(Hp.matrix, Xp.matrix );
     end
     
     function test_HandleGate1_QRotationGate1( test )
@@ -102,6 +107,11 @@ classdef test_qclab_qgates_HandleGate1 < matlab.unittest.TestCase
       
       test.verifyNotEqual( CR.theta, R.theta );
       test.verifyEqual( HR.theta, R.theta );
+      
+      % ctranspose
+      Hp = H';
+      Rp = R';
+      test.verifyEqual(Hp.matrix, Rp.matrix );
       
     end
     

@@ -49,7 +49,6 @@ classdef QAngle < handle & ...
       else
         obj.cos_ = varargin{1};
         obj.sin_ = varargin{2};
-        assert(abs( obj.cos_^2 + obj.sin_^2 - 1 ) < 10*eps);
       end
     end
     
@@ -95,7 +94,6 @@ classdef QAngle < handle & ...
           obj.sin_ = sin(varargin{1});
         end
       else
-        assert(varargin{1}^2 + varargin{2}^2 - 1 < 10*eps);
         obj.cos_ = varargin{1};
         obj.sin_ = varargin{2};
       end          

@@ -70,6 +70,10 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       circuit.draw(1, 'N');
       fprintf(1, '\n');
       
+      % ctranspose
+      circuitp = circuit';
+      test.verifyEqual(circuitp.matrix, circuit.matrix', 'AbsTol', 10*eps );
+      
     end
     
     function test_QCircuit_apply_matrix(test)
@@ -445,6 +449,10 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       fprintf(1, '\n');
       circuit.draw(1, 'S');
       fprintf(1, '\n');
+      
+      % ctranspose
+      circuitp = circuit';
+      test.verifyEqual(circuitp.matrix, circuit.matrix', 'AbsTol', 10*eps );
     end
     
     function test_QCircuit_In_QCircuit( test )
@@ -481,6 +489,10 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
        fprintf(1, '\n');
        C.draw(1, 'S');
        fprintf(1, '\n');
+       
+       % ctranspose
+      Cp = C';
+      test.verifyEqual(Cp.matrix, C.matrix', 'AbsTol', 10*eps );
     end
         
   end
