@@ -32,7 +32,7 @@ classdef (Abstract) QObject < handle & ...
     %> @brief Returns the unitary matrix corresponding to this quantum object. 
     [mat] = matrix(obj)
     %> @brief Applies this quantum object to the given matrix. 
-    [mat] = apply(obj,side,op,mat,offset)
+    [mat] = apply(obj,side,op, nbQubits, mat, offset)
     %> @brief Writes the QASM code of this quantum object to the given file id.
     [out] = toQASM(obj,fid, offset)
     %> @brief Checks if other equals this quantum object.
@@ -43,6 +43,13 @@ classdef (Abstract) QObject < handle & ...
   % --------------------------------------------------------------------------
   
   methods
+    %> Simulates this quantum object by applying it to a vector.
+    function [v] = simulate(obj, v)
+      nbQubits = log2(size(v,1));
+      assert(size(v,1) == 2^nbQubits);
+      v = obj.apply('R', 'N', nbQubits, v);
+    end
+    
     %> Checks if other is equal to this quantum object.
     function [bool] = eq(obj,other)
       bool = obj.equals(other);

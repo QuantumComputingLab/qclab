@@ -113,7 +113,7 @@ classdef CRotationX < qclab.qgates.QControlledGate2
     % ctranspose
     function objprime = ctranspose( obj )
       objprime = ctranspose@qclab.qgates.QControlledGate2( obj );
-      objprime.update( -obj.angle );
+      objprime.gate_ = obj.gate_';
     end
     
     %> Makes this controlled rotation-X gate fixed.

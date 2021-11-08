@@ -148,6 +148,37 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       test.verifyEqual( mat2, kron(mat', I1), 'AbsTol', eps );
     end
     
+    function test_QCircuit_simulate(test)
+      
+      H = @qclab.qgates.Hadamard ;
+      X = @qclab.qgates.PauliX ;
+      I1 = qclab.qId( 1 );
+      H0 = H(0);
+      X0 = X(0);
+      
+      circuit2 = qclab.QCircuit( 2 );
+      v = [1; 0; 0; 0];
+      
+      circuit2.push_back( H(0) );
+      w = circuit2.simulate(v);
+      
+      test.verifyEqual( w, kron(H0.matrix,I1)*v, 'AbsTol', eps)
+      
+      circuit2.push_back( H(1) );
+      w = circuit2.simulate(v);
+      
+      test.verifyEqual( w, kron(H0.matrix,H0.matrix)*v, 'AbsTol', eps)
+      
+      circuit2.push_back( X(0) );
+      
+      w = circuit2.simulate(v);
+      
+      test.verifyEqual( w, kron(X0.matrix * H0.matrix,H0.matrix)*v, ...
+         'AbsTol', eps)
+      
+      
+    end
+    
     function test_QCircuit_QASM(test)
       X = @qclab.qgates.PauliX ;
       Y = @qclab.qgates.PauliY ;

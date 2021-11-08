@@ -19,7 +19,7 @@ classdef QControlledGate2 < qclab.qgates.QGate2
     % Class constructor  =======================================================
     %> @brief Constructor for  2-qubit gates of controlled 1-qubit gates.
     %>
-    %> Constructs a 2-qubit gate with the given control qubit `qubit` on the 
+    %> Constructs a 2-qubit gate with the given control qubit `control` on the 
     %> control state `controlState`. The default control state is 1.
     %>
     %> @param control control qubit index

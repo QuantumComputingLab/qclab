@@ -55,6 +55,20 @@ classdef IO
       qclab.IO.qasmQControlledGate2( fid, control, controlState, gateString );
     end
     
+    % qasmCU2
+    function qasmCU2( fid, control, target, controlState, phi, lambda )
+      gateString = sprintf( 'cu2(%.15f, %.15f) q[%d], q[%d];\n', phi, ...
+                           lambda, control, target );
+      qclab.IO.qasmQControlledGate2( fid, control, controlState, gateString );
+    end
+    
+    % qasmCU3
+    function qasmCU3( fid, control, target, controlState, theta, phi, lambda )
+      gateString = sprintf( 'cu3(%.15f, %.15f, %.15f) q[%d], q[%d];\n', theta, ...
+                           phi, lambda, control, target );
+      qclab.IO.qasmQControlledGate2( fid, control, controlState, gateString );
+    end
+    
     % qasmQControlledGate2
     function qasmQControlledGate2( fid, control, controlState, gateString )
       if (controlState == 0)

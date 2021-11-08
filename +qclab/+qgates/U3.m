@@ -29,7 +29,7 @@ classdef U3 < qclab.qgates.QGate1 & qclab.QAdjustable
     %> @brief Constructor for U3 gates
     %>
     %> The U3 class constructor supports 5 ways of constructing a 1-qubit
-    %> U2 gate:
+    %> U3 gate:
     %>
     %> 1. U3() : Default Constructor. Constructs an adjustable 1-qubit U3 
     %>    gate with `qubit` set to 0 and \f$\theta = \phi = \lambda = 0\f$.
