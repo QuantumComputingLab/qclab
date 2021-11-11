@@ -272,8 +272,9 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
         thisGateCell = obj.gates_( i ).draw( 0, parameter, 0 );
         
         % ensure thisQubits is a list of all qubits the gate is drawn on
-        if length( thisQubits ) ~= size( thisGateCell, 1 )/3 % CNOT, SWAP, CRX..
-          thisQubits = thisQubits(1):thisQubits(2);
+        if length( thisQubits ) ~= size( thisGateCell, 1 )/3
+          % CNOT, SWAP, CRX, MCX..
+          thisQubits = min(thisQubits):max(thisQubits);
         end
         
         % left-most character thisGateCell can be drawn on

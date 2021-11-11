@@ -526,5 +526,86 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       test.verifyEqual(Cp.matrix, C.matrix', 'AbsTol', 10*eps );
     end
         
+    function test_QCircuit_MCGate( test )
+      C = qclab.QCircuit( 8 );
+      MCX = @qclab.qgates.MCX;
+      target = 3 ;
+      ctrl = [1,5,6] ;
+      
+      C.push_back( MCX(ctrl, target, [0,0,0]) );
+      
+      % draw the circuit
+      fprintf(1, '\n');
+      C.draw(1, 'S');
+      fprintf(1, '\n');
+      
+      C.push_back( MCX(ctrl, target, [0,0,1]) );
+      
+      % draw the circuit
+      fprintf(1, '\n');
+      C.draw(1, 'S');
+      fprintf(1, '\n');
+      
+      C.push_back( MCX(ctrl, target, [0,1,0]) );
+      
+      % draw the circuit
+      fprintf(1, '\n');
+      C.draw(1, 'S');
+      fprintf(1, '\n');
+      
+      C.push_back( MCX(ctrl, target, [0,1,1]) );
+      
+      % draw the circuit
+      fprintf(1, '\n');
+      C.draw(1, 'S');
+      fprintf(1, '\n');
+      
+      C.push_back( MCX(ctrl, target, [1,0,0]) );
+      
+      % draw the circuit
+      fprintf(1, '\n');
+      C.draw(1, 'S');
+      fprintf(1, '\n');
+      
+      C.push_back( MCX(ctrl, target, [1,0,1]) );
+      
+      % draw the circuit
+      fprintf(1, '\n');
+      C.draw(1, 'S');
+      fprintf(1, '\n');
+      
+      C.push_back( MCX(ctrl, target, [1,1,0]) );
+      
+      % draw the circuit
+      fprintf(1, '\n');
+      C.draw(1, 'S');
+      fprintf(1, '\n');
+      
+      C.push_back( MCX(ctrl, target, [1,1,1]) );
+      
+      % draw the circuit
+      fprintf(1, '\n');
+      C.draw(1, 'S');
+      fprintf(1, '\n');
+      
+      Cref = qclab.QCircuit( 8 );
+      Cref.push_back( qclab.qgates.PauliX( target ) );
+      
+      test.verifyEqual(C.matrix, Cref.matrix, 'AbsTol', 10*eps );
+      
+      C.push_back( qclab.qgates.Hadamard( 0 ) );
+      
+      C.push_back( qclab.qgates.RotationY( 2, pi/3 ) );
+      
+      C.push_back( qclab.qgates.MCRotationZ([4,7], 3, [0,0], pi/5 ) );
+      
+      
+      % draw the circuit
+      fprintf(1, '\n');
+      C.draw(1, 'S');
+      fprintf(1, '\n');
+      
+      C.matrix ;
+    end
   end
 end

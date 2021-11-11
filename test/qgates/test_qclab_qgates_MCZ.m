@@ -89,6 +89,8 @@ classdef test_qclab_qgates_MCZ < matlab.unittest.TestCase
       ICdown = qclab.qId(log2(size(Cdown,1))) - Cdown;
 
       mat_check = kron(Cup, kron(Z, Cdown)) + ...
+                  kron(ICup, kron(I1, Cdown)) + ...
+                  kron(Cup, kron(I1, ICdown)) + ...
                   kron(ICup, kron(I1, ICdown)) ;
       test.verifyEqual(mat, mat_check );       
       
@@ -101,6 +103,17 @@ classdef test_qclab_qgates_MCZ < matlab.unittest.TestCase
       
       gate = MCZ([2,3,5],1,[0,0,0]);
       gate.draw();
+      
+      % unitarity tests
+      target = 3 ;
+      ctrl = [1,5,6] ;
+      gate =  MCZ(ctrl, target, [0,0,0]);
+      gatemat = gate.matrix ;
+      test.verifyEqual(gatemat'*gatemat, eye(size(gatemat)),'AbsTol', eps);
+      
+      mat = qclab.qId(7);
+      mat = gate.apply('R', 'N', 7, mat);
+      test.verifyEqual(mat'*mat, eye(size(mat)),'AbsTol', eps);
     end
   end
 end

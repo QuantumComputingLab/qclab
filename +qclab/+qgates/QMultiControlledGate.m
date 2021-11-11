@@ -101,8 +101,18 @@ classdef QMultiControlledGate < qclab.QObject
       else
         ICdown = 1;
       end
-      mat = kron(kron(Cup,gate_mat),Cdown) + ...
-            kron(kron(ICup,I1),ICdown) ;
+      if size(Cup,1) == 1 
+        mat = kron(gate_mat,Cdown) + ...
+              kron(I1,ICdown) ;
+      elseif size(Cdown,1) == 1
+        mat = kron(Cup,gate_mat) + ...
+              kron(ICup,I1) ;
+      else
+        mat = kron(kron(Cup,gate_mat),Cdown) + ...
+              kron(kron(Cup,I1),ICdown) + ...
+              kron(kron(ICup,I1),Cdown) + ...
+              kron(kron(ICup,I1),ICdown) ;
+      end
     end
     
     % ==========================================================================
@@ -181,8 +191,18 @@ classdef QMultiControlledGate < qclab.QObject
          ICdown = qclab.qId(log2(size(Cdown,1))) - Cdown;
          Sdown = qclab.qId(controls(target_idx) - target - 1);
       end
-      mats = kron(Cup,kron(Sup,kron(mat1,kron(Sdown,Cdown)))) + ...
-             kron(ICup,kron(Sup,kron(I1,kron(Sdown,ICdown)))) ;
+      if size(Cup,1) == 1
+        mats = kron(mat1,kron(Sdown,Cdown)) + ...
+               kron(I1,kron(Sdown,ICdown)) ;
+      elseif size(Cdown,1) == 1
+        mats = kron(Cup,kron(Sup,mat1)) + ...
+               kron(ICup,kron(Sup,I1)) ;
+      else
+        mats = kron(Cup,kron(Sup,kron(mat1,kron(Sdown,Cdown)))) + ...
+               kron(Cup,kron(Sup,kron(I1,kron(Sdown,ICdown)))) + ...
+               kron(ICup,kron(Sup,kron(I1,kron(Sdown,Cdown)))) + ...
+               kron(ICup,kron(Sup,kron(I1,kron(Sdown,ICdown)))) ;
+      end
       s = log2(size(mats,1));
 
       if ( minq == 0 && maxq == nbQubits - 1)
