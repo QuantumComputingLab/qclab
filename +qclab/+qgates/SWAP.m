@@ -72,9 +72,9 @@ classdef SWAP < qclab.qgates.QGate2
       assert( qubits(1) < nbQubits && qubits(2) < nbQubits ); 
       cnot01 = qclab.qgates.CNOT( qubits(1), qubits(2) );
       cnot10 = qclab.qgates.CNOT( qubits(2), qubits(1) );
-      mat = cnot01.apply( side, op, nbQubits, mat, offset );
-      mat = cnot10.apply( side, op, nbQubits, mat, offset );
-      mat = cnot01.apply( side, op, nbQubits, mat, offset );
+      mat = cnot01.apply( side, op, nbQubits, mat, 0 );
+      mat = cnot10.apply( side, op, nbQubits, mat, 0 );
+      mat = cnot01.apply( side, op, nbQubits, mat, 0 );
     end
      
     % toQASM

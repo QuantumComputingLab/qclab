@@ -76,6 +76,35 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       
     end
     
+    function test_QCircuit_matrix_offset(test)
+      c1 = qclab.QCircuit(3, 1) ;
+      c2 = qclab.QCircuit(4, 2) ;
+      C = qclab.QCircuit(6) ;
+      Cref = qclab.QCircuit(6) ;
+      
+      SWAP = @qclab.qgates.SWAP ;
+      CNOT = @qclab.qgates.CNOT ;
+      MCX = @qclab.qgates.MCX ;      
+      U3 = @qclab.qgates.U3 ;
+      
+      c1.push_back( SWAP(0,2) );
+      c1.push_back( U3(2, 0.1, 0.2, 0.3) );
+      
+      Cref.push_back( SWAP(1,3) );
+      Cref.push_back( U3(3, 0.1, 0.2, 0.3) );
+      
+      C.push_back( c1 );
+      test.verifyEqual( C.matrix, Cref.matrix, 'AbsTol', 10*eps );
+      
+      c2.push_back(CNOT(2,3));
+      Cref.push_back(CNOT(4,5));
+      c2.push_back(MCX([0,3],1,[0,1]));
+      Cref.push_back(MCX([2,5],3,[0,1]));
+      
+      C.push_back( c2 );
+      test.verifyEqual( C.matrix, Cref.matrix, 'AbsTol', 10*eps );
+    end
+    
     function test_QCircuit_apply_matrix(test)
       
       H = @qclab.qgates.Hadamard ;
@@ -606,6 +635,10 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       fprintf(1, '\n');
       
       C.matrix ;
+      
+      C.clear ;
+      C.push_back( MCX([2,3,4], 1, [0,0,0]) );
+      C.draw() ;
     end
   end
 end
