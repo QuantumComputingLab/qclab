@@ -38,10 +38,15 @@ classdef RotationZZ < qclab.qgates.QRotationGate2
       bool = isa(other,'qclab.qgates.RotationZZ');
     end
     
-    % label for draw function
-    function [label] = label(obj, parameter)
+    % label for draw and tex function
+    function [label] = label(obj, parameter, tex)
       if nargin < 2, parameter = 'N'; end
-      label = 'RZZ';        
+      if nargin < 3, tex = false; end
+      if tex
+        label = 'R_{zz}';
+      else
+        label = 'RZZ';
+      end
       if strcmp(parameter, 'S') % short parameter
         label = sprintf([label, '(%.4f)'], obj.theta);
       elseif strcmp(parameter, 'L') % long parameter

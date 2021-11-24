@@ -188,11 +188,93 @@ classdef MCX < qclab.qgates.QMultiControlledGate
       
     end
     
-    % label for draw function
-    function [label] = label(obj, parameter)
-      if nargin < 2, parameter = 'N'; end
-      label = obj.gate_.label( parameter );
+        % TODO: doc
+    function [out] = toTex(obj, fid, parameter, offset)
+      if nargin < 2, fid = 1; end
+      if nargin < 3, parameter = 'N'; end
+      if nargin < 4, offset = 0; end
+      controls = obj.controls ;
+      target = obj.target ;
+      minq = min([controls(1), target]);
+      maxq = max([controls(end), target]);
+      target_idx = find(controls > target, 1);
+      if isempty(target_idx)
+        target_idx = length(controls) + 1;
+      end
+      
+      gateCell = cell( maxq-minq+1, 1 );
+      
+      % XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      cellRow = 1; controlIdx = 1;      
+      % upper part (if any)
+      if target_idx > 1
+        for i = controls(1):controls(target_idx-1)
+          if i == controls(controlIdx) % it is a controlled node
+            if controlIdx < target_idx - 1
+              diffq = controls(controlIdx+1) - controls(controlIdx) ;
+            else
+              diffq = target - controls(controlIdx) ;
+            end
+            
+            if obj.controlStates_(controlIdx) == 0
+              gateCell{cellRow} = ['&\t\\ctrlo{', num2str(diffq), '}\t'] ;
+            else
+              gateCell{cellRow} = ['&\t\\ctrl{', num2str(diffq), '}\t'] ;
+            end
+            controlIdx = controlIdx + 1 ;
+          else
+            gateCell{cellRow} = '&\t\\qw\t' ;
+          end
+          cellRow = cellRow + 1 ;        
+        end
+        % connect to gate
+        for i = controls(target_idx-1)+1:target-1
+          gateCell{cellRow} = '&\t\\qw\t' ;
+          cellRow = cellRow + 1 ;             
+        end
+      end
+      % gate
+      gateCell{cellRow} = '&\t\\targ\t' ;
+      cellRow = cellRow + 1 ;             
+      % lower part (if any)
+      if target_idx <= length(controls)
+        % connect to next control
+        for i = target+1:controls(target_idx)-1
+          gateCell{cellRow} = '&\t\\qw\t' ;
+          cellRow = cellRow + 1 ;         
+        end
+        % lower controls
+        for i = controls(target_idx):controls(end)
+           if i == controls(controlIdx) % it is a controlled node
+            if controlIdx == target_idx
+              diffq = target - controls(controlIdx) ;
+            else
+              diffq = controls(controlIdx-1) - controls(controlIdx) ; 
+            end
+            if obj.controlStates_(controlIdx) == 0
+              gateCell{cellRow} = ['&\t\\ctrlo{', num2str(diffq), '}\t'] ;
+            else
+              gateCell{cellRow} = ['&\t\\ctrl{', num2str(diffq), '}\t'] ;
+            end
+            controlIdx = controlIdx + 1 ;
+           else
+             gateCell{cellRow} = '&\t\\qw\t' ;
+           end
+           cellRow = cellRow + 1 ; 
+        end
+      end
+      % XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      
+      if fid > 0
+        qubits = (minq:maxq) + offset;
+        qclab.toTexCellArray( fid, gateCell, qubits );
+        out = 0;
+      else
+        out = gateCell ;
+      end
+      
     end
+    
   end
   
   methods (Static)

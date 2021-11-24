@@ -104,6 +104,16 @@ classdef test_qclab_qgates_MCY < matlab.unittest.TestCase
       gate = MCY([2,3,5],1,[0,0,0]);
       gate.draw();
       
+      % TeX tests
+      gate = MCY([0,2],4,[1,0]);
+      gate.toTex();
+      
+      gate = MCY([0,2,6],4,[1,0,0]);
+      gate.toTex();
+      
+      gate = MCY([2,3,5],1,[0,0,0]);
+      gate.toTex();
+      
       % unitarity tests
       target = 3 ;
       ctrl = [1,5,6] ;

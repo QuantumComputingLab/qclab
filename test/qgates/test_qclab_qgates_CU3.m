@@ -55,6 +55,27 @@ classdef test_qclab_qgates_CU3 < matlab.unittest.TestCase
       cu3.setControl(0);
       cu3.update( 0, 0, 0 );
       
+      % TeX
+      [out] = cu3.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      
+      cu3.setControlState( 0  );
+      [out] = cu3.toTex(1, 'S');
+      test.verifyEqual( out, 0 );
+      
+      cu3.setControl(3);
+      cu3.update( pi/3, pi/5, pi/7 );
+      [out] = cu3.toTex(1, 'L');
+      test.verifyEqual( out, 0 );
+      
+      cu3.setControlState(1);
+      [out] = cu3.toTex(0, 'N');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [3, 1] );
+      
+      cu3.setControl(0);
+      cu3.update( 0, 0, 0 );      
+      
       % gate
       U3 = qclab.qgates.U3() ;
       test.verifyTrue( cu3.gate == U3 );

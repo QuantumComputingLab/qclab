@@ -37,7 +37,7 @@ classdef test_qclab_qgates_CNOT < matlab.unittest.TestCase
       QASMstring = 'cx q[0], q[1];';
       test.verifyEqual(T(1:length(QASMstring)), QASMstring);
       
-      % draw gate
+      % draw
       [out] = cnot.draw(1, 'N');
       test.verifyEqual( out, 0 );
       
@@ -53,6 +53,25 @@ classdef test_qclab_qgates_CNOT < matlab.unittest.TestCase
       [out] = cnot.draw(0, 'N');
       test.verifyTrue( isa(out, 'cell') );
       test.verifySize( out, [9, 1] );
+      
+      cnot.setControl(0);
+      
+      % TeX
+      [out] = cnot.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      
+      cnot.setControlState( 0 );
+      [out] = cnot.toTex(1, 'S');
+      test.verifyEqual( out, 0 );
+      
+      cnot.setControl(3);
+      [out] = cnot.toTex(1, 'L');
+      test.verifyEqual( out, 0 );
+      
+      cnot.setControlState(1);
+      [out] = cnot.toTex(0, 'N');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [3, 1] );
       
       cnot.setControl(0);
       

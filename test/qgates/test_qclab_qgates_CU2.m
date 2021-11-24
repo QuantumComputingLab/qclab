@@ -58,6 +58,27 @@ classdef test_qclab_qgates_CU2 < matlab.unittest.TestCase
       cu2.setControl(0);
       cu2.update( 0, 0 );
       
+      % TeX
+      [out] = cu2.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      
+      cu2.setControlState( 0  );
+      [out] = cu2.toTex(1, 'S');
+      test.verifyEqual( out, 0 );
+      
+      cu2.setControl(3);
+      cu2.update( pi/3, pi/5 );
+      [out] = cu2.toTex(1, 'L');
+      test.verifyEqual( out, 0 );
+      
+      cu2.setControlState(1);
+      [out] = cu2.toTex(0, 'N');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [3, 1] );
+      
+      cu2.setControl(0);
+      cu2.update( 0, 0 );
+      
       % gate
       U2 = qclab.qgates.U2() ;
       test.verifyTrue( cu2.gate == U2 );

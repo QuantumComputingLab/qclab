@@ -74,6 +74,15 @@ classdef test_qclab_qgates_U2 < matlab.unittest.TestCase
       test.verifyTrue( isa(out, 'cell') );
       test.verifySize( out, [3, 1] );
       
+      % TeX
+      [out] = u2.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = u2.toTex(1, 'S');
+      test.verifyEqual( out, 0 );
+      [out] = u2.toTex(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [1, 1] );
+      
       % update(cos_phi, sin_phi, cos_lambda, sin_lambda)
       u2.update( cos(pi/3), sin(pi/3), cos(-pi/7), sin(-pi/7) );
       test.verifyEqual( u2.phi, pi/3, 'AbsTol', eps );

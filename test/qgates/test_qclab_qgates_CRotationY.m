@@ -54,6 +54,27 @@ classdef test_qclab_qgates_CRotationY < matlab.unittest.TestCase
       croty.setControl(0);
       croty.update( 0 );
       
+      % TeX
+      [out] = croty.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      
+      croty.setControlState( 0  );
+      [out] = croty.toTex(1, 'S');
+      test.verifyEqual( out, 0 );
+      
+      croty.setControl(3);
+      croty.update( pi/3 );
+      [out] = croty.toTex(1, 'L');
+      test.verifyEqual( out, 0 );
+      
+      croty.setControlState(1);
+      [out] = croty.toTex(0, 'N');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [3, 1] );
+      
+      croty.setControl(0);
+      croty.update( 0 );
+      
       % gate
       RY = qclab.qgates.RotationY() ;
       test.verifyTrue( croty.gate == RY );

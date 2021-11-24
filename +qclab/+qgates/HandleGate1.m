@@ -87,6 +87,14 @@ classdef HandleGate1 < qclab.qgates.QGate1
       out = obj.gate_.draw(fid, parameter, obj.offset_ + offset );
     end
     
+    % toTex
+    function [out] = toTex(obj, fid, parameter, offset)
+      if nargin < 2, fid = 1; end
+      if nargin < 3, parameter = 'N'; end
+      if nargin < 4, offset = 0; end
+      out = obj.gate_.toTex(fid, parameter, obj.offset_ + offset );
+    end
+    
     %> @brief Returns the qubit offset of this 1-qubit handle gate.
     function [offset] = offset(obj)
       offset = obj.offset_ ;

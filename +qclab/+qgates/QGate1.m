@@ -147,6 +147,37 @@ classdef QGate1 < qclab.QObject
       end
     end
     
+    % ==========================================================================
+    %> @brief Save a 1-qubit gate to TeX file
+    %>
+    %> @param obj 1-qubit gate
+    %> @param fid  file id to draw to:
+    %>              - 0  : return cell array with ascii characters as `out`
+    %>              - 1  : draw to command window (default)
+    %>              - >1 : draw to (open) file id
+    %> @param parameter 'N': don't print parameter (default), 'S': print short 
+    %>                  parameter, 'L': print long parameter.
+    %> @param offset qubit offset. Default is 0.
+    %>
+    %> @retval out if fid > 0 then out == 0 on succesfull completion, otherwise
+    %>             out contains a cell array with the drawing info.
+    % ==========================================================================
+    function [out] = toTex(obj, fid, parameter, offset)
+      if nargin < 2, fid = 1; end
+      if nargin < 3, parameter = 'N'; end
+      if nargin < 4, offset = 0; end
+      gateCell = cell(1,1) ;
+      label = obj.label( parameter, true );
+      gateCell{1} = ['&\t\\gate{', label,'}\t'] ;
+      if fid > 0
+        qubit = obj.qubit + offset ;
+        qclab.toTexCellArray( fid, gateCell, qubit );
+        out = 0;
+      else
+        out = gateCell;
+      end
+    end
+    
   end
   
   methods (Static)

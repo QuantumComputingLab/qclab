@@ -56,6 +56,25 @@ classdef test_qclab_qgates_CZ < matlab.unittest.TestCase
       
       cz.setControl(0);
       
+      % TeX
+      [out] = cz.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      
+      cz.setControlState( 0 );
+      [out] = cz.toTex(1, 'S');
+      test.verifyEqual( out, 0 );
+      
+      cz.setControl(3);
+      [out] = cz.toTex(1, 'L');
+      test.verifyEqual( out, 0 );
+      
+      cz.setControlState(1);
+      [out] = cz.toTex(0, 'N');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [3, 1] );
+      
+      cz.setControl(0);
+      
       % gate
       Z = qclab.qgates.PauliZ ;
       test.verifyTrue( cz.gate == Z );

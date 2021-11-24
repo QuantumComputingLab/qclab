@@ -35,6 +35,13 @@ classdef test_qclab_qgates_HandleGate1 < matlab.unittest.TestCase
       test.verifyTrue( isa(out, 'cell') );
       test.verifySize( out, [3, 1] );
       
+      % TeX
+      [out] = H.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = H.toTex(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [1, 1] );
+      
       % offset
       H.setOffset( 3 );
       test.verifyEqual( H.qubit, int32(3) );
@@ -51,6 +58,13 @@ classdef test_qclab_qgates_HandleGate1 < matlab.unittest.TestCase
       [out] = H.draw(0, 'L');
       test.verifyTrue( isa(out, 'cell') );
       test.verifySize( out, [3, 1] );
+      
+      % TeX with offset
+      [out] = H.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = H.toTex(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [1, 1] );
       
       % handle
       HX = H.gateHandle ;

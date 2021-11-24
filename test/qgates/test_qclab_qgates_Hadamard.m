@@ -37,6 +37,12 @@ classdef test_qclab_qgates_Hadamard < matlab.unittest.TestCase
       test.verifyTrue( isa(out, 'cell') );
       test.verifySize( out, [3, 1] );
       
+      % TeX gate
+      [out] = H.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = H.toTex(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [1, 1] );
       
       % operators == and ~=
       H2 = qclab.qgates.Hadamard();

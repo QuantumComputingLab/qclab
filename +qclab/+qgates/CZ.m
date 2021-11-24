@@ -84,10 +84,11 @@ classdef CZ < qclab.qgates.QControlledGate2
       obj.gate_.setQubit( target );
     end
     
-    % label for draw function
-    function [label] = label(obj, parameter)
+    % label for draw and tex function
+    function [label] = label(obj, parameter, tex )
       if nargin < 2, parameter = 'N'; end
-      label = obj.gate_.label( parameter );
+      if nargin < 3, tex = false; end
+      label = obj.gate_.label( parameter, tex );
     end
     
   end

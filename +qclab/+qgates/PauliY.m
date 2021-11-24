@@ -23,8 +23,8 @@ classdef PauliY < qclab.qgates.QGate1
       mat = [0 -1i; 1i 0];
     end
     
-    % label for draw function
-    function [label] = label(obj, parameter)
+    % label for draw and tex function
+    function [label] = label(obj, parameter, tex )
       label = 'Y';
     end
     

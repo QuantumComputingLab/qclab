@@ -70,6 +70,11 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       circuit.draw(1, 'N');
       fprintf(1, '\n');
       
+      % TeX the circuit
+      fprintf(1, '\n');
+      circuit.toTex(1, 'N');
+      fprintf(1, '\n');
+      
       % ctranspose
       circuitp = circuit';
       test.verifyEqual(circuitp.matrix, circuit.matrix', 'AbsTol', 10*eps );
@@ -510,6 +515,11 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       circuit.draw(1, 'S');
       fprintf(1, '\n');
       
+      % TeX the circuit
+      fprintf(1, '\n');
+      circuit.toTex(1, 'S');
+      fprintf(1, '\n');
+      
       % ctranspose
       circuitp = circuit';
       test.verifyEqual(circuitp.matrix, circuit.matrix', 'AbsTol', 10*eps );
@@ -550,6 +560,11 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
        C.draw(1, 'S');
        fprintf(1, '\n');
        
+      % TeX the circuit
+      fprintf(1, '\n');
+      C.toTex(1, 'S');
+      fprintf(1, '\n');
+       
        % ctranspose
       Cp = C';
       test.verifyEqual(Cp.matrix, C.matrix', 'AbsTol', 10*eps );
@@ -568,11 +583,21 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       C.draw(1, 'S');
       fprintf(1, '\n');
       
+      % TeX the circuit
+      fprintf(1, '\n');
+      C.toTex(1, 'S');
+      fprintf(1, '\n');
+      
       C.push_back( MCX(ctrl, target, [0,0,1]) );
       
       % draw the circuit
       fprintf(1, '\n');
       C.draw(1, 'S');
+      fprintf(1, '\n');
+      
+      % TeX the circuit
+      fprintf(1, '\n');
+      C.toTex(1, 'S');
       fprintf(1, '\n');
       
       C.push_back( MCX(ctrl, target, [0,1,0]) );
@@ -582,11 +607,21 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       C.draw(1, 'S');
       fprintf(1, '\n');
       
+      % TeX the circuit
+      fprintf(1, '\n');
+      C.toTex(1, 'S');
+      fprintf(1, '\n');
+      
       C.push_back( MCX(ctrl, target, [0,1,1]) );
       
       % draw the circuit
       fprintf(1, '\n');
       C.draw(1, 'S');
+      fprintf(1, '\n');
+      
+      % TeX the circuit
+      fprintf(1, '\n');
+      C.toTex(1, 'S');
       fprintf(1, '\n');
       
       C.push_back( MCX(ctrl, target, [1,0,0]) );
@@ -596,11 +631,21 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       C.draw(1, 'S');
       fprintf(1, '\n');
       
+      % TeX the circuit
+      fprintf(1, '\n');
+      C.toTex(1, 'S');
+      fprintf(1, '\n');
+      
       C.push_back( MCX(ctrl, target, [1,0,1]) );
       
       % draw the circuit
       fprintf(1, '\n');
       C.draw(1, 'S');
+      fprintf(1, '\n');
+      
+      % TeX the circuit
+      fprintf(1, '\n');
+      C.toTex(1, 'S');
       fprintf(1, '\n');
       
       C.push_back( MCX(ctrl, target, [1,1,0]) );
@@ -610,11 +655,21 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       C.draw(1, 'S');
       fprintf(1, '\n');
       
+      % TeX the circuit
+      fprintf(1, '\n');
+      C.toTex(1, 'S');
+      fprintf(1, '\n');
+      
       C.push_back( MCX(ctrl, target, [1,1,1]) );
       
       % draw the circuit
       fprintf(1, '\n');
       C.draw(1, 'S');
+      fprintf(1, '\n');
+      
+      % TeX the circuit
+      fprintf(1, '\n');
+      C.toTex(1, 'S');
       fprintf(1, '\n');
       
       Cref = qclab.QCircuit( 8 );
@@ -632,6 +687,11 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       % draw the circuit
       fprintf(1, '\n');
       C.draw(1, 'S');
+      fprintf(1, '\n');
+      
+      % TeX the circuit
+      fprintf(1, '\n');
+      C.toTex(1, 'S');
       fprintf(1, '\n');
       
       C.matrix ;

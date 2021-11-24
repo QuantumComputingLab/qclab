@@ -54,6 +54,27 @@ classdef test_qclab_qgates_CPhase < matlab.unittest.TestCase
       cphase.setControl(0);
       cphase.update( 0 );
       
+      % TeX
+      [out] = cphase.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      
+      cphase.setControlState( 0 ); 
+      [out] = cphase.toTex(1, 'S');
+      test.verifyEqual( out, 0 );
+      
+      cphase.setControl(3);
+      cphase.update( pi/3 );
+      [out] = cphase.toTex(1, 'L');
+      test.verifyEqual( out, 0 );
+      
+      cphase.setControlState(1);
+      [out] = cphase.toTex(0, 'N');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [3, 1] );
+      
+      cphase.setControl(0);
+      cphase.update( 0 );
+      
       % gate
       P = qclab.qgates.Phase() ;
       test.verifyTrue( cphase.gate == P );

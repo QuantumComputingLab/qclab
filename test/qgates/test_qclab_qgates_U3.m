@@ -88,6 +88,15 @@ classdef test_qclab_qgates_U3 < matlab.unittest.TestCase
       test.verifyTrue( isa(out, 'cell') );
       test.verifySize( out, [3, 1] );
       
+      % TeX gate
+      [out] = u3.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = u3.toTex(1, 'S');
+      test.verifyEqual( out, 0 );
+      [out] = u3.toTex(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [1, 1] );
+      
       % global phase
       test.verifyEqual( u3.globalPhase, 1, 'AbsTol', eps );  
       u3.setGlobalPhase( exp(1i * 8) );

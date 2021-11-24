@@ -34,9 +34,13 @@ classdef (Abstract) QObject < handle & ...
     %> @brief Applies this quantum object to the given matrix. 
     [mat] = apply(obj,side,op, nbQubits, mat, offset)
     %> @brief Writes the QASM code of this quantum object to the given file id.
-    [out] = toQASM(obj,fid, offset)
+    [out] = toQASM(obj, fid, offset)
     %> @brief Checks if other equals this quantum object.
     [bool] = equals(obj,other)
+    %> @brief Draws the quantum circuit diagram
+    [out] = draw(obj, fid, parameter, offset)
+    %> @brief Saves the quantum circuit diagram as tex
+    [out] = toTex(obj, fid, parameter, offset)
     %> @brief Return conjugate transpose of this quantum object.
     [outprime] = ctranspose(obj)
   end

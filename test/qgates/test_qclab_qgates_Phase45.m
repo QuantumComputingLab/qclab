@@ -36,6 +36,12 @@ classdef test_qclab_qgates_Phase45 < matlab.unittest.TestCase
       test.verifyTrue( isa(out, 'cell') );
       test.verifySize( out, [3, 1] );
       
+      % TeX gate
+      [out] = T.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = T.toTex(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [1, 1] );
       
       % operators == and ~=
       T2 = qclab.qgates.Phase45();

@@ -24,7 +24,7 @@ H = @qclab.qgates.Hadamard ;
 X = @qclab.qgates.PauliX ;
 CNOT = @qclab.qgates.CNOT ;
 
-nbQubits = 5 ; % the length of the input string
+nbQubits = 3 ; % the length of the input string
 
 % Constant Oracle
 % ------------------------------------------------------------------------------
@@ -38,6 +38,10 @@ end
 % Draw the constant oracle
 fprintf( 1, '\n\nConstant oracle:\n\n' );
 constantOracle.draw ;
+% TeX circuit
+fID = fopen('constant_oracle.tex','w');
+constantOracle.toTex(fID, 'S');
+fclose(fID);
 
 % Balanced Oracle
 % ------------------------------------------------------------------------------
@@ -64,9 +68,13 @@ for qubit = 1:length(bitString)
   end
 end
 
-% Draw the balanced oracle
+% Draw the balanced oracle and write to TeX
 fprintf( 1, '\n\nBalanced oracle:\n\n' );
 balancedOracle.draw ;
+% TeX circuit
+fID = fopen('balanced_oracle.tex','w');
+balancedOracle.toTex(fID, 'S');
+fclose(fID);
 
 % Complete Deutsch-Josza circuit
 % ------------------------------------------------------------------------------
@@ -98,6 +106,10 @@ end
 % Draw the Deutsch-Josza circuit
 fprintf( 1, '\n\nDeutsch-Josza circuit:\n\n' );
 djCircuit.draw ;
+% TeX circuit
+fID = fopen('Deutsch_Josza.tex','w');
+djCircuit.toTex(fID, 'S');
+fclose(fID);
 
 % Simulate the circuit, interpret results and plot probabilities
 psi = eye( 2^(nbQubits + 1), 1 );

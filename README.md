@@ -2,10 +2,13 @@
 
 <p align="center"><img src="doc/doxygen/QCLAB.png?raw=true" /></p>
 
-QCLAB is an object-oriented MATLAB toolbox for creating and representing
+QCLAB is an object-oriented MATLAB toolbox for creating, representing and simulating
 quantum circuits. QCLAB can be used for rapid prototyping and testing of
 quantum algorithms, and allows for fast algorithm development and discovery.
 QCLAB provides I/O through openQASM making it compatible with quantum hardware.
+Furthermore, QCLAB can draw circuit diagrams to the MATLAB command window
+and save the circuit diagrams to LaTeX source files. Please refer to the 
+`examples/` directory for example use cases.
 
 ### How to run? ###
 

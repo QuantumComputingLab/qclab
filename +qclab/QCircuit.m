@@ -329,6 +329,80 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       end
         
     end
+    
+    % ==========================================================================
+    %> @brief Save a quantum circuit to a TeX file.
+    %>
+    %> @param obj quantum circuit object.
+    %> @param fid  file id to draw to:
+    %>              - 0  : return cell array with ascii characters as `out`
+    %>              - 1  : draw to command window (default)
+    %>              - >1 : draw to (open) file id
+    %> @param parameter 'N' don't print parameter (default), 'S' print short 
+    %>                  parameter, 'L' print long parameter.
+    %> @param offset offset applied to qubit
+    %>
+    %> @retval out if fid > 0 then out == 0 on succesfull completion, otherwise
+    %>             out contains a cell array with the drawing info.
+    % ==========================================================================
+    function [out] = toTex(obj, fid, parameter, offset)
+      if nargin < 2, fid = 1; end
+      if nargin < 3, parameter = 'N'; end
+      if nargin < 4, offset = 0; end
+      circuitCell = cell(obj.nbQubits,1); % cell array to store all strings
+      circuitCell(:) = {''};
+      tabIndex = ones(obj.nbQubits, 1);    % most right tab index for  
+                                           % every qubit
+                                           
+      for i = 1:obj.nbGates
+        % Get the qubits and TeX strings for the current gate
+        thisQubits = obj.gates_( i ).qubits ;
+        thisQubits = min(thisQubits):max(thisQubits);
+        thisGateCell = obj.gates_( i ).toTex( 0, parameter, 0 );
+        
+        % left-most character thisGateCell can be drawn on
+        thisTab = max( tabIndex( thisQubits + 1 ) ); 
+        
+         % fill up other qubits to thisTab index if required
+        for q = thisQubits
+          diffTab = thisTab - tabIndex( q + 1 );
+          if diffTab > 0
+            circuitCell{ q + 1 } = strcat( circuitCell{ q + 1 }, ...
+                                           repmat( '&\t\\qw\t', 1, diffTab ) );
+            % update charIndex on q + 1
+            tabIndex( q + 1 ) = tabIndex( q + 1 )  + diffTab ; 
+          end
+        end
+        
+        % add thisGateCell to circuitCell
+        for q = thisQubits
+          thisq = q - thisQubits(1);
+          circuitCell{ q + 1 }  = strcat( circuitCell{ q + 1 }, ...
+                                            thisGateCell{ thisq + 1 } );
+        end
+        
+        % update tabIndex
+        thisWidth = count(thisGateCell{1},'&');
+        tabIndex( thisQubits + 1 ) = tabIndex( thisQubits + 1 ) + thisWidth;
+      end % all gates added to circuitCell --
+      
+      % fill all qubits to same maxTab to complete circuit
+      maxTab = max( tabIndex );
+      for q = 0:obj.nbQubits_ - 1
+        diffTab = maxTab - tabIndex( q + 1 );
+        if diffTab > 0
+            circuitCell{ q + 1 } = strcat( circuitCell{ q + 1 }, ...
+                                           repmat( '&\t\\qw\t', 1, diffTab ) );
+        end
+      end
+      
+       if fid > 0
+        qclab.toTexCellArray( fid, circuitCell, obj.qubits + offset );
+        out = 0;
+      else
+        out = circuitCell ;
+      end
+    end
   end
   
   methods (Static)

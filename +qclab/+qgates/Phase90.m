@@ -44,8 +44,8 @@ classdef Phase90 < qclab.qgates.QGate1
              0, 1i];
     end
     
-    % label for draw function
-    function [label] = label(obj, parameter)
+    % label for draw and tex function
+    function [label] = label(obj, parameter, tex )
       label = 'S';
     end
     

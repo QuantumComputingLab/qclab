@@ -32,6 +32,11 @@ circuit.toQASM( fID );
 fprintf( fID, '\n\nCircuit diagram:\n\n' );
 circuit.draw( fID, 'S' );
 
+% TeX circuit
+fID = fopen('qft_circuit.tex','w');
+circuit.toTex(fID, 'S');
+fclose(fID);
+
 function qftCircuit( circuit )
   H = @qclab.qgates.Hadamard ;
   CP = @qclab.qgates.CPhase ;

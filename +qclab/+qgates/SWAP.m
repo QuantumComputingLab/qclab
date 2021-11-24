@@ -138,6 +138,47 @@ classdef SWAP < qclab.qgates.QGate2
       end
     end
     
+    % ==========================================================================
+    %> @brief Save a 2-qubit SWAP gate to TeX file.
+    %>
+    %> @param obj 2-qubit SWAP gate 
+    %> @param fid  file id to draw to:
+    %>              - 0 : return cell array with ascii characters as `out`
+    %>              - 1 : draw to command window (default)
+    %>              - >1 : draw to (open) file id
+    %> @param parameter 'N' don't print parameter (default), 'S' print short 
+    %>                  parameter, 'L' print long parameter.
+    %> @param offset qubit offset. Default is 0.
+    %>
+    %> @retval out if fid > 0 then out == 0 on succesfull completion, otherwise
+    %>             out contains a cell array with the drawing info.
+    % ==========================================================================
+    function [out] = toTex(obj, fid, parameter, offset)
+      if nargin < 2, fid = 1; end
+      if nargin < 3, parameter = 'N'; end
+      if nargin < 4, offset = 0; end
+      
+      qubits = obj.qubits ;
+      gateCell = cell( qubits(2)-qubits(1)+1, 1 );
+      
+       % middle part
+      for i = 2:size(gateCell,1)-1
+        gateCell{i} = '&\t\\qw\t' ;
+      end
+      
+      diffq = size(gateCell, 1) - 1 ;
+      gateCell{1} = ['&\t\\qswap\\qwx[',num2str(diffq),']\t'] ;
+      gateCell{end} = '&\t\\qswap\t' ;
+      
+      if fid > 0
+        qubits = (qubits(1):qubits(2)) + offset;
+        qclab.toTexCellArray( fid, gateCell, qubits );
+        out = 0;
+      else
+        out = gateCell;
+      end
+    end
+    
   end %methods
   
   methods (Static)

@@ -229,8 +229,8 @@ classdef U3 < qclab.qgates.QGate1 & qclab.QAdjustable
       end 
     end
     
-    % label for draw function
-    function [label] = label(obj, parameter)
+    % label for draw and tex function
+    function [label] = label(obj, parameter, tex)
       if nargin < 2, parameter = 'N'; end
       label = 'U3';        
       if strcmp(parameter, 'S') % short parameter

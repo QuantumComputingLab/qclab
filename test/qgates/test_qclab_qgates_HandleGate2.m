@@ -32,6 +32,13 @@ classdef test_qclab_qgates_HandleGate2 < matlab.unittest.TestCase
       test.verifyTrue( isa(out, 'cell') );
       test.verifySize( out, [6, 1] );
       
+      % TeX
+      [out] = H.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = H.toTex(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [2, 1] );
+      
       % offset
       H.setOffset( 3 );
       qubits = H.qubits;
@@ -48,6 +55,13 @@ classdef test_qclab_qgates_HandleGate2 < matlab.unittest.TestCase
       [out] = H.draw(0, 'L');
       test.verifyTrue( isa(out, 'cell') );
       test.verifySize( out, [6, 1] );
+      
+      % TeX
+      [out] = H.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = H.toTex(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [2, 1] );
       
       % handle
       Hswap = H.gateHandle ;
@@ -84,6 +98,16 @@ classdef test_qclab_qgates_HandleGate2 < matlab.unittest.TestCase
       cphase = qclab.qgates.CPhase( 0, 2, pi/3 );
       Hcphase = qclab.qgates.HandleGate2 ( cphase, 1 );
       [out] = Hcphase.draw(1, 'S');
+      test.verifyEqual( out, 0 );
+      
+      % TeX Hcnot and Hcphase
+      Hcnot.setOffset( 2 );
+      [out] = Hcnot.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      
+      cphase = qclab.qgates.CPhase( 0, 2, pi/3 );
+      Hcphase = qclab.qgates.HandleGate2 ( cphase, 1 );
+      [out] = Hcphase.toTex(1, 'S');
       test.verifyEqual( out, 0 );
       
       % ctranspose
@@ -125,6 +149,15 @@ classdef test_qclab_qgates_HandleGate2 < matlab.unittest.TestCase
       [out] = H.draw(0, 'L');
       test.verifyTrue( isa(out, 'cell') );
       test.verifySize( out, [6, 1] );
+      
+      % TeX
+      fprintf('\n') % because of Matlab dot
+      H.setOffset( 3 );
+      [out] = H.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = H.toTex(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [2, 1] );
       
       % ctranspose
       Hp = H';

@@ -51,6 +51,23 @@ classdef test_qclab_qgates_iSWAP < matlab.unittest.TestCase
       
       iswap.setQubits([0,1]);
       
+      % TeX
+      [out] = iswap.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      
+      [out] = iswap.toTex(1, 'S');
+      test.verifyEqual( out, 0 );
+      
+      iswap.setQubits([3,1]);
+      [out] = iswap.toTex(1, 'L');
+      test.verifyEqual( out, 0 );
+      
+      [out] = iswap.toTex(0, 'N');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [3, 1] );
+      
+      iswap.setQubits([0,1]);
+      
       % operators == and ~=
       iswap2 = qclab.qgates.iSWAP(2, 4) ;
       test.verifyTrue( iswap == iswap2 );

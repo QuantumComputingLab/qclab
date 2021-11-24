@@ -56,6 +56,25 @@ classdef test_qclab_qgates_CY < matlab.unittest.TestCase
       
       cy.setControl(0);
       
+      % TeX
+      [out] = cy.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      
+      cy.setControlState( 0 );
+      [out] = cy.toTex(1, 'S');
+      test.verifyEqual( out, 0 );
+      
+      cy.setControl(3);
+      [out] = cy.toTex(1, 'L');
+      test.verifyEqual( out, 0 );
+      
+      cy.setControlState(1);
+      [out] = cy.toTex(0, 'N');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [3, 1] );
+      
+      cy.setControl(0);
+      
       % gate
       Y = qclab.qgates.PauliY ;
       test.verifyTrue( cy.gate == Y );

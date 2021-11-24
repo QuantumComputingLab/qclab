@@ -65,6 +65,16 @@ classdef test_qclab_qgates_RotationZZ < matlab.unittest.TestCase
       test.verifyTrue( isa(out, 'cell') );
       test.verifySize( out, [6, 1] );
       
+      % TeX gate
+      Rzz.setQubits([7 6]);
+      [out] = Rzz.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = Rzz.toTex(1, 'S');
+      test.verifyEqual( out, 0 );
+      [out] = Rzz.toTex(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [2, 1] );
+      
       % update(cos, sin)
       Rzz.update( cos(pi/3), sin(pi/3) );
       test.verifyEqual( Rzz.theta, 2*pi/3, 'AbsTol', eps );

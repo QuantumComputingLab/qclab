@@ -36,6 +36,12 @@ classdef test_qclab_qgates_PauliX < matlab.unittest.TestCase
       test.verifyTrue( isa(out, 'cell') );
       test.verifySize( out, [3, 1] );
       
+      % TeX gate
+      [out] = X.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = X.toTex(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [1, 1] );
       
       % operators == and ~=
       X2 = qclab.qgates.PauliX();

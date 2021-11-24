@@ -63,6 +63,15 @@ classdef test_qclab_qgates_RotationY < matlab.unittest.TestCase
       test.verifyTrue( isa(out, 'cell') );
       test.verifySize( out, [3, 1] );
       
+      % TeX gate
+      [out] = Ry.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      [out] = Ry.toTex(1, 'S');
+      test.verifyEqual( out, 0 );
+      [out] = Ry.toTex(0, 'L');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [1, 1] );
+      
       % update(cos, sin)
       Ry.update( cos(pi/3), sin(pi/3) );
       test.verifyEqual( Ry.theta, 2*pi/3, 'AbsTol', eps );

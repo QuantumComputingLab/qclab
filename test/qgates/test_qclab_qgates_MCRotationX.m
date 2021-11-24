@@ -54,6 +54,27 @@ classdef test_qclab_qgates_MCRotationX < matlab.unittest.TestCase
       mcrotx.setControls([0,1]);
       mcrotx.update( 0 );
       
+      % TeX
+      [out] = mcrotx.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      
+      mcrotx.setControlStates( [0,0]  );
+      [out] = mcrotx.toTex(1, 'S');
+      test.verifyEqual( out, 0 );
+      
+      mcrotx.setControls([3,1]);
+      mcrotx.update( pi/3 );
+      [out] = mcrotx.toTex(1, 'L');
+      test.verifyEqual( out, 0 );
+      
+      mcrotx.setControlStates([1,0]);
+      [out] = mcrotx.toTex(0, 'N');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [3, 1] );
+      
+      mcrotx.setControls([0,1]);
+      mcrotx.update( 0 );
+      
       % gate
       RX = qclab.qgates.RotationX() ;
       test.verifyTrue( mcrotx.gate == RX );

@@ -53,6 +53,27 @@ classdef test_qclab_qgates_CRotationZ < matlab.unittest.TestCase
       
       crotz.setControl(0);
       crotz.update( 0 );
+
+      % TeX
+      [out] = crotz.toTex(1, 'N');
+      test.verifyEqual( out, 0 );
+      
+      crotz.setControlState( 0  );
+      [out] = crotz.toTex(1, 'S');
+      test.verifyEqual( out, 0 );
+      
+      crotz.setControl(3);
+      crotz.update( pi/3 );
+      [out] = crotz.toTex(1, 'L');
+      test.verifyEqual( out, 0 );
+      
+      crotz.setControlState(1);
+      [out] = crotz.toTex(0, 'N');
+      test.verifyTrue( isa(out, 'cell') );
+      test.verifySize( out, [3, 1] );
+      
+      crotz.setControl(0);
+      crotz.update( 0 );
       
       % gate
       RZ = qclab.qgates.RotationZ() ;
