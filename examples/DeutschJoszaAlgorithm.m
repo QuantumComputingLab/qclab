@@ -17,12 +17,13 @@
 %> all input bitstrings x of length n, or if f is a balanced functions for all
 %> bitstrings x of length n.
 %
-% (C) Copyright Roel Van Beeumen and Daan Camps 2021.  
+% (C) Copyright Daan Camps, Sophia Keip and Roel Van Beeumen 2025.
 % ==============================================================================
 
 H = @qclab.qgates.Hadamard ;
 X = @qclab.qgates.PauliX ;
 CNOT = @qclab.qgates.CNOT ;
+M = @qclab.Measurement ;
 
 nbQubits = 3 ; % the length of the input string
 
@@ -76,6 +77,7 @@ fID = fopen('balanced_oracle.tex','w');
 balancedOracle.toTex(fID, 'S');
 fclose(fID);
 
+
 % Complete Deutsch-Josza circuit
 % ------------------------------------------------------------------------------
 djCircuit = qclab.QCircuit( nbQubits + 1 );
@@ -101,6 +103,7 @@ end
 % Repeat H-gates
 for qubit = 0:nbQubits - 1
   djCircuit.push_back( H( qubit ) );
+  djCircuit.push_back( M( qubit ) );
 end
 
 % Draw the Deutsch-Josza circuit
@@ -111,24 +114,13 @@ fID = fopen('Deutsch_Josza.tex','w');
 djCircuit.toTex(fID, 'S');
 fclose(fID);
 
-% Simulate the circuit, interpret results and plot probabilities
+% Simulate the circuit and interpret results
 psi = eye( 2^(nbQubits + 1), 1 );
-psi = djCircuit.apply( 'R', 'N', nbQubits + 1, psi );
-p = abs(psi).^2;
-
-if p(1) + p(2) > 1 - eps(100)
+sim = djCircuit.simulate( psi );
+results = sim.results
+if strcmp(sim.results(1), '000')
   fprintf( 1, '\nDetected constant Oracle.\n' );
 else
   fprintf( 1, '\nDetected balanced Oracle.\n' );
 end
 
-myXticklabels = cell( 2^(nbQubits + 1 ), 1 );
-for i = 0:2^(nbQubits + 1)-1
-  myXticklabels{i+1} = dec2bin( i, nbQubits );
-end
-
-figure(1); clf
-bar( 1:2^(nbQubits + 1), p );
-xticks( 1:2^(nbQubits + 1) );
-xticklabels( myXticklabels );
-ylabel('Probabilities');

@@ -59,9 +59,9 @@ classdef HandleGate2 < qclab.qgates.QGate2
     end
     
     % apply
-    function [mat] = apply(obj, side, op, nbQubits, mat, offset)
+    function [current] = apply(obj, side, op, nbQubits, current, offset)
       if nargin == 5, offset = 0; end
-      mat = obj.gate_.apply(side, op, nbQubits, mat, obj.offset_ + offset);
+      current = obj.gate_.apply(side, op, nbQubits, current, obj.offset_ + offset);
     end
     
     % toQASM

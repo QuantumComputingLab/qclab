@@ -60,21 +60,25 @@ classdef SWAP < qclab.qgates.QGate2
     end
     
     % apply
-    function [mat] = apply(obj, side, op, nbQubits, mat, offset)
+    function [current] = apply(obj, side, op, nbQubits, current, offset)
       if nargin == 5, offset = 0; end
       assert( nbQubits >= 2 );
-      if strcmp(side,'L') % left
-        assert( size(mat,2) == 2^nbQubits);
-      else % right
-        assert( size(mat,1) == 2^nbQubits);
+      if isa(current, 'double')
+          if strcmp(side,'L') % left
+            assert( size(current,2) == 2^nbQubits);
+          else % right
+            assert( size(current,1) == 2^nbQubits);
+          end
+      else
+          assert( size(current.states{1}) == 2^nbQubits )
       end
       qubits = obj.qubits + offset; 
       assert( qubits(1) < nbQubits && qubits(2) < nbQubits ); 
       cnot01 = qclab.qgates.CNOT( qubits(1), qubits(2) );
       cnot10 = qclab.qgates.CNOT( qubits(2), qubits(1) );
-      mat = cnot01.apply( side, op, nbQubits, mat, 0 );
-      mat = cnot10.apply( side, op, nbQubits, mat, 0 );
-      mat = cnot01.apply( side, op, nbQubits, mat, 0 );
+      current = cnot01.apply( side, op, nbQubits, current, 0 );
+      current = cnot10.apply( side, op, nbQubits, current, 0 );
+      current = cnot01.apply( side, op, nbQubits, current, 0 );
     end
      
     % toQASM

@@ -14,7 +14,7 @@
 %>  - matrix      % defined in qclab.QObject
 %>  - fixed       % defined in qclab.QObject
 %> 
-% (C) Copyright Daan Camps and Roel Van Beeumen 2021.  
+% (C) Copyright Daan Camps, Sophia Keip and Roel Van Beeumen 2025.
 % ==============================================================================
 classdef QGate1 < qclab.QObject
   properties (Access = protected)
@@ -44,8 +44,7 @@ classdef QGate1 < qclab.QObject
     
     % setQubit
     function setQubit(obj,qubit)
-      assert( qclab.isNonNegInteger( qubit ) );
-      
+      assert( qclab.isNonNegInteger( qubit ) );      
       obj.qubit_ = qubit ;
     end
     
@@ -61,25 +60,30 @@ classdef QGate1 < qclab.QObject
     end
     
     % ==========================================================================
-    %> @brief Apply the QGate1 to a matrix
-    %>
+    %> @brief Apply the QGate1 to a matrix or a struct of state vectors
+    %> `current`
     %> @param obj instance of QGate1 class.
     %> @param side 'L' or 'R' side application in quantum circuit
     %> @param op 'N', 'T' or 'C' for normal, transpose or conjugate transpose
     %>           application of QGate1
-    %> @param nbQubits qubit size of `mat`
-    %> @param mat matrix to which QGate1 is applied
+    %> @param nbQubits qubit size of `current`
+    %> @param current matrix or struct of state vectors to which QGate1 is 
+    %> applied
     %> @param offset offset applied to qubit
     % ==========================================================================
-    function [mat] = apply(obj, side, op, nbQubits, mat, offset)
+    function [current] = apply(obj, side, op, nbQubits, current, offset)
       if nargin == 5, offset = 0; end
       assert( nbQubits >= 1);
       qubit = obj.qubit + offset ;
       assert( qubit < nbQubits ) ;
-      if strcmp(side,'L') % left
-        assert( size(mat,2) == 2^nbQubits);
-      else % right
-        assert( size(mat,1) == 2^nbQubits);
+      if isa(current, 'double')
+          if strcmp(side,'L') % left
+            assert( size(current,2) == 2^nbQubits);
+          else % right
+            assert( size(current,1) == 2^nbQubits);
+          end
+      else
+          assert( length(current.states{1}) == 2^nbQubits )
       end
       % operation
       if strcmp(op, 'N') % normal
@@ -100,11 +104,7 @@ classdef QGate1 < qclab.QObject
         matn = kron(kron(qclab.qId(qubit), mat1), qclab.qId(nbQubits-qubit-1)) ;
       end
       % side
-      if strcmp(side, 'L') % left
-        mat = mat * matn ;
-      else % right
-        mat = matn * mat ;
-      end
+      current = qclab.applyGateTo(current, matn, side ) ;
     end
     
     % ctranspose

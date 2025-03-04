@@ -23,9 +23,6 @@ end
 
 % QASM
 fID = 1;
-fprintf( fID, '\n\nQASM output:\n\n' );
-fprintf( fID, 'OPENQASM 2.0;\ninclude "qelib1.inc";\n\n');
-fprintf( fID, 'qreg q[%d];\n',nbQubits);
 circuit.toQASM( fID );
 
 % Draw circuit

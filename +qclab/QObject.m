@@ -7,7 +7,7 @@
 %>  This class implements functionalities that are shared between different
 %>  types of Quantum Objects.
 %
-% (C) Copyright Daan Camps and Roel Van Beeumen 2021.  
+% (C) Copyright Daan Camps, Sophia Keip and Roel Van Beeumen 2025.  
 % ==============================================================================
 classdef (Abstract) QObject < handle & ...
                               matlab.mixin.Heterogeneous & ...
@@ -29,10 +29,6 @@ classdef (Abstract) QObject < handle & ...
     [qubits] = qubits(obj)
     %> @brief Sets the qubits of this quantum object. 
     setQubits(obj,qubits)
-    %> @brief Returns the unitary matrix corresponding to this quantum object. 
-    [mat] = matrix(obj)
-    %> @brief Applies this quantum object to the given matrix. 
-    [mat] = apply(obj,side,op, nbQubits, mat, offset)
     %> @brief Writes the QASM code of this quantum object to the given file id.
     [out] = toQASM(obj, fid, offset)
     %> @brief Checks if other equals this quantum object.
@@ -41,18 +37,17 @@ classdef (Abstract) QObject < handle & ...
     [out] = draw(obj, fid, parameter, offset)
     %> @brief Saves the quantum circuit diagram as tex
     [out] = toTex(obj, fid, parameter, offset)
+    %> @brief Applies this quantum gate to the given input current. 
+    [current] = apply(obj,side,op, nbQubits, current, offset)
+    %> @brief Returns the unitary matrix corresponding to this quantum object. 
+    [mat] = matrix(obj)
     %> @brief Return conjugate transpose of this quantum object.
     [outprime] = ctranspose(obj)
   end
   % --------------------------------------------------------------------------
   
   methods
-    %> Simulates this quantum object by applying it to a vector.
-    function [v] = simulate(obj, v)
-      nbQubits = log2(size(v,1));
-      assert(size(v,1) == 2^nbQubits);
-      v = obj.apply('R', 'N', nbQubits, v);
-    end
+    
     
     %> Checks if other is equal to this quantum object.
     function [bool] = eq(obj,other)

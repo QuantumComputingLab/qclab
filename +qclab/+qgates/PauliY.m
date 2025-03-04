@@ -1,3 +1,28 @@
+% PauliY - 1-qubit Pauli-Y gate for quantum circuits
+% The PauliY class implements a 1-qubit Pauli-Y gate. The Pauli-Y gate
+% combines a bit flip and a phase flip. It maps the |0⟩ state to -i|1⟩ and 
+% the |1⟩ state to i|0⟩, introducing a phase shift in the process.
+%
+% The matrix representation of the Pauli-Y gate is:
+%   Y = [0  -i; 
+%        i  0]
+%
+% Creation
+%   Syntax
+%     Y = qclab.qgates.PauliY(qubit)
+%
+%   Input Arguments
+%     qubit - qubit to which the Pauli-Y gate is applied
+%             non-negative integer, (default: 0)
+%
+%   Output:
+%     Y - A quantum object of type `PauliY`, representing the 1-qubit
+%         Pauli-Y gate on qubit `qubit`.
+%
+% Example:
+%   Create a Pauli-Y gate object acting on qubit 0:
+%     Y = qclab.qgates.PauliY(0);
+
 %> @file PauliY.m
 %> @brief Implements Pauli-Y class.
 % ==============================================================================

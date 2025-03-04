@@ -1,3 +1,28 @@
+% Hadamard - 1-qubit Hadamard gate for quantum circuits
+% The Hadamard class implements a 1-qubit Hadamard gate. This gate transforms 
+% the quantum state |0⟩ into the superposition (|0⟩ + |1⟩) / sqrt(2) and |1⟩ 
+% into (|0⟩ - |1⟩) / sqrt(2).
+%
+% The matrix representation of the Hadamard gate is:
+%   H = (1 / sqrt(2)) * [1  1; 
+%                        1  -1]
+%
+% Creation
+%   Syntax
+%     H = qclab.qgates.Hadamard(qubit)  Hadamard gate on qubit `qubit`
+%
+%   Input Arguments
+%     qubit - qubit to which the Hadamard gate is applied
+%             non-negative integer, (default: 0)
+%
+%   Output:
+%     H - A quantum object of type `Hadamard`, representing the 1-qubit
+%         Hadamard gate on qubit `qubit`.
+%
+% Example:
+%   Create a Hadamard gate object acting on qubit 0:
+%     H = qclab.qgates.Hadamard(0);
+
 %> @file Hadamard.m
 %> @brief Implements Hadamard class.
 % ==============================================================================

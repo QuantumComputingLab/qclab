@@ -1,3 +1,28 @@
+% PauliX - 1-qubit Pauli-X gate for quantum circuits
+% The PauliX class implements a 1-qubit Pauli-X gate. The Pauli-X gate 
+% performs a bit flip, swapping the |0⟩ and |1⟩ states. It is the quantum 
+% analog of the classical NOT gate.
+%
+% The matrix representation of the Pauli-X gate is:
+%   X = [0  1; 
+%        1  0]
+%
+% Creation
+%   Syntax
+%     X = qclab.qgates.PauliX(qubit)
+%
+%   Input Arguments
+%     qubit - qubit to which the Pauli-X gate is applied
+%             non-negative integer, (default: 0)
+%
+%   Output:
+%     X - A quantum object of type `PauliX`, representing the 1-qubit
+%         Pauli-X gate on qubit `qubit`.
+%
+% Example:
+%   Create a Pauli-X gate object acting on qubit 0:
+%     X = qclab.qgates.PauliX(0);
+
 %> @file PauliX.m
 %> @brief Implements Pauli-X class.
 % ==============================================================================

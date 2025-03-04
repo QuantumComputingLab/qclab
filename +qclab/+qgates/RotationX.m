@@ -1,3 +1,30 @@
+% RotationX - 1-qubit rotation gate about the X axis
+% The RotationX class implements a 1-qubit rotation gate around the X axis.
+% This gate performs a rotation by an angle θ around the X axis of the Bloch
+% sphere. 
+%
+% The matrix representation of the RotationX gate is:
+%   R_x(θ) = [cos(θ/2)    -i*sin(θ/2);
+%             -i*sin(θ/2)  cos(θ/2)]
+%
+% Creation
+%   Syntax
+%     RX = qclab.qgates.RotationX(qubit, theta)
+%
+%   Input Arguments
+%     qubit - qubit to which the RotationX gate is applied
+%             non-negative integer, (default: 0)
+%     theta - rotation angle in radians
+%
+%   Output:
+%     RX - A quantum object of type `RotationX`, representing the 1-qubit
+%          rotation gate about the X axis on qubit `qubit` with rotation
+%          angle `theta`.
+%
+% Example:
+%   Create a RotationX gate object on qubit 0 with a rotation angle of π/2:
+%     RX = qclab.qgates.RotationX(0, pi/2);
+
 %> @file RotationX.m
 %> @brief Implements RotationX class.
 % ==============================================================================

@@ -1,3 +1,52 @@
+% Phase - 1-qubit phase gate for quantum circuits
+% The Phase class implements a 1-qubit phase gate. The phase gate adds a 
+% phase shift to the quantum state, changing the relative phase between the 
+% |0⟩ and |1⟩ basis states. The gate is parameterized by the angle θ.
+%
+% The matrix representation of the Phase gate is:
+%   P(θ) = [1  0;
+%           0  cos(θ) + i*sin(θ)]
+%
+% Creation
+%   Syntax
+%     P = qclab.qgates.Phase() 
+%       - Default constructor, creates a phase gate with qubit set to 0 and θ = 0.
+%     
+%     P = qclab.qgates.Phase(qubit)
+%       - Creates a phase gate on the given `qubit` with θ = 0.
+%
+%     P = qclab.qgates.Phase(qubit, angle, fixed)
+%       - Creates a phase gate on the given `qubit` with the provided quantum angle.
+%         The `fixed` flag indicates whether the phase is adjustable (false) or not (true).
+%
+%     P = qclab.qgates.Phase(qubit, theta, fixed)
+%       - Creates a phase gate on the given `qubit` with the provided phase angle θ.
+%         The `fixed` flag indicates whether the phase is adjustable (false) or not (true).
+%
+%     P = qclab.qgates.Phase(qubit, cos, sin, fixed)
+%       - Creates a phase gate on the given `qubit` with the provided cosine and sine values
+%         of the phase angle. The `fixed` flag indicates whether the phase is adjustable (false) or not (true).
+%
+%   Input Arguments
+%     qubit - qubit to which the Phase gate is applied
+%             non-negative integer, default 0
+%     angle - (optional) quantum angle 
+%     theta - (optional) phase angle in radians 
+%     cos   - (optional) cosine of the phase angle 
+%     sin   - (optional) sine of the phase angle 
+%     fixed - (optional) logical flag indicating if the phase is fixed (default: false)
+%
+%   Output:
+%     P - A quantum object of type `Phase`, representing the 1-qubit phase 
+%         gate on qubit `qubit`.
+%
+% Examples:
+%   Create a Phase gate object acting on qubit 0 with a phase angle of π/4:
+%     P = qclab.qgates.Phase(0, pi/4);
+%
+%   Create a Phase gate with specific cosine and sine values:
+%     P = qclab.qgates.Phase(0, cos(pi/4), sin(pi/4), false);
+
 %> @file Phase.m
 %> @brief Implements Phase gate class.
 % ==============================================================================

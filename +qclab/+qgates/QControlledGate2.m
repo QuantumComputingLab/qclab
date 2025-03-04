@@ -5,7 +5,7 @@
 %> @brief Base class for 2-qubit gates of controlled 1-qubit gates.
 %
 %> 
-% (C) Copyright Daan Camps and Roel Van Beeumen 2021.  
+% (C) Copyright Daan Camps, Sophia Keip and Roel Van Beeumen 2025.
 % ==============================================================================
 classdef QControlledGate2 < qclab.qgates.QGate2
   properties (Access = protected)
@@ -74,30 +74,36 @@ classdef QControlledGate2 < qclab.qgates.QGate2
     end
     
     % ==========================================================================
-    %> @brief Apply the QControlledGate2 to a matrix `mat`
-    %>
+    %> @brief Apply the QControlledGate2 to a matrix or a struct of state 
+    %> vectors
     %> @param obj instance of QControlledGate2 class.
     %> @param side 'L' or 'R' for respectively left or right side of application
     %>              (in quantum circuit ordering)
     %> @param op 'N', 'T' or 'C' for respectively normal, transpose or conjugate
     %>           transpose application of QControlledGate2
-    %> @param nbQubits qubit size of `mat`
-    %> @param mat matrix to which QControlledGate2 is applied
+    %> @param nbQubits qubit size of `current`
+    %> @param current matrix or struct of state vectors to which 
+    %> QControlledGate2 is applied
     %> @param offset offset applied to qubits
     % ==========================================================================
-    function [mat] = apply(obj, side, op, nbQubits, mat, offset)
+    function [current] = apply(obj, side, op, nbQubits, current, offset)
       if nargin == 5, offset = 0; end
       assert( nbQubits >= 2 );
-      if strcmp(side,'L')
-        assert( size(mat,2) == 2^nbQubits );
+      if isa(current, 'double')
+          if strcmp(side,'L') % left
+            assert( size(current,2) == 2^nbQubits);
+          else % right
+            assert( size(current,1) == 2^nbQubits);
+          end
       else
-        assert( size(mat,1) == 2^nbQubits );
+          assert( length(current.states{1}) == 2^nbQubits )
       end
       qubits = obj.qubits + offset;
       assert( qubits(1) < nbQubits ); assert( qubits(2) < nbQubits );
       % nearest neighbor qubits
       if qubits(1) + 1 == qubits(2) 
-        mat = apply@qclab.qgates.QGate2( obj, side, op, nbQubits, mat, offset );
+        current = apply@qclab.qgates.QGate2( obj, side, op, nbQubits, ...
+                  current, offset );
         return
       end
       E0 = [1 0; 0 0]; E1 = [0 0; 0 1];
@@ -137,12 +143,8 @@ classdef QControlledGate2 < qclab.qgates.QGate2
         matn = kron(kron(qclab.qId(qubits(1)),mats),...
                          qclab.qId(nbQubits - qubits(2) - 1));
       end
-      % side
-      if strcmp(side, 'L') % left
-        mat = mat * matn ;
-      else % right
-        mat = matn * mat ;
-      end
+      % apply
+      current = qclab.applyGateTo(current, matn, side ) ;
     end
     
     %> @brief Returns the control qubit of this 2-qubit gate.

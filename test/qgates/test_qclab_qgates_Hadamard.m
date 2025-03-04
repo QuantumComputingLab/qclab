@@ -1,6 +1,6 @@
 classdef test_qclab_qgates_Hadamard < matlab.unittest.TestCase
   methods (Test)
-    function test_PauliX(test)
+    function test_Hadamard(test)
       H = qclab.qgates.Hadamard();
       
       test.verifyEqual( H.nbQubits, int32(1) );     % nbQubits

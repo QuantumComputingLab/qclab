@@ -1,3 +1,30 @@
+% RotationY - 1-qubit rotation gate about the Y axis
+% The RotationY class implements a 1-qubit rotation gate around the Y axis.
+% This gate performs a rotation by an angle θ around the Y axis of the Bloch
+% sphere. 
+%
+% The matrix representation of the RotationY gate is:
+%   R_y(θ) = [cos(θ/2)  -sin(θ/2);
+%             sin(θ/2)   cos(θ/2)]
+%
+% Creation
+%   Syntax
+%     RY = qclab.qgates.RotationY(qubit, theta)
+%
+%   Input Arguments
+%     qubit - qubit to which the RotationY gate is applied
+%             non-negative integer, (default: 0)
+%     theta - rotation angle in radians
+%
+%   Output:
+%     RY - A quantum object of type `RotationY`, representing the 1-qubit
+%          rotation gate about the Y axis on qubit `qubit` with rotation
+%          angle `theta`.
+%
+% Example:
+%   Create a RotationY gate object for qubit 0 with a rotation angle of π/2:
+%     RY = qclab.qgates.RotationY(0, pi/2);
+
 %> @file RotationY.m
 %> @brief Implements RotationY class.
 % ==============================================================================

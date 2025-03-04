@@ -1,3 +1,28 @@
+% PauliZ - 1-qubit Pauli-Z gate for quantum circuits
+% The PauliZ class implements a 1-qubit Pauli-Z gate. The Pauli-Z gate
+% flips the phase of the |1⟩ state while leaving the |0⟩ state unchanged.
+%
+% The matrix representation of the Pauli-Z gate is:
+%   Z = [1  0; 
+%        0 -1]
+%
+% Creation
+%   Syntax
+%     Z = qclab.qgates.PauliZ(qubit)
+%
+%   Input Arguments
+%     qubit - qubit to which the Pauli-Z gate is applied
+%             non-negative integer, (default: 0)
+%
+%   Output:
+%     Z - A quantum object of type `PauliZ`, representing the 1-qubit
+%         Pauli-Z gate on qubit `qubit`.
+%
+%
+% Example:
+%   Create a Pauli-Z gate object acting on qubit 0:
+%     Z = qclab.qgates.PauliZ(0);
+
 %> @file PauliZ.m
 %> @brief Implements Pauli-Z class.
 % ==============================================================================

@@ -36,9 +36,10 @@
 %>		doxygen Doxyfile.dox
 %>      \endcode
 %>
-%>## Developers - Lawrence Berkeley National Laboratory
-%>- [Daan Camps](http://campsd.github.io/) - dcamps@lbl.gov
-%>- [Roel Van Beeumen](http://www.roelvanbeeumen.be/) - rvanbeeumen@lbl.gov
+%>## Developers 
+%>- [Daan Camps](http://campsd.github.io/) (Lawrence Berkeley National Laboratory) - dcamps@lbl.gov
+%>- [Sophia Keip](https://www.fernuni-hagen.de/MATHEMATIK/DMO/mitarbeiter/keip.html) (FernUniversität in Hagen) - sophia.keip@fernuni-hagen.de
+%>- [Roel Van Beeumen](http://www.roelvanbeeumen.be/) (Lawrence Berkeley National Laboratory) - rvanbeeumen@lbl.gov
 %>
 %>
 %>## Funding

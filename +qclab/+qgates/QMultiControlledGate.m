@@ -5,7 +5,7 @@
 %> @brief Base class for multi-qubit gates of multi-controlled 1-qubit gates.
 %
 %> 
-% (C) Copyright Daan Camps and Roel Van Beeumen 2021.  
+% (C) Copyright Daan Camps, Sophia Keip and Roel Van Beeumen 2025.
 % ==============================================================================
 classdef QMultiControlledGate < qclab.QObject
   
@@ -78,7 +78,7 @@ classdef QMultiControlledGate < qclab.QObject
       Cup = 1;
       for i = 1:target_idx-1
         if obj.controlStates_(i) == 0
-          Cup = kron(Cup, E0); % TODO: double check order.
+          Cup = kron(Cup, E0);
         else
           Cup = kron(Cup, E1);
         end
@@ -116,7 +116,8 @@ classdef QMultiControlledGate < qclab.QObject
     end
     
     % ==========================================================================
-    %> @brief Apply the QMultiControlledGate to a matrix `mat`
+    %> @brief Apply the QMultiControlledGate to a matrix or a struct of
+    %> state vectors
     %>
     %> @param obj instance of QMultiControlledGate class.
     %> @param side 'L' or 'R' for respectively left or right side of application
@@ -124,20 +125,25 @@ classdef QMultiControlledGate < qclab.QObject
     %> @param op 'N', 'T' or 'C' for respectively normal, transpose or conjugate
     %>           transpose application of QMultiControlledGate
     %> @param nbQubits qubit size of `mat`
-    %> @param mat matrix to which QMultiControlledGate is applied
+    %> @param current matrix or struct of state vectors to which 
+    %> QMultiControlledGate is applied
     %> @param offset offset applied to qubits
     % ==========================================================================
-    function [mat] = apply(obj, side, op, nbQubits, mat, offset)
+    function [current] = apply(obj, side, op, nbQubits, current, offset)
       if nargin == 5, offset = 0; end
       controls = obj.controls + offset ;
       target = obj.target + offset ;
       minq = min([controls(1), target]);
       maxq = max([controls(end), target]);
       assert( nbQubits > maxq );
-      if strcmp(side,'L')
-        assert( size(mat,2) == 2^nbQubits );
+      if isa(current, 'double')
+          if strcmp(side,'L') % left
+            assert( size(current,2) == 2^nbQubits);
+          else % right
+            assert( size(current,1) == 2^nbQubits);
+          end
       else
-        assert( size(mat,1) == 2^nbQubits );
+          assert( length(current.states{1}) == 2^nbQubits )
       end
       E0 = [1 0; 0 0]; E1 = [0 0; 0 1];
       I1 = qclab.qId(1);
@@ -215,12 +221,8 @@ classdef QMultiControlledGate < qclab.QObject
         matn = kron(qclab.qId(minq), kron(mats, ...
                     qclab.qId(nbQubits - maxq - 1))) ;
       end  
-       % side
-      if strcmp(side, 'L') % left
-        mat = mat * matn ;
-      else % right
-        mat = matn * mat ;
-      end
+       % apply
+      current = qclab.applyGateTo( current, matn, side ) ;
     end
     
      %> @brief Returns the control qubits of this multi-qubit gate.

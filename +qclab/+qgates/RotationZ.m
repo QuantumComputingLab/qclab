@@ -1,3 +1,30 @@
+% RotationZ - 1-qubit rotation gate about the Z axis
+% The RotationZ class implements a 1-qubit rotation gate around the Z axis.
+% This gate performs a rotation by an angle θ around the Z axis of the Bloch
+% sphere. 
+%
+% The matrix representation of the RotationZ gate is:
+%   R_z(θ) = [cos(θ/2) - i*sin(θ/2)    0;
+%                    0        cos(θ/2) + i*sin(θ/2)]
+%
+% Creation
+%   Syntax
+%     RZ = qclab.qgates.RotationZ(qubit, theta)
+%
+%   Input Arguments
+%     qubit - qubit to which the RotationZ gate is applied
+%             non-negative integer, (default: 0)
+%     theta - rotation angle in radians
+%
+%   Output:
+%     RZ - A quantum object of type `RotationZ`, representing the 1-qubit
+%          rotation gate about the Z axis on qubit `qubit` with rotation
+%          angle `theta`.
+%
+% Example:
+%   Create a RotationZ gate object for qubit 0 with a rotation angle of π/2:
+%     RZ = qclab.qgates.RotationZ(0, pi/2);
+
 %> @file RotationZ.m
 %> @brief Implements RotationZ class.
 % ==============================================================================

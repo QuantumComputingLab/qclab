@@ -60,13 +60,17 @@ classdef iSWAP < qclab.qgates.QGate2
     end
     
     % apply
-    function [mat] = apply(obj, side, op, nbQubits, mat, offset)
+    function [current] = apply(obj, side, op, nbQubits, current, offset)
       if nargin == 5, offset = 0; end
       assert( nbQubits >= 2 );
-      if strcmp(side,'L') % left
-        assert( size(mat,2) == 2^nbQubits);
-      else % right
-        assert( size(mat,1) == 2^nbQubits);
+      if isa(current, 'double')
+          if strcmp(side,'L') % left
+            assert( size(current,2) == 2^nbQubits);
+          else % right
+            assert( size(current,1) == 2^nbQubits);
+          end
+      else
+          assert( size(current.states{1}) == 2^nbQubits )
       end
       qubits = obj.qubits + offset; 
       assert( qubits(1) < nbQubits && qubits(2) < nbQubits );
@@ -75,19 +79,19 @@ classdef iSWAP < qclab.qgates.QGate2
       CNOT = qclab.qgates.CNOT( qubits(1), qubits(2) );
       
       % layer 1
-      mat = S.apply( side, op, nbQubits, mat );
+      current = S.apply( side, op, nbQubits, current );
       S.setQubit( qubits(2) );
-      mat = S.apply( side, op, nbQubits, mat );
+      current = S.apply( side, op, nbQubits, current );
       % layer 2
-      mat = H.apply( side, op, nbQubits, mat );
+      current = H.apply( side, op, nbQubits, current );
       % layer 3
-      mat = CNOT.apply( side, op, nbQubits, mat );
+      current = CNOT.apply( side, op, nbQubits, current );
       % layer 4
       CNOT.setQubits( [qubits(2), qubits(1)] );
-      mat = CNOT.apply( side, op, nbQubits, mat );
+      current = CNOT.apply( side, op, nbQubits, current );
       % layer 5
       H.setQubit( qubits(2) );
-      mat = H.apply( side, op, nbQubits, mat );
+      current = H.apply( side, op, nbQubits, current );
     end
     
     % toQASM

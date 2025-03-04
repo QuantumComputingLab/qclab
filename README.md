@@ -1,4 +1,4 @@
-# QCLAB Matlab Toolbox [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5160555.svg)](https://doi.org/10.5281/zenodo.5160555)
+# QCLAB Matlab Toolbox [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5722739.svg)](https://doi.org/10.5281/zenodo.5722739)
 
 <p align="center"><img src="doc/doxygen/QCLAB.png?raw=true" /></p>
 
@@ -13,7 +13,7 @@ and save the circuit diagrams to LaTeX source files. Please refer to the
 ### How to run? ###
 
 The QCLAB Toolbox is implemented using MATLAB object oriented functionalities
-and is compatible with MATLAB R2018a or newer.
+and is compatible with MATLAB R2020b or newer.
 
 1. Clone repository:
 
@@ -34,9 +34,10 @@ and is compatible with MATLAB R2018a or newer.
 		cd doc/doxygen/
 		doxygen Doxyfile.dox
 
-## Developers - Lawrence Berkeley National Laboratory
-- [Daan Camps](http://campsd.github.io/) - dcamps@lbl.gov
-- [Roel Van Beeumen](http://www.roelvanbeeumen.be/) - rvanbeeumen@lbl.gov
+## Developers 
+- [Daan Camps](http://campsd.github.io/) (Lawrence Berkeley National Laboratory) - dcamps@lbl.gov
+- [Sophia Keip](https://www.fernuni-hagen.de/MATHEMATIK/DMO/mitarbeiter/keip.html) (FernUniversität in Hagen) - sophia.keip@fernuni-hagen.de
+- [Roel Van Beeumen](http://www.roelvanbeeumen.be/) (Lawrence Berkeley National Laboratory) - rvanbeeumen@lbl.gov
 
 
 ## Funding
