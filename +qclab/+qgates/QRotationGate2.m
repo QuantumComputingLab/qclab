@@ -11,7 +11,7 @@ classdef QRotationGate2 < qclab.qgates.QGate2 & ...
                         
   properties (Access = protected)
     %> Qubits of this 2-qubit rotation gate
-    qubits_(1,2)    int32
+    qubits_(1,2)    int64
     %> Quantum rotation of this rotation gate.
     rotation_(1,1)  qclab.QRotation
   end
@@ -286,6 +286,18 @@ classdef QRotationGate2 < qclab.qgates.QGate2 & ...
     function cp = copyElement(obj)
       cp = copyElement@matlab.mixin.Copyable( obj );
       cp.rotation_ = obj.rotation ;
+    end
+
+     %> Property groups
+    function groups = getPropertyGroups(obj)
+     import matlab.mixin.util.PropertyGroup
+     props = struct();
+     props.nbQubits = obj.nbQubits;  
+     props.Qubits = obj.qubits;
+     props.Theta = obj.theta; 
+     props.Sin = obj.sin; 
+     props.Cos = obj.cos; 
+     groups = PropertyGroup(props);
     end
     
   end

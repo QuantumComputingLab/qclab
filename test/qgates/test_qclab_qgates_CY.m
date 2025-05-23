@@ -2,12 +2,12 @@ classdef test_qclab_qgates_CY < matlab.unittest.TestCase
   methods (Test)
     function test_CY(test)
       cy = qclab.qgates.CY() ;
-      test.verifyEqual( cy.nbQubits, int32(2) );
+      test.verifyEqual( cy.nbQubits, int64(2) );
       test.verifyTrue( cy.fixed );
       test.verifyTrue( cy.controlled ) ;
-      test.verifyEqual( cy.control, int32(0) );
-      test.verifyEqual( cy.target, int32(1) );
-      test.verifyEqual( cy.controlState, int32(1) );
+      test.verifyEqual( cy.control, int64(0) );
+      test.verifyEqual( cy.target, int64(1) );
+      test.verifyEqual( cy.controlState, int64(1) );
       
       % matrix
       CY_check = [1, 0, 0, 0;
@@ -17,17 +17,17 @@ classdef test_qclab_qgates_CY < matlab.unittest.TestCase
       test.verifyEqual(cy.matrix, CY_check );
       
       % qubit
-      test.verifyEqual( cy.qubit, int32(0) );
+      test.verifyEqual( cy.qubit, int64(0) );
       
       % qubits
       qubits = cy.qubits;
       test.verifyEqual( length(qubits), 2 );
-      test.verifyEqual( qubits(1), int32(0) );
-      test.verifyEqual( qubits(2), int32(1) );
+      test.verifyEqual( qubits(1), int64(0) );
+      test.verifyEqual( qubits(2), int64(1) );
       qnew = [5, 3] ;
       cy.setQubits( qnew );
-      test.verifyEqual( table(cy.qubits()).Var1(1), int32(3) );
-      test.verifyEqual( table(cy.qubits()).Var1(2), int32(5) );
+      test.verifyEqual( table(cy.qubits()).Var1(1), int64(3) );
+      test.verifyEqual( table(cy.qubits()).Var1(2), int64(5) );
       qnew = [0, 1];
       cy.setQubits( qnew );
       
@@ -109,9 +109,9 @@ classdef test_qclab_qgates_CY < matlab.unittest.TestCase
       % ctranspose
       cy = qclab.qgates.CY() ;
       cyp = cy';
-      test.verifyEqual( cyp.nbQubits, int32(2) );
-      test.verifyEqual( cyp.control, int32(0) );
-      test.verifyEqual( cyp.target, int32(1) );
+      test.verifyEqual( cyp.nbQubits, int64(2) );
+      test.verifyEqual( cyp.control, int64(0) );
+      test.verifyEqual( cyp.target, int64(1) );
       test.verifyEqual(cyp.matrix, cy.matrix' );
     end
     

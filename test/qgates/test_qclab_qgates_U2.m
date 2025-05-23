@@ -2,7 +2,7 @@ classdef test_qclab_qgates_U2 < matlab.unittest.TestCase
   methods (Test)
     function test_U2(test)
       u2 = qclab.qgates.U2() ;
-      test.verifyEqual( u2.nbQubits, int32(1) );    % nbQubits
+      test.verifyEqual( u2.nbQubits, int64(1) );    % nbQubits
       test.verifyFalse( u2.fixed );                 % fixed
       test.verifyFalse( u2.controlled );            % controlled
       test.verifyEqual( u2.cosPhi, 1.0 );           % cos(phi)
@@ -17,17 +17,17 @@ classdef test_qclab_qgates_U2 < matlab.unittest.TestCase
       test.verifyEqual( u2.matrix, mat1 );
       
       % qubit
-      test.verifyEqual( u2.qubit, int32(0) );
+      test.verifyEqual( u2.qubit, int64(0) );
       u2.setQubit( 2 ) ;
-      test.verifyEqual( u2.qubit, int32(2) );
+      test.verifyEqual( u2.qubit, int64(2) );
       
       % qubits
       qubits = u2.qubits;
       test.verifyEqual( length(qubits), 1 );
-      test.verifyEqual( qubits(1), int32(2) )
+      test.verifyEqual( qubits(1), int64(2) )
       qnew = 3 ;
       u2.setQubits( qnew );
-      test.verifyEqual( u2.qubit, int32(3) );
+      test.verifyEqual( u2.qubit, int64(3) );
       
       % fixed
       u2.makeFixed();
@@ -109,8 +109,8 @@ classdef test_qclab_qgates_U2 < matlab.unittest.TestCase
     
     function test_U2_constructors( test )
       u2 = qclab.qgates.U2( 1, pi/2, pi/3 );
-      test.verifyEqual( u2.qubit, int32(1) );       % qubit      
-      test.verifyEqual( u2.nbQubits, int32(1) );    % nbQubits
+      test.verifyEqual( u2.qubit, int64(1) );       % qubit      
+      test.verifyEqual( u2.nbQubits, int64(1) );    % nbQubits
       test.verifyFalse( u2.fixed );                 % fixed
       test.verifyFalse( u2.controlled );            % controlled
       test.verifyEqual( u2.cosPhi, cos(pi/2) );     % cos(phi)
@@ -122,8 +122,8 @@ classdef test_qclab_qgates_U2 < matlab.unittest.TestCase
       
       
       u2 = qclab.qgates.U2( 5, pi/2, pi/3, true );
-      test.verifyEqual( u2.qubit, int32(5) );       % qubit      
-      test.verifyEqual( u2.nbQubits, int32(1) );    % nbQubits
+      test.verifyEqual( u2.qubit, int64(5) );       % qubit      
+      test.verifyEqual( u2.nbQubits, int64(1) );    % nbQubits
       test.verifyTrue( u2.fixed );                  % fixed
       test.verifyFalse( u2.controlled );            % controlled
       test.verifyEqual( u2.cosPhi, cos(pi/2) );     % cos(phi)
@@ -134,8 +134,8 @@ classdef test_qclab_qgates_U2 < matlab.unittest.TestCase
       test.verifyEqual( u2.lambda, pi/3 );          % lambda
       
       u2 = qclab.qgates.U2( 5, cos(pi/4), sin(pi/4), cos(pi/5), sin(pi/5) );
-      test.verifyEqual( u2.qubit, int32(5) );       % qubit      
-      test.verifyEqual( u2.nbQubits, int32(1) );    % nbQubits
+      test.verifyEqual( u2.qubit, int64(5) );       % qubit      
+      test.verifyEqual( u2.nbQubits, int64(1) );    % nbQubits
       test.verifyFalse( u2.fixed );                 % fixed
       test.verifyFalse( u2.controlled );            % controlled
       test.verifyEqual( u2.cosPhi, cos(pi/4) );     % cos(phi)
@@ -146,8 +146,8 @@ classdef test_qclab_qgates_U2 < matlab.unittest.TestCase
       test.verifyEqual( u2.lambda, pi/5 );          % lambda
       
       u2 = qclab.qgates.U2( 5, cos(pi/4), sin(pi/4), cos(pi/5), sin(pi/5), true );
-      test.verifyEqual( u2.qubit, int32(5) );       % qubit      
-      test.verifyEqual( u2.nbQubits, int32(1) );    % nbQubits
+      test.verifyEqual( u2.qubit, int64(5) );       % qubit      
+      test.verifyEqual( u2.nbQubits, int64(1) );    % nbQubits
       test.verifyTrue( u2.fixed );                        % fixed
       test.verifyFalse( u2.controlled );            % controlled
       test.verifyEqual( u2.cosPhi, cos(pi/4) );     % cos(phi)

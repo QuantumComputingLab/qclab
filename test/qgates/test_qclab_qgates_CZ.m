@@ -2,12 +2,12 @@ classdef test_qclab_qgates_CZ < matlab.unittest.TestCase
   methods (Test)
     function test_CZ(test)
       cz = qclab.qgates.CZ() ;
-      test.verifyEqual( cz.nbQubits, int32(2) );
+      test.verifyEqual( cz.nbQubits, int64(2) );
       test.verifyTrue( cz.fixed );
       test.verifyTrue( cz.controlled ) ;
-      test.verifyEqual( cz.control, int32(0) );
-      test.verifyEqual( cz.target, int32(1) );
-      test.verifyEqual( cz.controlState, int32(1) );
+      test.verifyEqual( cz.control, int64(0) );
+      test.verifyEqual( cz.target, int64(1) );
+      test.verifyEqual( cz.controlState, int64(1) );
       
       % matrix
       CZ_check = [1, 0, 0, 0;
@@ -17,17 +17,17 @@ classdef test_qclab_qgates_CZ < matlab.unittest.TestCase
       test.verifyEqual(cz.matrix, CZ_check );
       
       % qubit
-      test.verifyEqual( cz.qubit, int32(0) );
+      test.verifyEqual( cz.qubit, int64(0) );
       
       % qubits
       qubits = cz.qubits;
       test.verifyEqual( length(qubits), 2 );
-      test.verifyEqual( qubits(1), int32(0) );
-      test.verifyEqual( qubits(2), int32(1) );
+      test.verifyEqual( qubits(1), int64(0) );
+      test.verifyEqual( qubits(2), int64(1) );
       qnew = [5, 3] ;
       cz.setQubits( qnew );
-      test.verifyEqual( table(cz.qubits()).Var1(1), int32(3) );
-      test.verifyEqual( table(cz.qubits()).Var1(2), int32(5) );
+      test.verifyEqual( table(cz.qubits()).Var1(1), int64(3) );
+      test.verifyEqual( table(cz.qubits()).Var1(2), int64(5) );
       qnew = [0, 1];
       cz.setQubits( qnew );
       
@@ -109,9 +109,9 @@ classdef test_qclab_qgates_CZ < matlab.unittest.TestCase
       % ctranspose
       cz = qclab.qgates.CZ() ;
       czp = cz';
-      test.verifyEqual( czp.nbQubits, int32(2) );
-      test.verifyEqual( czp.control, int32(0) );
-      test.verifyEqual( czp.target, int32(1) );
+      test.verifyEqual( czp.nbQubits, int64(2) );
+      test.verifyEqual( czp.control, int64(0) );
+      test.verifyEqual( czp.target, int64(1) );
       test.verifyEqual(czp.matrix, cz.matrix' );
     end
     

@@ -7,9 +7,9 @@
 %     obj = qclab.QCircuit( nbQubits, offset )
 %
 %   Input Arguments
-%     nbQubits - number of qubits (positive integer)         
-%     offset - (optional) offset of the quantum circuit 
-%              (default: 0)
+%     nbQubits - number of qubits (positive integer)
+%     offset   - (optional) offset of the quantum circuit
+%                (default: 0)
 %
 %   Output:
 %     obj - A quantum object of type `QCircuit`.
@@ -63,15 +63,17 @@
 classdef QCircuit < qclab.QObject & qclab.QAdjustable
   properties (Access = protected)
     %> Number of qubits of this quantum circuit.
-    nbQubits_(1,1)  int32
+    nbQubits_(1,1)  int64
     %> Qubit offset of this quantum circuit.
-    offset_(1,1)  int32
+    offset_(1,1)  int64
     %> Objects of this quantum circuit.
-    objects_      qclab.QObject
+    objects_  qclab.QObject
     %> Draw property of this quantum circuit.
     block_ logical = false
     %> Label of this quantum circuit.
     label_ char = ''
+    %> Number of measurement in the circuit.
+    nbMeasurements_(1,1) int64
   end
 
   methods
@@ -93,7 +95,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       %   qubits = obj.nbQubits()
       %
       % Outputs:
-      %   qubits - Number of qubits in the circuit (int32).
+      %   qubits - Number of qubits in the circuit (int64).
       nbQubits = obj.nbQubits_;
     end
 
@@ -105,7 +107,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       %   q = obj.qubit()
       %
       % Outputs:
-      %   q - The index of the first qubit (int32).
+      %   q - The index of the first qubit (int64).
       qubit = obj.offset_;
     end
 
@@ -117,13 +119,32 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       %   qubits = obj.qubits()
       %
       % Outputs:
-      %   qubits - array of indices of qubits used in the circuit (int32 array).
+      %   qubits - array of indices of qubits used in the circuit (int64 array).
       qubits = obj.offset_:obj.nbQubits_+obj.offset_-1;
     end
+
+    % label for draw and tex function
+    function [label] = label(obj, parameter, tex )
+      label = [' ',obj.label_,' '];
+    end
+
+    % qubits
+    function [nbMeasurements] = nbMeasurements(obj)
+      % qubits - Return the number of measurements of the quantum circuit.
+      %
+      % Syntax:
+      %   nbMeasurements = obj.nbMeasurements()
+      %
+      % Outputs:
+      %   nbMeasurements - Number of measurements in the circuit (int64).
+      nbMeasurements = obj.nbMeasurements_;
+    end
+
 
     % matrix
     function [mat] = matrix(obj)
       % matrix - Return the unitary matrix corresponding to this quantum circuit.
+      %          Does not work for circuits which include measurements
       %
       % Works only on circuits without measurements.
       %
@@ -132,9 +153,9 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       %
       % Outputs:
       %   mat - Unitary matrix representing the quantum circuit (double).
-      assert(isempty(obj.measurements),['circuit including measurements ' ...
-        'has no unitary representation'])
-      mat = qclab.qId(obj.nbQubits);
+      assert(obj.nbMeasurements == 0)
+      issparse = qclab.isSparse(obj.nbQubits_);
+      mat = qclab.qId(obj.nbQubits, issparse);
       for i = 1:length(obj.objects_)
         mat = apply(obj.objects_(i), 'R', 'N', obj.nbQubits, mat) ;
       end
@@ -171,7 +192,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       for i = 1:length(obj.objects_)
         v = apply(obj.objects_(i), 'R', 'N', nbQubits, v);
       end
-      [meas, measMid, measEnd] = obj.measurements;
+      % no measurements
       if isa(v,"double")
         w = v;
         v = struct;
@@ -179,14 +200,20 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
         v.res = dec2bin(0:length(w)-1);
         v.res = v.res(w ~= 0,:);
         v.res = cellstr(v.res);
-        v.prob = w.^2;
+        v.prob = abs(w).^2;
         v.prob = v.prob(w ~= 0);
         meas = [arrayfun(@(x) qclab.Measurement(x), 0:obj.nbQubits-1)];
         measMid = [];
         measEnd = [arrayfun(@(x) qclab.Measurement(x), 0:obj.nbQubits-1)];
-      end
+      
       simulation = qclab.QSimulate(v.states, v.res, v.prob, ...
-                                {meas, measMid, measEnd}, seed);
+        {meas, measMid, measEnd}, seed);
+      % with measurements
+      else
+        [meas, measMid, measEnd] = obj.measurements;
+        simulation = qclab.QSimulate(v.states, v.res, v.prob, ...
+        {meas, measMid, measEnd}, seed);
+      end
     end
 
     % ==========================================================================
@@ -225,24 +252,24 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
         if strcmp(side,'L') % Left + NoTrans
           for i = length(obj.objects_):-1:1
             current = apply(obj.objects_(i), side, op, nbQubits, current, ...
-                            obj.qubit + offset );
+              obj.qubit + offset );
           end
         else % Right + NoTrans
           for i = 1:length(obj.objects_)
             current = apply(obj.objects_(i), side, op, nbQubits, current, ...
-                            obj.qubit + offset );
+              obj.qubit + offset );
           end
         end
       else
         if strcmp(side,'L') % Left + [Conj]Trans
           for i = 1:length(obj.objects_)
             current = apply(obj.objects_(i), side, op, nbQubits, current, ...
-                            obj.qubit + offset );
+              obj.qubit + offset );
           end
         else % Right + [Conj]Trans
           for i = length(obj.objects_):-1:1
             current = apply(obj.objects_(i), side, op, nbQubits, current, ...
-                            obj.qubit + offset );
+              obj.qubit + offset );
           end
         end
       end
@@ -256,7 +283,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       %   [meas, meas_mid, meas_end] = obj.measurements()
       %
       % Outputs:
-      %   meas      - All measurements of the circuit (qclab.Measurement).            
+      %   meas      - All measurements of the circuit (qclab.Measurement).
       %   meas_mid  - Mid-circuit measurements (qclab.Measurement).
       %   meas_end  - End-circuit measurements (qclab.Measurement).
 
@@ -271,7 +298,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
         % object is applied to the measurements qubit.
         qubits_meas_end = arrayfun(@(measurement) measurement.qubit, meas_end);
         indicesToDelete = ismember(qubits_meas_end, ...
-                                   obj.objectsFlattend(i).qubits);
+          obj.objectsFlattend(i).qubits);
         meas_end(indicesToDelete) = [];
         % Add object to meas and meas_end if it is a Measurement
         if isa(obj.objectsFlattend(i), 'qclab.Measurement')
@@ -341,10 +368,10 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
         else
           measQubits = arrayfun(@(x) x.qubit, meas);
           basisChangeMatrices = arrayfun(@(x) x.matrix, meas, ...
-                                        'UniformOutput', false);
+            'UniformOutput', false);
           measQubits_o = arrayfun(@(x) x.qubit, meas_o);
           basisChangeMatrices_o = arrayfun(@(x) x.matrix, meas_o, ...
-                                          'UniformOutput', false);
+            'UniformOutput', false);
           [meas_sort, sortIdx] = sort(measQubits);
           basisChangeMatrix_sort = basisChangeMatrices(sortIdx);
           [meas_sort_o, sortIdx_o] = sort(measQubits_o);
@@ -352,15 +379,15 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
           % Check if all measurements are equal (same qubits and basis
           % changes)
           if isequal(meas_sort, meas_sort_o) && ...
-             isequal(basisChangeMatrix_sort, basisChangeMatrix_sort_o)
+              isequal(basisChangeMatrix_sort, basisChangeMatrix_sort_o)
             bool = true;
             % Check if all sub matrices between a layer of measurements and
             % the layers of measurements are the same
             rest_objects_comb = {obj.objectsFlattend, other.objectsFlattend};
             while (~isempty(rest_objects_comb{1}) || ...
-                   ~isempty(rest_objects_comb{2})) && bool == true
-              subcircuits = {qclab.QCircuit(obj.nbQubits_), 
-                             qclab.QCircuit(other.nbQubits_)};
+                ~isempty(rest_objects_comb{2})) && bool == true
+              subcircuits = {qclab.QCircuit(obj.nbQubits_),
+                qclab.QCircuit(other.nbQubits_)};
               measure_layers = {[], []};
               remove_indices = {[], []};
               for k = 1:2
@@ -371,7 +398,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
                     % only add gate, of no measurement occured on its
                     % qubits
                     if isempty(intersect(measure_layers{k}, ...
-                               rest_objects_comb{k}(i).qubits))
+                        rest_objects_comb{k}(i).qubits))
                       subcircuits{k}.push_back(rest_objects_comb{k}(i));
                       remove_indices{k}(end+1) = i;
                     end
@@ -388,7 +415,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
               submatrices = {subcircuits{1}.matrix, subcircuits{2}.matrix};
               % compare submatrices and measure layers
               bool = max(abs(submatrices{1}(:) - submatrices{2}(:))) < ...
-                     5*eps && isequal(measure_layers{1}, measure_layers{2});
+                5*eps && isequal(measure_layers{1}, measure_layers{2});
             end
           end
         end
@@ -403,7 +430,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       %   offset = obj.offset()
       %
       % Outputs:
-      %   offset - offset of the quantum circuit (int32).
+      %   offset - offset of the quantum circuit (int64).
       offset = obj.offset_ ;
     end
 
@@ -415,7 +442,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       %   obj.setOffset(offset)
       %
       % Inputs:
-      %   offset - offset to be set (int32).
+      %   offset - offset to be set (int64).
       assert(qclab.isNonNegInteger(offset));
       obj.offset_ = offset ;
     end
@@ -499,7 +526,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
             sub_objects(j).setQubits(sub_objects(j).qubits + offset);
           end
           objectsFlattend = [objectsFlattend(1:i-1), sub_objects, ...
-                              objectsFlattend(i+1:end)];
+            objectsFlattend(i+1:end)];
           i = i + length(sub_objects);
         else
           i = i + 1;
@@ -535,7 +562,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       %   num = obj.nbObjects()
       %
       % Outputs:
-      %   num - Number of quantum objects in the circuit (int32).
+      %   num - Number of quantum objects in the circuit (int64).
       nbObjects = length(obj.objects_);
     end
 
@@ -550,6 +577,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       % Syntax:
       %   obj.clear()
       obj.objects_ = qclab.QObject.empty;
+      obj.nbMeasurements_ = 0;
     end
 
     %> @brief Inserts `objects` at unique positions `pos` in this quantum circuit.
@@ -565,6 +593,14 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       assert( qclab.isNonNegIntegerArray( pos - 1 ) );
       assert( length(pos) == length(objects) );
       assert( obj.canInsert(objects) );
+      for i = 1:length(objects)
+        if isa(objects( i ), 'qclab.Measurement')
+          obj.nbMeasurements_ = obj.nbMeasurements_ + 1;
+        elseif isa(objects( i ), 'qclab.QCircuit')
+          obj.nbMeasurements_ = obj.nbMeasurements_ + ...
+            objects( i ).nbMeasurements_;
+        end
+      end
       totalObjects =  length(obj.objects_) + length(objects);
       newObjects(1,totalObjects) = qclab.qgates.Identity; % initialize array
       newObjects(pos) = objects;
@@ -589,6 +625,14 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       %   pos - Position(s) of the object(s) to erase.
       assert( qclab.isNonNegIntegerArray( pos - 1 ) ) ;
       assert( max( pos ) <= obj.nbObjects );
+      for i = 1:length( pos )
+        if isa(obj.objects_( pos(i) ), 'qclab.Measurement')
+          obj.nbMeasurements_ = obj.nbMeasurements_ - 1;
+        elseif isa(obj.objects_( pos(i) ), 'qclab.QCircuit')
+          obj.nbMeasurements_ = obj.nbMeasurements_ - ...
+            obj.objects_( pos ).nbMeasurements_;
+        end
+      end
       obj.objects_( pos ) = [] ;
     end
 
@@ -606,7 +650,18 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       assert( pos <= obj.nbObjects );
       assert( length(object) == 1 );
       assert( obj.canInsert( object ) );
+      if isa(obj.objects_( pos ), 'qclab.Measurement')
+        obj.nbMeasurements_ = obj.nbMeasurements_ - 1;
+      elseif isa(obj.objects_( pos ), 'qclab.QCircuit')
+        obj.nbMeasurements_ = obj.nbMeasurements_ - ...
+          obj.objects_( pos ).nbMeasurements_;
+      end
       obj.objects_( pos ) = object ;
+      if isa(object, 'qclab.Measurement')
+        obj.nbMeasurements_ = obj.nbMeasurements_ + 1;
+      elseif isa(object, 'qclab.QCircuit')
+        obj.nbMeasurements_ = obj.nbMeasurements_ + object.nbMeasurements_;
+      end
     end
 
     %> @brief Add an object to the end of this quantum circuit.
@@ -622,6 +677,11 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       %            (see qclab.QCircuit)).
       assert( obj.canInsert( object ) && isscalar( object ) );
       obj.objects_(end+1) = object ;
+      if isa(object, 'qclab.Measurement')
+        obj.nbMeasurements_ = obj.nbMeasurements_ + 1;
+      elseif isa(object, 'qclab.QCircuit')
+        obj.nbMeasurements_ = obj.nbMeasurements_ + object.nbMeasurements_;
+      end
     end
 
     %> @brief Remove the last gate of this quantum circuit.
@@ -630,6 +690,12 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       %
       % Syntax:
       %   obj.pop_back()
+      if isa(obj.objects_( end ), 'qclab.Measurement')
+        obj.nbMeasurements_ = obj.nbMeasurements_ - 1;
+      elseif isa(obj.objects_( end ), 'qclab.QCircuit')
+        obj.nbMeasurements_ = obj.nbMeasurements_ - ...
+          obj.objects_( end ).nbMeasurements_;
+      end
       obj.objects_(end) = [];
     end
 
@@ -649,7 +715,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       obj.objects_(end+1) = qclab.Barrier(obj.qubits, visibility);
     end
 
-    %> @brief Checks if the objects in `objects` can be inserted into this 
+    %> @brief Checks if the objects in `objects` can be inserted into this
     %> quantum circuit.
     function [bool] = canInsert(obj, objects)
       % canInsert - Check if an object can be inserted into this quantum circuit.
@@ -703,7 +769,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       obj.block_ = true;
       obj.label_ = label;
     end
-    
+
     % unBlock
     function unBlock(obj, recursive)
       % unBlock - Set the block drawing property to false.
@@ -728,8 +794,8 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       % If recursive is true, unblock all subcircuits
       if recursive
         for i = 1:length(obj.objects)
-          if isa(obj.objects(i), qclab.QCircuit) 
-          obj.subCircuits{i}.unBlock(true); % Recursively unblock subcircuits
+          if isa(obj.objects(i), qclab.QCircuit)
+            obj.subCircuits{i}.unBlock(true); % Recursively unblock subcircuits
           end
         end
       end
@@ -743,7 +809,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
     %>              - 0  : return cell array with ascii characters as `out`
     %>              - 1  : draw to command window (default)
     %>              - >1 : draw to (open) file id
-    %> @param parameter 'N' don't print parameter (default), 'S' print short 
+    %> @param parameter 'N' don't print parameter (default), 'S' print short
     %>                  parameter, 'L' print long parameter.
     %> @param offset offset applied to qubit
     %>
@@ -769,7 +835,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       %              - 'S' print short parameter,
       %              - 'L' print long parameter.
       %   offset   - Offset applied to the qubit indices (default is 0).
-       
+
       if nargin < 2, fid = 1; end
       if nargin < 3, parameter = 'N'; end
       if nargin < 4, offset = 0; end
@@ -777,8 +843,8 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       if obj.block_ == false
         circuitCell = cell(3*obj.nbQubits,1); % cell array to store all strings
         circuitCell(:) = {''};
-        charIndex = ones(obj.nbQubits, 1);    % most right character index for 
-                                              % every qubit
+        charIndex = ones(obj.nbQubits, 1);    % most right character index for
+        % every qubit
         for i = 1:obj.nbObjects
           % Get the qubits and draw strings for the current gate
           thisQubits = obj.objects_( i ).qubits ;
@@ -807,11 +873,11 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
           for q = thisQubits
             thisq = q - thisQubits(1);
             circuitCell{ 3*q + 1 }  = strcat( circuitCell{ 3*q + 1}, ...
-                                        thisObjectCell{ 3*thisq + 1 } );
+              thisObjectCell{ 3*thisq + 1 } );
             circuitCell{ 3*q + 2 }  = strcat( circuitCell{ 3*q + 2}, ...
-                                        thisObjectCell{ 3*thisq + 2 } );
+              thisObjectCell{ 3*thisq + 2 } );
             circuitCell{ 3*q + 3 }  = strcat( circuitCell{ 3*q + 3 }, ...
-                                        thisObjectCell{ 3*thisq + 3 } );
+              thisObjectCell{ 3*thisq + 3 } );
           end
 
           % update the charIndex on thisQubits
@@ -825,17 +891,17 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
           diffChar = maxChar - charIndex( q + 1 );
           if diffChar > 0
             circuitCell{ 3*q + 1 } = strcat( circuitCell{ 3*q + 1 }, ...
-                                      repmat( space, 1, diffChar ) );
+              repmat( space, 1, diffChar ) );
             circuitCell{ 3*q + 2 } = strcat( circuitCell{ 3*q + 2 }, ...
-                                      repmat( h, 1, diffChar ) );
+              repmat( h, 1, diffChar ) );
             circuitCell{ 3*q + 3 } = strcat( circuitCell{ 3*q + 3 }, ...
-                                      repmat( space, 1, diffChar ) );
+              repmat( space, 1, diffChar ) );
           end
         end
       else
         nbQubits = obj.nbQubits;
         circuitCell =  cell(3*nbQubits,1);
-        label = [' ' , obj.label_ , ' '];
+        label = obj.label ;
         width = length( label );
         if nbQubits == 1
           circuitCell{1} = [ space, ulc, repmat(h, 1, width), urc ];
@@ -886,7 +952,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
     %>              - 0  : return cell array with ascii characters as `out`
     %>              - 1  : draw to command window (default)
     %>              - >1 : draw to (open) file id
-    %> @param parameter 'N' don't print parameter (default), 'S' print short 
+    %> @param parameter 'N' don't print parameter (default), 'S' print short
     %>                  parameter, 'L' print long parameter.
     %> @param offset offset applied to qubit
     %>
@@ -932,7 +998,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
             diffTab = thisTab - tabIndex( q + 1 );
             if diffTab > 0
               circuitCell{ q + 1 } = strcat( circuitCell{ q + 1 }, ...
-                                      repmat( '&\t\\qw\t', 1, diffTab ) );
+                repmat( '&\t\\qw\t', 1, diffTab ) );
 
               % update charIndex on q + 1
               tabIndex( q + 1 ) = tabIndex( q + 1 )  + diffTab ;
@@ -941,7 +1007,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
           for q = thisQubits
             thisq = q - thisQubits(1);
             circuitCell{ q + 1 }  = strcat( circuitCell{ q + 1 }, ...
-                                      thisObjectCell{ thisq + 1 } );
+              thisObjectCell{ thisq + 1 } );
           end
 
           % update tabIndex
@@ -955,15 +1021,20 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
           diffTab = maxTab - tabIndex( q + 1 );
           if diffTab > 0
             circuitCell{ q + 1 } = strcat( circuitCell{ q + 1 }, ...
-                                      repmat( '&\t\\qw\t', 1, diffTab ) );
+              repmat( '&\t\\qw\t', 1, diffTab ) );
           end
         end
       else
         label = obj.label_;
-        circuitCell{1} = ['&\t\\multigate{' int2str(obj.nbQubits-1) '}' ...
-                                              '{', label,'}\t'] ;
-        for i = 2:obj.nbQubits
-          circuitCell{i} = ['&\t\\ghost{', label,'}\t'] ;
+        if obj.nbQubits == 1
+          circuitCell = cell(1,1) ;
+          circuitCell{1} = ['&\t\\gate{\\mathrm{', label,'}}\t'] ;
+        else
+          circuitCell{1} = ['&\t\\multigate{' int2str(obj.nbQubits-1) '}' ...
+            '{\\mathrm{', label,'}}\t'] ;
+          for i = 2:obj.nbQubits
+            circuitCell{i} = ['&\t\\ghost{\\mathrm{', label,'}}\t'] ;
+          end
         end
       end
       if fid > 0
@@ -998,6 +1069,16 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
     function cp = copyElement(obj)
       cp = copyElement@matlab.mixin.Copyable( obj );
       cp.objects_ = obj.objects() ;
+    end
+
+    %> Property groups
+    function groups = getPropertyGroups(obj)
+      import matlab.mixin.util.PropertyGroup
+      props = struct();
+      props.nbQubits = obj.nbQubits;
+      props.nbObjects = obj.nbObjects;
+      props.offset = obj.offset;
+      groups = PropertyGroup(props);
     end
   end
 end % class QCircuit

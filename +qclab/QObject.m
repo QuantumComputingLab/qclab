@@ -66,15 +66,25 @@ classdef (Abstract) QObject < handle & ...
     end
   end
   
-  methods (Sealed, Access = protected )
+  methods ( Access = protected )
     %> display Heterogeneous header
     function header = getHeader(obj)
-         header = getHeader@matlab.mixin.CustomDisplay(obj);
+         object = matlab.mixin.CustomDisplay.getClassNameForHeader(obj);
+         headerStr = [object ' with properties '];
+         header =  sprintf('%s\n',headerStr);
     end
     
     %> Property groups
     function groups = getPropertyGroups(obj)
-         groups = getPropertyGroups@matlab.mixin.CustomDisplay(obj);
+      import matlab.mixin.util.PropertyGroup
+      props = struct();
+      props.nbQubits = obj.nbQubits;
+      if obj.nbQubits == 1
+        props.Qubit = obj.qubit; 
+      else
+        props.Qubits = obj.qubits;
+      end       
+      groups = PropertyGroup(props);
     end
     
     %> display Heterogeneous footer

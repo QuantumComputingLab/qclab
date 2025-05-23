@@ -2,28 +2,28 @@ classdef test_qclab_qgates_CU3 < matlab.unittest.TestCase
   methods (Test)
     function test_CU3(test)
       cu3 = qclab.qgates.CU3() ;
-      test.verifyEqual( cu3.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( cu3.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( cu3.fixed );                 % fixed
       test.verifyTrue( cu3.controlled );             % controlled
-      test.verifyEqual( cu3.control, int32(0) );     % control
-      test.verifyEqual( cu3.target, int32(1) );      % target
-      test.verifyEqual( cu3.controlState, int32(1)); % controlState
+      test.verifyEqual( cu3.control, int64(0) );     % control
+      test.verifyEqual( cu3.target, int64(1) );      % target
+      test.verifyEqual( cu3.controlState, int64(1)); % controlState
       
       % matrix
       test.verifyEqual(cu3.matrix, eye(4), 'AbsTol', 4*eps );
       
       % qubit
-      test.verifyEqual( cu3.qubit, int32(0) );
+      test.verifyEqual( cu3.qubit, int64(0) );
       
       % qubits
       qubits = cu3.qubits;
       test.verifyEqual( length(qubits), 2 );
-      test.verifyEqual( qubits(1), int32(0) );
-      test.verifyEqual( qubits(2), int32(1) );
+      test.verifyEqual( qubits(1), int64(0) );
+      test.verifyEqual( qubits(2), int64(1) );
       qnew = [5, 3] ;
       cu3.setQubits( qnew );
-      test.verifyEqual( table(cu3.qubits()).Var1(1), int32(3) );
-      test.verifyEqual( table(cu3.qubits()).Var1(2), int32(5) );
+      test.verifyEqual( table(cu3.qubits()).Var1(1), int64(3) );
+      test.verifyEqual( table(cu3.qubits()).Var1(2), int64(5) );
       qnew = [0, 1];
       cu3.setQubits( qnew );
       

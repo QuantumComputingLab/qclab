@@ -2,12 +2,12 @@ classdef test_qclab_qgates_CNOT < matlab.unittest.TestCase
   methods (Test)
     function test_CNOT(test)
       cnot = qclab.qgates.CNOT() ;
-      test.verifyEqual( cnot.nbQubits, int32(2) );
+      test.verifyEqual( cnot.nbQubits, int64(2) );
       test.verifyTrue( cnot.fixed );
       test.verifyTrue( cnot.controlled ) ;
-      test.verifyEqual( cnot.control, int32(0) );
-      test.verifyEqual( cnot.target, int32(1) );
-      test.verifyEqual( cnot.controlState, int32(1) );
+      test.verifyEqual( cnot.control, int64(0) );
+      test.verifyEqual( cnot.target, int64(1) );
+      test.verifyEqual( cnot.controlState, int64(1) );
       
       % matrix
       CNOT_check = [1, 0, 0, 0;
@@ -17,17 +17,17 @@ classdef test_qclab_qgates_CNOT < matlab.unittest.TestCase
       test.verifyEqual(cnot.matrix, CNOT_check );
       
       % qubit
-      test.verifyEqual( cnot.qubit, int32(0) );
+      test.verifyEqual( cnot.qubit, int64(0) );
       
       % qubits
       qubits = cnot.qubits;
       test.verifyEqual( length(qubits), 2 );
-      test.verifyEqual( qubits(1), int32(0) );
-      test.verifyEqual( qubits(2), int32(1) );
+      test.verifyEqual( qubits(1), int64(0) );
+      test.verifyEqual( qubits(2), int64(1) );
       qnew = [5, 3] ;
       cnot.setQubits( qnew );
-      test.verifyEqual( table(cnot.qubits()).Var1(1), int32(3) );
-      test.verifyEqual( table(cnot.qubits()).Var1(2), int32(5) );
+      test.verifyEqual( table(cnot.qubits()).Var1(1), int64(3) );
+      test.verifyEqual( table(cnot.qubits()).Var1(2), int64(5) );
       qnew = [0, 1];
       cnot.setQubits( qnew );
       
@@ -109,9 +109,9 @@ classdef test_qclab_qgates_CNOT < matlab.unittest.TestCase
       % ctranspose
        cnot = qclab.qgates.CNOT() ;
        cnotp = cnot';
-       test.verifyEqual( cnotp.nbQubits, int32(2) );
-       test.verifyEqual( cnotp.control, int32(0) );
-       test.verifyEqual( cnotp.target, int32(1) );
+       test.verifyEqual( cnotp.nbQubits, int64(2) );
+       test.verifyEqual( cnotp.control, int64(0) );
+       test.verifyEqual( cnotp.target, int64(1) );
        test.verifyEqual(cnotp.matrix, cnot.matrix' );
     end
     

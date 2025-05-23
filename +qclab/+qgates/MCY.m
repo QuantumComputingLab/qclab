@@ -43,22 +43,22 @@ classdef MCY < qclab.qgates.QMultiControlledGate
       end
     end
     
-     % target
-    function [target] = target(obj)
-      target = obj.gate_.qubit ;
+     % targets
+    function [targets] = targets(obj)
+      targets = obj.gate_.qubit ;
     end
     
-    %> Copy of 1-qubit gate of multi-controlled-NOT gate
-    function [gate] = gate(obj)
-      gate = copy(obj.gate_);
-    end
-    
-    % setTarget
-    function setTarget(obj, target)
+    % setTargets
+    function setTargets(obj, target)
       assert( qclab.isNonNegInteger(target) ) ; 
       controls = obj.controls() ;
       assert( ~(any(controls(:) == target) ) ) ;
       obj.gate_.setQubit( target );
+    end
+
+    %> Copy of 1-qubit gate of multi-controlled-PauliY gate
+    function [gate] = gate(obj)
+      gate = copy(obj.gate_);
     end
     
     % label for draw and tex function
@@ -68,6 +68,13 @@ classdef MCY < qclab.qgates.QMultiControlledGate
       label = obj.gate_.label( parameter, tex );
     end
     
+    % setQubits
+    function setQubits(obj, qubits)
+      assert( qclab.isNonNegIntegerArray(qubits) ) ;
+      assert( length(qubits) == length(unique(qubits)) );
+      obj.controls_ = sort(qubits(1:end-1)) ;
+      obj.setTargets( qubits(end) ) ;
+    end
   end
   
   methods (Static)

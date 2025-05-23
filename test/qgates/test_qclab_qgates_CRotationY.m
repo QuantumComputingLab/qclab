@@ -2,28 +2,28 @@ classdef test_qclab_qgates_CRotationY < matlab.unittest.TestCase
   methods (Test)
     function test_CRotationY(test)
       croty = qclab.qgates.CRotationY() ;
-      test.verifyEqual( croty.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( croty.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( croty.fixed );                 % fixed
       test.verifyTrue( croty.controlled );             % controlled
-      test.verifyEqual( croty.control, int32(0) );     % control
-      test.verifyEqual( croty.target, int32(1) );      % target
-      test.verifyEqual( croty.controlState, int32(1)); % controlState
+      test.verifyEqual( croty.control, int64(0) );     % control
+      test.verifyEqual( croty.target, int64(1) );      % target
+      test.verifyEqual( croty.controlState, int64(1)); % controlState
       
       % matrix
       test.verifyEqual(croty.matrix, eye(4) );
       
       % qubit
-      test.verifyEqual( croty.qubit, int32(0) );
+      test.verifyEqual( croty.qubit, int64(0) );
       
       % qubits
       qubits = croty.qubits;
       test.verifyEqual( length(qubits), 2 );
-      test.verifyEqual( qubits(1), int32(0) );
-      test.verifyEqual( qubits(2), int32(1) );
+      test.verifyEqual( qubits(1), int64(0) );
+      test.verifyEqual( qubits(2), int64(1) );
       qnew = [5, 3] ;
       croty.setQubits( qnew );
-      test.verifyEqual( table(croty.qubits()).Var1(1), int32(3) );
-      test.verifyEqual( table(croty.qubits()).Var1(2), int32(5) );
+      test.verifyEqual( table(croty.qubits()).Var1(1), int64(3) );
+      test.verifyEqual( table(croty.qubits()).Var1(2), int64(5) );
       qnew = [0, 1];
       croty.setQubits( qnew );
       
@@ -158,9 +158,9 @@ classdef test_qclab_qgates_CRotationY < matlab.unittest.TestCase
       % ctranspose
       croty = qclab.qgates.CRotationY(1, 2, pi/3 ) ;
       crotyp = croty';
-      test.verifyEqual( crotyp.nbQubits, int32(2) );
-      test.verifyEqual( crotyp.control, int32(1) );
-      test.verifyEqual( crotyp.target, int32(2) );
+      test.verifyEqual( crotyp.nbQubits, int64(2) );
+      test.verifyEqual( crotyp.control, int64(1) );
+      test.verifyEqual( crotyp.target, int64(2) );
       test.verifyEqual(crotyp.matrix, croty.matrix', 'AbsTol', eps );
       
     end
@@ -172,12 +172,12 @@ classdef test_qclab_qgates_CRotationY < matlab.unittest.TestCase
       angle = qclab.QAngle( theta/2 );
       croty = qclab.qgates.CRotationY( 1, 3, angle );
       
-      test.verifyEqual( croty.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( croty.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( croty.fixed );                 % fixed
       test.verifyTrue( croty.controlled );             % controlled
-      test.verifyEqual( croty.control, int32(1) );     % control
-      test.verifyEqual( croty.target, int32(3) );      % target
-      test.verifyEqual( croty.controlState, int32(1));        % controlState
+      test.verifyEqual( croty.control, int64(1) );     % control
+      test.verifyEqual( croty.target, int64(3) );      % target
+      test.verifyEqual( croty.controlState, int64(1));        % controlState
       
       test.verifyEqual( croty.theta, theta, 'AbsTol', eps );
       test.verifyEqual( croty.cos, cos(theta/2), 'AbsTol', eps);
@@ -186,12 +186,12 @@ classdef test_qclab_qgates_CRotationY < matlab.unittest.TestCase
       % angle, custom controlState
       croty = qclab.qgates.CRotationY( 1, 3, angle, 0 );
       
-      test.verifyEqual( croty.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( croty.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( croty.fixed );                 % fixed
       test.verifyTrue( croty.controlled );             % controlled
-      test.verifyEqual( croty.control, int32(1) );     % control
-      test.verifyEqual( croty.target, int32(3) );      % target
-      test.verifyEqual( croty.controlState, int32(0));        % controlState
+      test.verifyEqual( croty.control, int64(1) );     % control
+      test.verifyEqual( croty.target, int64(3) );      % target
+      test.verifyEqual( croty.controlState, int64(0));        % controlState
       
       test.verifyEqual( croty.theta, theta, 'AbsTol', eps );
       test.verifyEqual( croty.cos, cos(theta/2), 'AbsTol', eps);
@@ -200,12 +200,12 @@ classdef test_qclab_qgates_CRotationY < matlab.unittest.TestCase
       % theta, default controlState
       croty = qclab.qgates.CRotationY( 1, 3, theta );
       
-      test.verifyEqual( croty.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( croty.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( croty.fixed );                 % fixed
       test.verifyTrue( croty.controlled );             % controlled
-      test.verifyEqual( croty.control, int32(1) );     % control
-      test.verifyEqual( croty.target, int32(3) );      % target
-      test.verifyEqual( croty.controlState, int32(1));        % controlState
+      test.verifyEqual( croty.control, int64(1) );     % control
+      test.verifyEqual( croty.target, int64(3) );      % target
+      test.verifyEqual( croty.controlState, int64(1));        % controlState
       
       test.verifyEqual( croty.theta, theta, 'AbsTol', eps );
       test.verifyEqual( croty.cos, cos(theta/2), 'AbsTol', eps);
@@ -214,12 +214,12 @@ classdef test_qclab_qgates_CRotationY < matlab.unittest.TestCase
       % theta, custom controlState
       croty = qclab.qgates.CRotationY( 1, 3, theta, 0 );
       
-      test.verifyEqual( croty.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( croty.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( croty.fixed );                 % fixed
       test.verifyTrue( croty.controlled );             % controlled
-      test.verifyEqual( croty.control, int32(1) );     % control
-      test.verifyEqual( croty.target, int32(3) );      % target
-      test.verifyEqual( croty.controlState, int32(0));        % controlState
+      test.verifyEqual( croty.control, int64(1) );     % control
+      test.verifyEqual( croty.target, int64(3) );      % target
+      test.verifyEqual( croty.controlState, int64(0));        % controlState
       
       test.verifyEqual( croty.theta, theta, 'AbsTol', eps );
       test.verifyEqual( croty.cos, cos(theta/2), 'AbsTol', eps);
@@ -228,12 +228,12 @@ classdef test_qclab_qgates_CRotationY < matlab.unittest.TestCase
       % cos, sin, default controlState
       croty = qclab.qgates.CRotationY( 1, 3, cos(theta), sin(theta) );
       
-      test.verifyEqual( croty.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( croty.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( croty.fixed );                 % fixed
       test.verifyTrue( croty.controlled );             % controlled
-      test.verifyEqual( croty.control, int32(1) );     % control
-      test.verifyEqual( croty.target, int32(3) );      % target
-      test.verifyEqual( croty.controlState, int32(1));        % controlState
+      test.verifyEqual( croty.control, int64(1) );     % control
+      test.verifyEqual( croty.target, int64(3) );      % target
+      test.verifyEqual( croty.controlState, int64(1));        % controlState
       
       test.verifyEqual( croty.theta, 2*theta, 'AbsTol', eps );
       test.verifyEqual( croty.cos, cos(theta), 'AbsTol', eps);
@@ -242,12 +242,12 @@ classdef test_qclab_qgates_CRotationY < matlab.unittest.TestCase
       % cos, sin, custom controlState
       croty = qclab.qgates.CRotationY( 1, 3, cos(theta), sin(theta), 0 );
       
-      test.verifyEqual( croty.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( croty.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( croty.fixed );                 % fixed
       test.verifyTrue( croty.controlled );             % controlled
-      test.verifyEqual( croty.control, int32(1) );     % control
-      test.verifyEqual( croty.target, int32(3) );      % target
-      test.verifyEqual( croty.controlState, int32(0));        % controlState
+      test.verifyEqual( croty.control, int64(1) );     % control
+      test.verifyEqual( croty.target, int64(3) );      % target
+      test.verifyEqual( croty.controlState, int64(0));        % controlState
       
       test.verifyEqual( croty.theta, 2*theta, 'AbsTol', eps );
       test.verifyEqual( croty.cos, cos(theta), 'AbsTol', eps);

@@ -3,12 +3,12 @@ classdef test_qclab_Barrier < matlab.unittest.TestCase
     function test_Barrier(test)
       B = qclab.Barrier([0,1]);
       
-      test.verifyEqual( B.nbQubits, int32(2) );     % nbQubits
+      test.verifyEqual( B.nbQubits, int64(2) );     % nbQubits
       test.verifyTrue( B.fixed );               % fixed
       test.verifyFalse( B.controlled );         % controlled
       
       % qubit
-      test.verifyEqual( B.qubit, int32(0) );
+      test.verifyEqual( B.qubit, int64(0) );
 
       % visibility
       test.verifyEqual( B.visibility, false );
@@ -16,7 +16,7 @@ classdef test_qclab_Barrier < matlab.unittest.TestCase
       % qubits
       qubits = B.qubits;
       test.verifyEqual( length(qubits), 2 );
-      test.verifyEqual( qubits(1), int32(0) );
+      test.verifyEqual( qubits(1), int64(0) );
       
       % matrix
       test.verifyEqual( B.matrix, [1, 0, 0,0;0,1,0,0;0,0,1,0;0,0, 0, 1]);
@@ -47,7 +47,7 @@ classdef test_qclab_Barrier < matlab.unittest.TestCase
       % ctranspose
       B = qclab.Barrier([0,1]);
       Bp = B';
-      test.verifyEqual( Bp.nbQubits, int32(2) );
+      test.verifyEqual( Bp.nbQubits, int64(2) );
       test.verifyEqual(Bp.matrix, B.matrix' );
     end
   end

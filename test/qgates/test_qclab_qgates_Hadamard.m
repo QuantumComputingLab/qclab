@@ -3,22 +3,22 @@ classdef test_qclab_qgates_Hadamard < matlab.unittest.TestCase
     function test_Hadamard(test)
       H = qclab.qgates.Hadamard();
       
-      test.verifyEqual( H.nbQubits, int32(1) );     % nbQubits
+      test.verifyEqual( H.nbQubits, int64(1) );     % nbQubits
       test.verifyTrue( H.fixed );               % fixed
       test.verifyFalse( H.controlled );         % controlled
       
       % qubit
-      test.verifyEqual( H.qubit, int32(0) );
+      test.verifyEqual( H.qubit, int64(0) );
       H.setQubit( 2 );
-      test.verifyEqual( H.qubit, int32(2) );
+      test.verifyEqual( H.qubit, int64(2) );
       
       % qubits
       qubits = H.qubits;
       test.verifyEqual( length(qubits), 1 );
-      test.verifyEqual( qubits(1), int32(2) );
+      test.verifyEqual( qubits(1), int64(2) );
       qnew = 3 ;
       H.setQubits( qnew );
-      test.verifyEqual( H.qubit, int32(3) );
+      test.verifyEqual( H.qubit, int64(3) );
       
       % matrix
       sqrt2 = 1/sqrt(2);
@@ -52,7 +52,7 @@ classdef test_qclab_qgates_Hadamard < matlab.unittest.TestCase
       % ctranspose
       H = qclab.qgates.Hadamard();
       Hp = H';
-      test.verifyEqual( Hp.nbQubits, int32(1) );
+      test.verifyEqual( Hp.nbQubits, int64(1) );
       test.verifyEqual(Hp.matrix, H.matrix' );
     end
   end

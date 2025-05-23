@@ -2,12 +2,12 @@ classdef test_qclab_qgates_CU2 < matlab.unittest.TestCase
   methods (Test)
     function test_CU2(test)
       cu2 = qclab.qgates.CU2() ;
-      test.verifyEqual( cu2.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( cu2.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( cu2.fixed );                 % fixed
       test.verifyTrue( cu2.controlled );             % controlled
-      test.verifyEqual( cu2.control, int32(0) );     % control
-      test.verifyEqual( cu2.target, int32(1) );      % target
-      test.verifyEqual( cu2.controlState, int32(1)); % controlState
+      test.verifyEqual( cu2.control, int64(0) );     % control
+      test.verifyEqual( cu2.target, int64(1) );      % target
+      test.verifyEqual( cu2.controlState, int64(1)); % controlState
       
       % matrix
       mat_check = [1.0000         0         0         0
@@ -17,17 +17,17 @@ classdef test_qclab_qgates_CU2 < matlab.unittest.TestCase
       test.verifyEqual(cu2.matrix, mat_check, 'AbsTol', 4*eps );
       
       % qubit
-      test.verifyEqual( cu2.qubit, int32(0) );
+      test.verifyEqual( cu2.qubit, int64(0) );
       
       % qubits
       qubits = cu2.qubits;
       test.verifyEqual( length(qubits), 2 );
-      test.verifyEqual( qubits(1), int32(0) );
-      test.verifyEqual( qubits(2), int32(1) );
+      test.verifyEqual( qubits(1), int64(0) );
+      test.verifyEqual( qubits(2), int64(1) );
       qnew = [5, 3] ;
       cu2.setQubits( qnew );
-      test.verifyEqual( table(cu2.qubits()).Var1(1), int32(3) );
-      test.verifyEqual( table(cu2.qubits()).Var1(2), int32(5) );
+      test.verifyEqual( table(cu2.qubits()).Var1(1), int64(3) );
+      test.verifyEqual( table(cu2.qubits()).Var1(2), int64(5) );
       qnew = [0, 1];
       cu2.setQubits( qnew );
       
@@ -177,9 +177,9 @@ classdef test_qclab_qgates_CU2 < matlab.unittest.TestCase
       % ctranspose
       cu2 = qclab.qgates.CU2(1, 2, 0, pi/3, pi/4 ) ;
       cu2p = cu2';
-      test.verifyEqual( cu2p.nbQubits, int32(2) );
-      test.verifyEqual( cu2p.control, int32(1) );
-      test.verifyEqual( cu2p.target, int32(2) );
+      test.verifyEqual( cu2p.nbQubits, int64(2) );
+      test.verifyEqual( cu2p.control, int64(1) );
+      test.verifyEqual( cu2p.target, int64(2) );
       test.verifyEqual(cu2p.matrix, cu2.matrix', 'AbsTol', eps );
       
     end

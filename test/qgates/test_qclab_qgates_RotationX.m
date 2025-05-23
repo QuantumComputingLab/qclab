@@ -2,7 +2,7 @@ classdef test_qclab_qgates_RotationX < matlab.unittest.TestCase
   methods (Test)
     function test_RotationX(test)
       Rx = qclab.qgates.RotationX() ;
-      test.verifyEqual( Rx.nbQubits, int32(1) );    % nbQubits
+      test.verifyEqual( Rx.nbQubits, int64(1) );    % nbQubits
       test.verifyFalse( Rx.fixed );             % fixed
       test.verifyFalse( Rx.controlled );        % controlled
       test.verifyEqual( Rx.cos, 1.0 );          % cos
@@ -13,17 +13,17 @@ classdef test_qclab_qgates_RotationX < matlab.unittest.TestCase
       test.verifyEqual( Rx.matrix, eye(2) );
       
       % qubit
-      test.verifyEqual( Rx.qubit, int32(0) );
+      test.verifyEqual( Rx.qubit, int64(0) );
       Rx.setQubit( 2 ) ;
-      test.verifyEqual( Rx.qubit, int32(2) );
+      test.verifyEqual( Rx.qubit, int64(2) );
       
       % qubits
       qubits = Rx.qubits;
       test.verifyEqual( length(qubits), 1 );
-      test.verifyEqual( qubits(1), int32(2) )
+      test.verifyEqual( qubits(1), int64(2) )
       qnew = 3 ;
       Rx.setQubits( qnew );
-      test.verifyEqual( Rx.qubit, int32(3) );
+      test.verifyEqual( Rx.qubit, int64(3) );
       
       % fixed
       Rx.makeFixed();
@@ -129,7 +129,7 @@ classdef test_qclab_qgates_RotationX < matlab.unittest.TestCase
       % ctranspose
       Rx = qclab.qgates.RotationX(0, pi/3);
       Rxp = Rx';
-      test.verifyEqual( Rxp.nbQubits, int32(1) );
+      test.verifyEqual( Rxp.nbQubits, int64(1) );
       test.verifyEqual(Rxp.matrix, Rx.matrix', 'AbsTol', eps );
     end
 
@@ -159,7 +159,7 @@ classdef test_qclab_qgates_RotationX < matlab.unittest.TestCase
       
       % (A) test X - Z - X to Z - X - Z
       theta1 = 5.33;
-      qubit = int32(0);
+      qubit = int64(0);
       G1 = RX(qubit, theta1 );
       theta2 = -2.21;
       G2 = RZ(qubit, theta2 );
@@ -196,7 +196,7 @@ classdef test_qclab_qgates_RotationX < matlab.unittest.TestCase
       
       % (B) test X - Y - X to Y - X - Y
       theta1 = 5.33;
-      qubit = int32(0);
+      qubit = int64(0);
       G1 = RX(qubit, theta1 );
       theta2 = -2.21;
       G2 = RY(qubit, theta2 );
@@ -233,10 +233,10 @@ classdef test_qclab_qgates_RotationX < matlab.unittest.TestCase
       
       % (C) test XI - ZZ - XI to ZZ - XI - ZZ
       theta1 = 5.33;
-      qubit = int32(0);
+      qubit = int64(0);
       G1 = RX(qubit, theta1 );
       theta2 = -2.21;
-      qubits2 = int32([0,1]);
+      qubits2 = int64([0,1]);
       G2 = RZZ(qubits2, theta2 );
       theta3 = pi/5;
       G3 = RX(qubit, theta3 );
@@ -271,10 +271,10 @@ classdef test_qclab_qgates_RotationX < matlab.unittest.TestCase
       
       % (D) test IX - ZZ - IX to ZZ - IX - ZZ
       theta1 = 5.33;
-      qubit = int32(1);
+      qubit = int64(1);
       G1 = RX(qubit, theta1 );
       theta2 = -2.21;
-      qubits2 = int32([0,1]);
+      qubits2 = int64([0,1]);
       G2 = RZZ(qubits2, theta2 );
       theta3 = pi/5;
       G3 = RX(qubit, theta3 );
@@ -309,10 +309,10 @@ classdef test_qclab_qgates_RotationX < matlab.unittest.TestCase
       
       % (E) test XI - YY - XI to YY - XI - YY
       theta1 = 5.33;
-      qubit = int32(0);
+      qubit = int64(0);
       G1 = RX(qubit, theta1 );
       theta2 = -2.21;
-      qubits2 = int32([0,1]);
+      qubits2 = int64([0,1]);
       G2 = RYY(qubits2, theta2 );
       theta3 = pi/5;
       G3 = RX(qubit, theta3 );
@@ -347,10 +347,10 @@ classdef test_qclab_qgates_RotationX < matlab.unittest.TestCase
       
       % (F) test IX - YY - IX to YY - IX - YY
       theta1 = 5.33;
-      qubit = int32(1);
+      qubit = int64(1);
       G1 = RX(qubit, theta1 );
       theta2 = -2.21;
-      qubits2 = int32([0,1]);
+      qubits2 = int64([0,1]);
       G2 = RYY(qubits2, theta2 );
       theta3 = pi/5;
       G3 = RX(qubit, theta3 );

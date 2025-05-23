@@ -39,10 +39,10 @@ classdef MCRotationY < qclab.qgates.QMultiControlledGate
       if isa(other,'qclab.qgates.MCRotationY') && ...
          sum(obj.controlStates == other.controlStates) == ...
             length(obj.controlStates) && (obj.gate_ == other.gate_)
-        bool = (sum(obj.controls < obj.target) == ...
-                sum(other.controls < other.target)) && ...
-               (sum(obj.controls > obj.target) == ...
-                sum(other.controls > other.target)) ;
+        bool = (sum(obj.controls < obj.targets) == ...
+                sum(other.controls < other.targets)) && ...
+               (sum(obj.controls > obj.targets) == ...
+                sum(other.controls > other.targets)) ;
       end
     end
     
@@ -91,22 +91,22 @@ classdef MCRotationY < qclab.qgates.QMultiControlledGate
       obj.gate_.update(varargin{:});
     end
     
-     % target
-    function [target] = target(obj)
-      target = obj.gate_.qubit ;
+     % targets
+    function [targets] = targets(obj)
+      targets = obj.gate_.qubit ;
+    end
+
+    % setTargets
+    function setTargets(obj, target)
+      assert( qclab.isNonNegInteger(target) ) ; 
+      controls = obj.controls() ;
+      assert( ~(any(controls(:) == target) ) ) ;
+      obj.gate_.setQubit( target );
     end
     
     %> Copy of 1-qubit gate of multi-controlled rotation-Y gate
     function [gate] = gate(obj)
       gate = copy(obj.gate_);
-    end
-    
-    % setTarget
-    function setTarget(obj, target)
-      assert( qclab.isNonNegInteger(target) ) ; 
-      controls = obj.controls() ;
-      assert( ~(any(controls(:) == target) ) ) ;
-      obj.gate_.setQubit( target );
     end
     
     % label for draw and tex function
@@ -116,6 +116,13 @@ classdef MCRotationY < qclab.qgates.QMultiControlledGate
       label = obj.gate_.label( parameter, tex );
     end
     
+    % setQubits
+    function setQubits(obj, qubits)
+      assert( qclab.isNonNegIntegerArray(qubits) ) ;
+      assert( length(qubits) == length(unique(qubits)) );
+      obj.controls_ = sort(qubits(1:end-1)) ;
+      obj.setTargets( qubits(end) ) ;
+    end
   end
   
   methods ( Access = protected )

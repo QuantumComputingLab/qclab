@@ -2,28 +2,28 @@ classdef test_qclab_qgates_CPhase < matlab.unittest.TestCase
   methods (Test)
     function test_CPhase(test)
       cphase = qclab.qgates.CPhase() ;
-      test.verifyEqual( cphase.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( cphase.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( cphase.fixed );                 % fixed
       test.verifyTrue( cphase.controlled );             % controlled
-      test.verifyEqual( cphase.control, int32(0) );     % control
-      test.verifyEqual( cphase.target, int32(1) );      % target
-      test.verifyEqual( cphase.controlState, int32(1)); % controlState
+      test.verifyEqual( cphase.control, int64(0) );     % control
+      test.verifyEqual( cphase.target, int64(1) );      % target
+      test.verifyEqual( cphase.controlState, int64(1)); % controlState
       
       % matrix
       test.verifyEqual(cphase.matrix, eye(4) );
       
       % qubit
-      test.verifyEqual( cphase.qubit, int32(0) );
+      test.verifyEqual( cphase.qubit, int64(0) );
       
       % qubits
       qubits = cphase.qubits;
       test.verifyEqual( length(qubits), 2 );
-      test.verifyEqual( qubits(1), int32(0) );
-      test.verifyEqual( qubits(2), int32(1) );
+      test.verifyEqual( qubits(1), int64(0) );
+      test.verifyEqual( qubits(2), int64(1) );
       qnew = [5, 3] ;
       cphase.setQubits( qnew );
-      test.verifyEqual( table(cphase.qubits()).Var1(1), int32(3) );
-      test.verifyEqual( table(cphase.qubits()).Var1(2), int32(5) );
+      test.verifyEqual( table(cphase.qubits()).Var1(1), int64(3) );
+      test.verifyEqual( table(cphase.qubits()).Var1(2), int64(5) );
       qnew = [0, 1];
       cphase.setQubits( qnew );
       
@@ -158,9 +158,9 @@ classdef test_qclab_qgates_CPhase < matlab.unittest.TestCase
       % ctranspose
       cphase = qclab.qgates.CPhase(1, 2, pi/3 ) ;
       cphasep = cphase';
-      test.verifyEqual( cphasep.nbQubits, int32(2) );
-      test.verifyEqual( cphasep.control, int32(1) );
-      test.verifyEqual( cphasep.target, int32(2) );
+      test.verifyEqual( cphasep.nbQubits, int64(2) );
+      test.verifyEqual( cphasep.control, int64(1) );
+      test.verifyEqual( cphasep.target, int64(2) );
       test.verifyEqual(cphasep.matrix, cphase.matrix', 'AbsTol', eps );
       
       
@@ -172,12 +172,12 @@ classdef test_qclab_qgates_CPhase < matlab.unittest.TestCase
       angle = qclab.QAngle( pi/4 );
       cphase = qclab.qgates.CPhase( 1, 3, angle );
       
-      test.verifyEqual( cphase.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( cphase.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( cphase.fixed );                 % fixed
       test.verifyTrue( cphase.controlled );             % controlled
-      test.verifyEqual( cphase.control, int32(1) );     % control
-      test.verifyEqual( cphase.target, int32(3) );      % target
-      test.verifyEqual( cphase.controlState, int32(1));        % controlState
+      test.verifyEqual( cphase.control, int64(1) );     % control
+      test.verifyEqual( cphase.target, int64(3) );      % target
+      test.verifyEqual( cphase.controlState, int64(1));        % controlState
       
       test.verifyEqual( cphase.theta, pi/4, 'AbsTol', eps );
       test.verifyEqual( cphase.cos, cos(pi/4), 'AbsTol', eps);
@@ -186,12 +186,12 @@ classdef test_qclab_qgates_CPhase < matlab.unittest.TestCase
       % angle, custom controlState
       cphase = qclab.qgates.CPhase( 1, 3, angle, 0 );
       
-      test.verifyEqual( cphase.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( cphase.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( cphase.fixed );                 % fixed
       test.verifyTrue( cphase.controlled );             % controlled
-      test.verifyEqual( cphase.control, int32(1) );     % control
-      test.verifyEqual( cphase.target, int32(3) );      % target
-      test.verifyEqual( cphase.controlState, int32(0));        % controlState
+      test.verifyEqual( cphase.control, int64(1) );     % control
+      test.verifyEqual( cphase.target, int64(3) );      % target
+      test.verifyEqual( cphase.controlState, int64(0));        % controlState
       
       test.verifyEqual( cphase.theta, pi/4, 'AbsTol', eps );
       test.verifyEqual( cphase.cos, cos(pi/4), 'AbsTol', eps);
@@ -200,12 +200,12 @@ classdef test_qclab_qgates_CPhase < matlab.unittest.TestCase
       % theta, default controlState
       cphase = qclab.qgates.CPhase( 1, 3, pi/4 );
       
-      test.verifyEqual( cphase.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( cphase.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( cphase.fixed );                 % fixed
       test.verifyTrue( cphase.controlled );             % controlled
-      test.verifyEqual( cphase.control, int32(1) );     % control
-      test.verifyEqual( cphase.target, int32(3) );      % target
-      test.verifyEqual( cphase.controlState, int32(1));        % controlState
+      test.verifyEqual( cphase.control, int64(1) );     % control
+      test.verifyEqual( cphase.target, int64(3) );      % target
+      test.verifyEqual( cphase.controlState, int64(1));        % controlState
       
       test.verifyEqual( cphase.theta, pi/4, 'AbsTol', eps );
       test.verifyEqual( cphase.cos, cos(pi/4), 'AbsTol', eps);
@@ -214,12 +214,12 @@ classdef test_qclab_qgates_CPhase < matlab.unittest.TestCase
       % theta, custom controlState
       cphase = qclab.qgates.CPhase( 1, 3, pi/4, 0 );
       
-      test.verifyEqual( cphase.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( cphase.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( cphase.fixed );                 % fixed
       test.verifyTrue( cphase.controlled );             % controlled
-      test.verifyEqual( cphase.control, int32(1) );     % control
-      test.verifyEqual( cphase.target, int32(3) );      % target
-      test.verifyEqual( cphase.controlState, int32(0));        % controlState
+      test.verifyEqual( cphase.control, int64(1) );     % control
+      test.verifyEqual( cphase.target, int64(3) );      % target
+      test.verifyEqual( cphase.controlState, int64(0));        % controlState
       
       test.verifyEqual( cphase.theta, pi/4, 'AbsTol', eps );
       test.verifyEqual( cphase.cos, cos(pi/4), 'AbsTol', eps);
@@ -228,12 +228,12 @@ classdef test_qclab_qgates_CPhase < matlab.unittest.TestCase
       % cos, sin, default controlState
       cphase = qclab.qgates.CPhase( 1, 3, cos(pi/4), sin(pi/4) );
       
-      test.verifyEqual( cphase.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( cphase.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( cphase.fixed );                 % fixed
       test.verifyTrue( cphase.controlled );             % controlled
-      test.verifyEqual( cphase.control, int32(1) );     % control
-      test.verifyEqual( cphase.target, int32(3) );      % target
-      test.verifyEqual( cphase.controlState, int32(1));        % controlState
+      test.verifyEqual( cphase.control, int64(1) );     % control
+      test.verifyEqual( cphase.target, int64(3) );      % target
+      test.verifyEqual( cphase.controlState, int64(1));        % controlState
       
       test.verifyEqual( cphase.theta, pi/4, 'AbsTol', eps );
       test.verifyEqual( cphase.cos, cos(pi/4), 'AbsTol', eps);
@@ -242,12 +242,12 @@ classdef test_qclab_qgates_CPhase < matlab.unittest.TestCase
       % cos, sin, custom controlState
       cphase = qclab.qgates.CPhase( 1, 3, cos(pi/4), sin(pi/4), 0 );
       
-      test.verifyEqual( cphase.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( cphase.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( cphase.fixed );                 % fixed
       test.verifyTrue( cphase.controlled );             % controlled
-      test.verifyEqual( cphase.control, int32(1) );     % control
-      test.verifyEqual( cphase.target, int32(3) );      % target
-      test.verifyEqual( cphase.controlState, int32(0));        % controlState
+      test.verifyEqual( cphase.control, int64(1) );     % control
+      test.verifyEqual( cphase.target, int64(3) );      % target
+      test.verifyEqual( cphase.controlState, int64(0));        % controlState
       
       test.verifyEqual( cphase.theta, pi/4, 'AbsTol', eps );
       test.verifyEqual( cphase.cos, cos(pi/4), 'AbsTol', eps);

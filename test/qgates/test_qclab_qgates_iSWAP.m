@@ -2,22 +2,22 @@ classdef test_qclab_qgates_iSWAP < matlab.unittest.TestCase
   methods (Test)
     function test_iSWAP(test)
       iswap = qclab.qgates.iSWAP();
-      test.verifyEqual( iswap.nbQubits, int32(2) );
+      test.verifyEqual( iswap.nbQubits, int64(2) );
       test.verifyTrue( iswap.fixed );
       test.verifyFalse( iswap.controlled ) ;
       
       % qubit
-      test.verifyEqual( iswap.qubit, int32(0) );
+      test.verifyEqual( iswap.qubit, int64(0) );
       
       % qubits
       qubits = iswap.qubits;
       test.verifyEqual( length(qubits), 2 );
-      test.verifyEqual( qubits(1), int32(0) );
-      test.verifyEqual( qubits(2), int32(1) );
+      test.verifyEqual( qubits(1), int64(0) );
+      test.verifyEqual( qubits(2), int64(1) );
       qnew = [5, 3] ;
       iswap.setQubits( qnew );
-      test.verifyEqual( table(iswap.qubits()).Var1(1), int32(3) );
-      test.verifyEqual( table(iswap.qubits()).Var1(2), int32(5) );
+      test.verifyEqual( table(iswap.qubits()).Var1(1), int64(3) );
+      test.verifyEqual( table(iswap.qubits()).Var1(2), int64(5) );
       qnew = [0, 1];
       iswap.setQubits( qnew );
       
@@ -76,7 +76,7 @@ classdef test_qclab_qgates_iSWAP < matlab.unittest.TestCase
       % ctranspose
       iswap = qclab.qgates.iSWAP();
       iswapp = iswap';
-      test.verifyEqual( iswapp.nbQubits, int32(2) );
+      test.verifyEqual( iswapp.nbQubits, int64(2) );
       test.verifyEqual(iswapp.matrix, iswap.matrix', 'AbsTol', 10*eps );
     end
     

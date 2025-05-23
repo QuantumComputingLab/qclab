@@ -2,30 +2,30 @@ classdef test_qclab_qgates_MCRotationX < matlab.unittest.TestCase
   methods (Test)
     function test_MCRotationX(test)
       mcrotx = qclab.qgates.MCRotationX([0,1],2) ;
-      test.verifyEqual( mcrotx.nbQubits, int32(3) );    % nbQubits
+      test.verifyEqual( mcrotx.nbQubits, int64(3) );    % nbQubits
       test.verifyFalse( mcrotx.fixed );                 % fixed
       test.verifyTrue( mcrotx.controlled );             % controlled
-      test.verifyEqual( mcrotx.controls, int32([0,1]) );     % control
-      test.verifyEqual( mcrotx.target, int32(2) );      % target
-      test.verifyEqual( mcrotx.controlStates, int32([1,1])); % controlState
+      test.verifyEqual( mcrotx.controls, int64([0,1]) );     % control
+      test.verifyEqual( mcrotx.targets, int64(2) );      % target
+      test.verifyEqual( mcrotx.controlStates, int64([1,1])); % controlState
       
       % matrix
       test.verifyEqual(mcrotx.matrix, eye(8) );
       
       % qubit
-      test.verifyEqual( mcrotx.qubit, int32(0) );
+      test.verifyEqual( mcrotx.qubit, int64(0) );
       
       % qubits
       qubits = mcrotx.qubits;
       test.verifyEqual( length(qubits), 3 );
-      test.verifyEqual( qubits(1), int32(0) );
-      test.verifyEqual( qubits(2), int32(1) );
-      test.verifyEqual( qubits(3), int32(2) );
+      test.verifyEqual( qubits(1), int64(0) );
+      test.verifyEqual( qubits(2), int64(1) );
+      test.verifyEqual( qubits(3), int64(2) );
       qnew = [5, 3, 1] ;
       mcrotx.setQubits( qnew );
-      test.verifyEqual( table(mcrotx.qubits()).Var1(1), int32(3) );
-      test.verifyEqual( table(mcrotx.qubits()).Var1(2), int32(5) );
-      test.verifyEqual( table(mcrotx.qubits()).Var1(3), int32(1) );
+      test.verifyEqual( table(mcrotx.qubits()).Var1(1), int64(3) );
+      test.verifyEqual( table(mcrotx.qubits()).Var1(2), int64(5) );
+      test.verifyEqual( table(mcrotx.qubits()).Var1(3), int64(1) );
       qnew = [0, 1, 2];
       mcrotx.setQubits( qnew );
       
@@ -89,11 +89,11 @@ classdef test_qclab_qgates_MCRotationX < matlab.unittest.TestCase
       
       % set control, target controlState
       mcrotx.setControls([3,4]);
-      mcrotx.setTarget(5);
+      mcrotx.setTargets(5);
       test.verifyTrue( mcrotx == mcrotx2 );
       test.verifyFalse( mcrotx ~= mcrotx2 );
       mcrotx.setControls([4,6]);
-      mcrotx.setTarget(1);
+      mcrotx.setTargets(1);
       test.verifyTrue( mcrotx ~= mcrotx2 );
       test.verifyFalse( mcrotx == mcrotx2 );      
       
@@ -149,9 +149,9 @@ classdef test_qclab_qgates_MCRotationX < matlab.unittest.TestCase
       % ctranspose
       mcrotx = qclab.qgates.MCRotationX(1, 2, 1, pi/3 ) ;
       mcrotxp = mcrotx';
-      test.verifyEqual( mcrotxp.nbQubits, int32(2) );
-      test.verifyEqual( mcrotxp.controls, int32(1) );
-      test.verifyEqual( mcrotxp.target, int32(2) );
+      test.verifyEqual( mcrotxp.nbQubits, int64(2) );
+      test.verifyEqual( mcrotxp.controls, int64(1) );
+      test.verifyEqual( mcrotxp.targets, int64(2) );
       test.verifyEqual(mcrotxp.matrix, mcrotx.matrix', 'AbsTol', eps );
       
     end

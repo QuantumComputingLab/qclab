@@ -35,6 +35,7 @@ classdef QGate2 < qclab.QObject
     function [current] = apply(obj, side, op, nbQubits, current, offset)
       if nargin == 5, offset = 0; end
       assert( nbQubits >= 2);
+      isSparse = qclab.isSparse(nbQubits) ;
       if isa(current, 'double')
           if strcmp(side,'L') % left
             assert( size(current,2) == 2^nbQubits);
@@ -59,12 +60,12 @@ classdef QGate2 < qclab.QObject
       if (nbQubits == 2)
         matn = mat2 ;
       elseif ( qubits(1) == 0 )
-        matn = kron(mat2, qclab.qId(nbQubits-2)) ;
+        matn = kron(mat2, qclab.qId(nbQubits-2, isSparse)) ;
       elseif ( qubits(2) == nbQubits-1)
-        matn = kron(qclab.qId(nbQubits-2), mat2);
+        matn = kron(qclab.qId(nbQubits-2, isSparse), mat2);
       else
-        matn = kron(kron(qclab.qId(qubits(1)), mat2), ...
-          qclab.qId(nbQubits-qubits(2)-1)) ;
+        matn = kron(kron(qclab.qId(qubits(1), isSparse), mat2), ...
+          qclab.qId(nbQubits-qubits(2)-1, isSparse)) ;
       end
       current = qclab.applyGateTo( current, matn, side ) ;
     end
@@ -150,7 +151,7 @@ classdef QGate2 < qclab.QObject
   methods (Static)
     % nbQubits
     function [nbQubits] = nbQubits(~)
-      nbQubits = int32(2);
+      nbQubits = int64(2);
     end
     
     % setQubit

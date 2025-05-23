@@ -10,7 +10,7 @@
 classdef HandleGate1 < qclab.qgates.QGate1
   properties (Access = protected)
     %> Qubit offset of this 1-qubit handle gate.
-    offset_(1,1) int32
+    offset_(1,1) int64
     %> Gate handle of this 1-qubit handle gate.
     gate_(1,1) qclab.qgates.QGate1 = qclab.qgates.Identity
   end

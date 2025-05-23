@@ -2,7 +2,7 @@ classdef test_qclab_qgates_RotationYY < matlab.unittest.TestCase
   methods (Test)
     function test_RotationYY(test)
       Ryy = qclab.qgates.RotationYY() ;
-      test.verifyEqual( Ryy.nbQubits, int32(2) );    % nbQubits
+      test.verifyEqual( Ryy.nbQubits, int64(2) );    % nbQubits
       test.verifyFalse( Ryy.fixed );             % fixed
       test.verifyFalse( Ryy.controlled );        % controlled
       test.verifyEqual( Ryy.cos, 1.0 );          % cos
@@ -15,12 +15,12 @@ classdef test_qclab_qgates_RotationYY < matlab.unittest.TestCase
       % qubits
       qubits = Ryy.qubits;
       test.verifyEqual( length(qubits), 2 );
-      test.verifyEqual( qubits(1), int32(0) );
-      test.verifyEqual( qubits(2), int32(1) );
+      test.verifyEqual( qubits(1), int64(0) );
+      test.verifyEqual( qubits(2), int64(1) );
       qnew = [5, 3] ;
       Ryy.setQubits( qnew );
-      test.verifyEqual( table(Ryy.qubits()).Var1(1), int32(3) );
-      test.verifyEqual( table(Ryy.qubits()).Var1(2), int32(5) );
+      test.verifyEqual( table(Ryy.qubits()).Var1(1), int64(3) );
+      test.verifyEqual( table(Ryy.qubits()).Var1(2), int64(5) );
       
       % fixed
       Ryy.makeFixed();
@@ -132,7 +132,7 @@ classdef test_qclab_qgates_RotationYY < matlab.unittest.TestCase
       % ctranspose
       Ryy = qclab.qgates.RotationYY([0,1], pi/3);
       Ryyp = Ryy';
-      test.verifyEqual( Ryyp.nbQubits, int32(2) );
+      test.verifyEqual( Ryyp.nbQubits, int64(2) );
       test.verifyEqual(Ryyp.matrix, Ryy.matrix', 'AbsTol', eps );
       
     end
@@ -163,10 +163,10 @@ classdef test_qclab_qgates_RotationYY < matlab.unittest.TestCase
       
       % (A) test Vee to Hat: YY - ZZ - YY
       theta1 = 5.33;
-      qubits1 = int32([0, 1]);
+      qubits1 = int64([0, 1]);
       G1 = RYY(qubits1, theta1 );
       theta2 = -2.21;
-      qubits2 = int32([1, 2]);
+      qubits2 = int64([1, 2]);
       G2 = RZZ(qubits2, theta2 );
       theta3 = pi/5;
       G3 = RYY(qubits1, theta3 );
@@ -201,10 +201,10 @@ classdef test_qclab_qgates_RotationYY < matlab.unittest.TestCase
       
       % (B) test Hat to Vee YY - XX - YY
       theta1 = 5.33;
-      qubits1 = int32([1, 2]);
+      qubits1 = int64([1, 2]);
       G1 = RYY(qubits1, theta1 );
       theta2 = -2.21;
-      qubits2 = int32([0, 1]);
+      qubits2 = int64([0, 1]);
       G2 = RXX(qubits2, theta2 );
       theta3 = pi/5;
       G3 = RYY(qubits1, theta3 );
@@ -239,10 +239,10 @@ classdef test_qclab_qgates_RotationYY < matlab.unittest.TestCase
       
       % (C) test TFIM turnover: YY - ZI - YY
       theta1 = 5.33;
-      qubits1 = int32([0, 1]);
+      qubits1 = int64([0, 1]);
       G1 = RYY(qubits1, theta1 );
       theta2 = -2.21;
-      qubits2 = int32(0);
+      qubits2 = int64(0);
       G2 = RZ(qubits2, theta2 );
       theta3 = pi/5;
       G3 = RYY(qubits1, theta3 );
@@ -277,10 +277,10 @@ classdef test_qclab_qgates_RotationYY < matlab.unittest.TestCase
       
       % (D) test TFIM turnover: YY - IX - YY
       theta1 = 5.33;
-      qubits1 = int32([0, 1]);
+      qubits1 = int64([0, 1]);
       G1 = RYY(qubits1, theta1 );
       theta2 = -2.21;
-      qubits2 = int32(1);
+      qubits2 = int64(1);
       G2 = RX(qubits2, theta2 );
       theta3 = pi/5;
       G3 = RYY(qubits1, theta3 );

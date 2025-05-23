@@ -9,51 +9,50 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
 
       % 1 qubit circuit
       circuit = qclab.QCircuit( 1 );
-      test.verifyEqual( circuit.nbQubits, int32(1) );     % nbQubits
+      test.verifyEqual( circuit.nbQubits, int64(1) );     % nbQubits
       test.verifyFalse( circuit.fixed );                  % fixed
       test.verifyFalse( circuit.controlled );             % controlled
 
       % qubits
-      test.verifyEqual( circuit.qubit(), int32(0) );
+      test.verifyEqual( circuit.qubit(), int64(0) );
       qubits = circuit.qubits();
       test.verifyEqual( length(qubits), 1 );
-      test.verifyEqual( qubits, int32(0) );
-
+      test.verifyEqual( qubits, int64(0) );
       % 3 qubit circuit
       circuit = qclab.QCircuit( 3 );
-      test.verifyEqual( circuit.nbQubits, int32(3) );     % nbQubits
+      test.verifyEqual( circuit.nbQubits, int64(3) );     % nbQubits
       test.verifyFalse( circuit.fixed );                  % fixed
       test.verifyFalse( circuit.controlled );             % controlled
 
       % qubits
-      test.verifyEqual( circuit.qubit(), int32(0) );
+      test.verifyEqual( circuit.qubit(), int64(0) );
       qubits = circuit.qubits();
       test.verifyEqual( length(qubits), 3 );
-      test.verifyEqual( qubits, int32([0, 1, 2]) );
+      test.verifyEqual( qubits, int64([0, 1, 2]) );
 
       % 3 qubits circuit with offset 5
       circuit = qclab.QCircuit( 3, 5 );
-      test.verifyEqual( circuit.nbQubits, int32(3) );     % nbQubits
+      test.verifyEqual( circuit.nbQubits, int64(3) );     % nbQubits
       test.verifyFalse( circuit.fixed );                  % fixed
       test.verifyFalse( circuit.controlled );             % controlled
 
       % qubits
-      test.verifyEqual( circuit.qubit(), int32(5) );
+      test.verifyEqual( circuit.qubit(), int64(5) );
       qubits = circuit.qubits();
       test.verifyEqual( length(qubits), 3 );
-      test.verifyEqual( qubits, int32([5, 6, 7]) );
+      test.verifyEqual( qubits, int64([5, 6, 7]) );
 
       % offset
-      test.verifyEqual( circuit.offset, int32(5) );
+      test.verifyEqual( circuit.offset, int64(5) );
       circuit.setOffset( 2 );
-      test.verifyEqual( circuit.offset, int32(2) );
+      test.verifyEqual( circuit.offset, int64(2) );
       qubits = circuit.qubits();
       test.verifyEqual( length(qubits), 3 );
-      test.verifyEqual( qubits, int32([2, 3, 4]) );
+      test.verifyEqual( qubits, int64([2, 3, 4]) );
 
       % 3 qubit circuit with 1 qubit gates
       circuit = qclab.QCircuit( 3 );
-      test.verifyEqual( circuit.nbQubits, int32(3) );     % nbQubits
+      test.verifyEqual( circuit.nbQubits, int64(3) );     % nbQubits
       test.verifyFalse( circuit.fixed );                  % fixed
       test.verifyFalse( circuit.controlled );             % controlled
       circuit.push_back( X(0) );
@@ -534,7 +533,7 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       fprintf(1, '\n');
 
     end
-    
+
     function test_QCircuit_barrier(test)
       X = @qclab.qgates.PauliX ;
       Z = @qclab.qgates.PauliZ ;
@@ -545,7 +544,7 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       circuit.push_back(H(1));
       circuit.push_back(Z(2));
       circuit.barrier
-  
+
       test.verifyTrue( all(circuit.objects(4) == qclab.Barrier([0,1,2])));
     end
 
@@ -842,6 +841,62 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       mat3 = kron(I1,CNOT01.matrix)*kron(CNOT01.matrix, I1);
       test.verifyEqual( circuit.matrix, mat3, 'AbsTol', eps );
 
+    end
+
+    function test_QCircuit_nbMeasurements( test )
+
+      M = @qclab.Measurement ;
+      H = @qclab.qgates.Hadamard ;
+
+      C1 = qclab.QCircuit(2) ;
+      C1.push_back(M(0))
+      C1.push_back(M(1))
+
+      C = qclab.QCircuit(3) ;
+
+      %push_back
+      C.push_back(M(0))
+      test.verifyEqual( C.nbMeasurements , int64(1)  );
+      C.push_back(C1)
+      test.verifyEqual( C.nbMeasurements , int64(3)  );
+
+      %pop_back
+      C.pop_back()
+      test.verifyEqual( C.nbMeasurements , int64(1)  );
+      C.pop_back()
+      test.verifyEqual( C.nbMeasurements , int64(0)  );
+
+      %insert
+      C.push_back(H(0))
+      C.push_back(H(0))
+      C.insert([1,2],[H(0),M(1)])
+      test.verifyEqual( C.nbMeasurements , int64(1)  );
+      C.insert(1,C1)
+      test.verifyEqual( C.nbMeasurements , int64(3)  );
+
+      %replace
+      C.push_back(H(0))
+      C.push_back(H(0))
+      C.replace(1,H(0))
+      test.verifyEqual( C.nbMeasurements , int64(1)  );
+      C.replace(3,H(0))
+      test.verifyEqual( C.nbMeasurements , int64(0)  );
+
+      %erase
+      C.clear()
+      C.push_back(M(0))
+      C.push_back(M(0))
+      C.push_back(M(0))
+      C.erase([1,2])
+      test.verifyEqual( C.nbMeasurements , int64(1)  );
+      C.push_back(C1)
+      C.erase(2)
+      test.verifyEqual( C.nbMeasurements , int64(1)  );
+
+      %clear
+      C.clear()
+      C.nbMeasurements
+      test.verifyEqual( C.nbMeasurements , int64(0)  );
     end
 
     function test_QCircuit_Draw( test )

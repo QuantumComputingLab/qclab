@@ -19,7 +19,7 @@
 classdef QGate1 < qclab.QObject
   properties (Access = protected)
     %> Qubit of this 1-qubit gate.
-    qubit_(1,1)  int32
+    qubit_(1,1)  int64
   end
   
   methods
@@ -76,6 +76,7 @@ classdef QGate1 < qclab.QObject
       assert( nbQubits >= 1);
       qubit = obj.qubit + offset ;
       assert( qubit < nbQubits ) ;
+      isSparse = qclab.isSparse(nbQubits) ;
       if isa(current, 'double')
           if strcmp(side,'L') % left
             assert( size(current,2) == 2^nbQubits);
@@ -97,11 +98,12 @@ classdef QGate1 < qclab.QObject
       if (nbQubits == 1)
         matn = mat1 ;
       elseif ( qubit == 0 )
-        matn = kron(mat1, qclab.qId(nbQubits-1)) ;
+        matn = kron(mat1, qclab.qId(nbQubits-1, isSparse)) ;
       elseif ( qubit == nbQubits-1)
-        matn = kron(qclab.qId(nbQubits-1), mat1);
+        matn = kron(qclab.qId(nbQubits-1, isSparse), mat1);
       else
-        matn = kron(kron(qclab.qId(qubit), mat1), qclab.qId(nbQubits-qubit-1)) ;
+        matn = kron(kron(qclab.qId(qubit,isSparse), mat1), qclab.qId(...
+                    nbQubits-qubit-1,isSparse)) ;
       end
       % side
       current = qclab.applyGateTo(current, matn, side ) ;
@@ -183,7 +185,7 @@ classdef QGate1 < qclab.QObject
   methods (Static)
     % nbQubits
     function [nbQubits] = nbQubits
-      nbQubits = int32(1);
+      nbQubits = int64(1);
     end
     
      % controlled

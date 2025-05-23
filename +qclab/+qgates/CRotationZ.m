@@ -189,5 +189,17 @@ classdef CRotationZ < qclab.qgates.QControlledGate2
       cp.gate_ = obj.gate() ;
     end
     
+    %> Property groups
+    function groups = getPropertyGroups(obj)
+      import matlab.mixin.util.PropertyGroup
+      props = struct();
+      props.nbQubits = obj.nbQubits;
+      props.Control = obj.control;
+      props.Target = obj.target;
+      props.Theta = obj.theta; 
+      props.Sin = obj.sin; 
+      props.Cos = obj.cos;
+      groups = PropertyGroup(props);
+    end
   end
 end

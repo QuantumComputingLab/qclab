@@ -3,12 +3,12 @@ classdef test_qclab_qgates_MCY < matlab.unittest.TestCase
     function test_MCY(test)
       MCY = @qclab.qgates.MCY ;
       gate = MCY([0,1],2) ;
-      test.verifyEqual( gate.nbQubits, int32(3) );
+      test.verifyEqual( gate.nbQubits, int64(3) );
       test.verifyTrue( gate.fixed );
       test.verifyTrue( gate.controlled ) ;
-      test.verifyEqual( gate.controls, int32([0,1]) );
-      test.verifyEqual( gate.target, int32(2) );
-      test.verifyEqual( gate.controlStates, int32([1,1]) );
+      test.verifyEqual( gate.controls, int64([0,1]) );
+      test.verifyEqual( gate.targets, int64(2) );
+      test.verifyEqual( gate.controlStates, int64([1,1]) );
       
       % matrix
       Toffoli_check = [1, 0, 0, 0, 0, 0, 0, 0;

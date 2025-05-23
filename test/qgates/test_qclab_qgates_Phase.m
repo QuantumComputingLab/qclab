@@ -2,7 +2,7 @@ classdef test_qclab_qgates_Phase < matlab.unittest.TestCase
   methods (Test)
     function test_Phase(test)
       Ph = qclab.qgates.Phase() ;
-      test.verifyEqual( Ph.nbQubits, int32(1) );    % nbQubits
+      test.verifyEqual( Ph.nbQubits, int64(1) );    % nbQubits
       test.verifyFalse( Ph.fixed );             % fixed
       test.verifyFalse( Ph.controlled );        % controlled
       test.verifyEqual( Ph.cos, 1.0 );          % cos
@@ -13,17 +13,17 @@ classdef test_qclab_qgates_Phase < matlab.unittest.TestCase
       test.verifyEqual( Ph.matrix, eye(2) );
       
       % qubit
-      test.verifyEqual( Ph.qubit, int32(0) );
+      test.verifyEqual( Ph.qubit, int64(0) );
       Ph.setQubit( 2 ) ;
-      test.verifyEqual( Ph.qubit, int32(2) );
+      test.verifyEqual( Ph.qubit, int64(2) );
       
       % qubits
       qubits = Ph.qubits;
       test.verifyEqual( length(qubits), 1 );
-      test.verifyEqual( qubits(1), int32(2) )
+      test.verifyEqual( qubits(1), int64(2) )
       qnew = 3 ;
       Ph.setQubits( qnew );
-      test.verifyEqual( Ph.qubit, int32(3) );
+      test.verifyEqual( Ph.qubit, int64(3) );
       
       % fixed
       Ph.makeFixed();
@@ -89,15 +89,15 @@ classdef test_qclab_qgates_Phase < matlab.unittest.TestCase
       % ctranspose
       Ph = qclab.qgates.Phase(0, pi/3);
       Php = Ph';
-      test.verifyEqual( Php.nbQubits, int32(1) );
+      test.verifyEqual( Php.nbQubits, int64(1) );
       test.verifyEqual(Php.matrix, Ph.matrix', 'AbsTol', eps );
       
     end
     
     function test_Phase_constructors( test )
       Ph = qclab.qgates.Phase( 1, pi/2 );
-      test.verifyEqual( Ph.qubit, int32(1) );
-      test.verifyEqual( Ph.nbQubits, int32(1) );    % nbQubits
+      test.verifyEqual( Ph.qubit, int64(1) );
+      test.verifyEqual( Ph.nbQubits, int64(1) );    % nbQubits
       test.verifyFalse( Ph.fixed );             % fixed
       test.verifyFalse( Ph.controlled );        % controlled
       test.verifyEqual( Ph.cos, cos(pi/2), 'AbsTol', eps  );          % cos
@@ -105,8 +105,8 @@ classdef test_qclab_qgates_Phase < matlab.unittest.TestCase
       test.verifyEqual( Ph.theta, pi/2, 'AbsTol', eps  );        % theta
       
       Ph = qclab.qgates.Phase( 5, pi/2, true );
-      test.verifyEqual( Ph.qubit, int32(5) );
-      test.verifyEqual( Ph.nbQubits, int32(1) );    % nbQubits
+      test.verifyEqual( Ph.qubit, int64(5) );
+      test.verifyEqual( Ph.nbQubits, int64(1) );    % nbQubits
       test.verifyTrue( Ph.fixed );             % fixed
       test.verifyFalse( Ph.controlled );        % controlled
       test.verifyEqual( Ph.cos, cos(pi/2), 'AbsTol', eps  );          % cos
@@ -114,8 +114,8 @@ classdef test_qclab_qgates_Phase < matlab.unittest.TestCase
       test.verifyEqual( Ph.theta, pi/2, 'AbsTol', eps  );        % theta
       
       Ph = qclab.qgates.Phase( 5, cos(pi/4), sin(pi/4) );
-      test.verifyEqual( Ph.qubit, int32(5) );
-      test.verifyEqual( Ph.nbQubits, int32(1) );    % nbQubits
+      test.verifyEqual( Ph.qubit, int64(5) );
+      test.verifyEqual( Ph.nbQubits, int64(1) );    % nbQubits
       test.verifyFalse( Ph.fixed );             % fixed
       test.verifyFalse( Ph.controlled );        % controlled
       test.verifyEqual( Ph.cos, cos(pi/4), 'AbsTol', eps  );          % cos
@@ -123,8 +123,8 @@ classdef test_qclab_qgates_Phase < matlab.unittest.TestCase
       test.verifyEqual( Ph.theta, pi/4, 'AbsTol', eps  );        % theta
       
       Ph = qclab.qgates.Phase( 5, cos(pi/4), sin(pi/4), true );
-      test.verifyEqual( Ph.qubit, int32(5) );
-      test.verifyEqual( Ph.nbQubits, int32(1) );    % nbQubits
+      test.verifyEqual( Ph.qubit, int64(5) );
+      test.verifyEqual( Ph.nbQubits, int64(1) );    % nbQubits
       test.verifyTrue( Ph.fixed );             % fixed
       test.verifyFalse( Ph.controlled );        % controlled
       test.verifyEqual( Ph.cos, cos(pi/4), 'AbsTol', eps  );          % cos

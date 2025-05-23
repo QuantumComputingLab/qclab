@@ -2,22 +2,22 @@ classdef test_qclab_qgates_Phase90 < matlab.unittest.TestCase
   methods (Test)
     function test_Phase90(test)
       S = qclab.qgates.Phase90() ;
-      test.verifyEqual( S.nbQubits, int32(1) );    % nbQubits
+      test.verifyEqual( S.nbQubits, int64(1) );    % nbQubits
       test.verifyTrue( S.fixed );                  % fixed
       test.verifyFalse( S.controlled );            % controlled
       
       % qubit
-      test.verifyEqual( S.qubit, int32(0) );
+      test.verifyEqual( S.qubit, int64(0) );
       S.setQubit( 2 );
-      test.verifyEqual( S.qubit, int32(2) );
+      test.verifyEqual( S.qubit, int64(2) );
       
       % qubits
       qubits = S.qubits;
       test.verifyEqual( length(qubits), 1 );
-      test.verifyEqual( qubits(1), int32(2) );
+      test.verifyEqual( qubits(1), int64(2) );
       qnew = 3 ;
       S.setQubits( qnew );
-      test.verifyEqual( S.qubit, int32(3) );
+      test.verifyEqual( S.qubit, int64(3) );
       
       % matrix
       test.verifyEqual( S.matrix, [1, 0; 0 1i]);
@@ -50,7 +50,7 @@ classdef test_qclab_qgates_Phase90 < matlab.unittest.TestCase
       % ctranspose
       S = qclab.qgates.Phase90();
       Sp = S';
-      test.verifyEqual( Sp.nbQubits, int32(1) );
+      test.verifyEqual( Sp.nbQubits, int64(1) );
       test.verifyEqual(Sp.matrix, S.matrix', 'AbsTol', eps );
     end
   end

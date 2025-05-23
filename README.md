@@ -1,4 +1,4 @@
-# QCLAB Matlab Toolbox [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5722739.svg)](https://doi.org/10.5281/zenodo.5722739)
+# QCLAB Matlab Toolbox [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14968124.svg)](https://doi.org/10.5281/zenodo.14968124)
 
 <p align="center"><img src="doc/doxygen/QCLAB.png?raw=true" /></p>
 

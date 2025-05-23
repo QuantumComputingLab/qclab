@@ -4,17 +4,17 @@ classdef test_qclab_qgates_HandleGate2 < matlab.unittest.TestCase
       swap = qclab.qgates.SWAP ;
       H = qclab.qgates.HandleGate2( swap ) ;
       
-      test.verifyEqual( H.nbQubits, int32(2) );     % nbQubits
+      test.verifyEqual( H.nbQubits, int64(2) );     % nbQubits
       test.verifyTrue( H.fixed );               % fixed
       test.verifyFalse( H.controlled );         % controlled
-      test.verifyEqual( H.qubit, int32(0) );    % qubit
-      test.verifyEqual( H.offset, int32(0) );   % offset
+      test.verifyEqual( H.qubit, int64(0) );    % qubit
+      test.verifyEqual( H.offset, int64(0) );   % offset
       test.verifySameHandle( H.gateHandle, swap )       % handle
       
       % qubits
       qubits = H.qubits;
       test.verifyEqual( length(qubits), 2 );
-      test.verifyEqual( qubits, int32([0, 1]) );
+      test.verifyEqual( qubits, int64([0, 1]) );
       
       % matrix
       test.verifyEqual( H.matrix, swap.matrix );
@@ -42,9 +42,9 @@ classdef test_qclab_qgates_HandleGate2 < matlab.unittest.TestCase
       % offset
       H.setOffset( 3 );
       qubits = H.qubits;
-      test.verifyEqual( H.qubit, int32(3) );
-      test.verifyEqual( qubits, int32([3, 4]) );
-      test.verifyEqual( H.offset, int32(3) );
+      test.verifyEqual( H.qubit, int64(3) );
+      test.verifyEqual( qubits, int64([3, 4]) );
+      test.verifyEqual( H.offset, int64(3) );
       [T,~] = evalc('H.toQASM(1)'); % capture output to std::out in T
       QASMstring = 'swap q[3], q[4];';
       test.verifyEqual(T(1:length(QASMstring)), QASMstring);
@@ -67,14 +67,14 @@ classdef test_qclab_qgates_HandleGate2 < matlab.unittest.TestCase
       Hswap = H.gateHandle ;
       Hswap.setQubits( [7, 3] );
       qubits = H.qubits;
-      test.verifyEqual( qubits, int32([6, 10]) );
+      test.verifyEqual( qubits, int64([6, 10]) );
       CX = H.gate ;
       CX.setQubits( [17, 13] );
       qubits = H.qubits;
-      test.verifyEqual( qubits, int32([6, 10]) );
+      test.verifyEqual( qubits, int64([6, 10]) );
       H.setGate(CX);
       qubits = H.qubits;
-      test.verifyEqual( qubits, int32([16, 20]) );
+      test.verifyEqual( qubits, int64([16, 20]) );
       
       % operators == and ~=
       test.verifyTrue( H == swap );
@@ -120,11 +120,11 @@ classdef test_qclab_qgates_HandleGate2 < matlab.unittest.TestCase
       R = qclab.qgates.RotationXX ;
       H = qclab.qgates.HandleGate2( R ) ;
       
-      test.verifyEqual( H.nbQubits, int32(2) );     % nbQubits
+      test.verifyEqual( H.nbQubits, int64(2) );     % nbQubits
       test.verifyFalse( H.fixed );               % fixed
       test.verifyFalse( H.controlled );         % controlled
-      test.verifyEqual( H.qubit, int32(0) );    % qubit
-      test.verifyEqual( H.offset, int32(0) );   % offset
+      test.verifyEqual( H.qubit, int64(0) );    % qubit
+      test.verifyEqual( H.offset, int64(0) );   % offset
       test.verifySameHandle( H.gateHandle, R );  % gateHandle
       if ~verLessThan('matlab', '9.8')
           test.verifyNotSameHandle( H.gate, R ); % gate

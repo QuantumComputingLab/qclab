@@ -30,17 +30,17 @@ classdef Barrier < qclab.QObject
 
     % qubit
     function [qubit] = qubit(obj)
-      qubit = int32(min(obj.qubits_)) ;
+      qubit = int64(min(obj.qubits_)) ;
     end
 
     % qubits
     function [qubits] = qubits(obj)
-      qubits = int32([obj.qubits_]);
+      qubits = int64([obj.qubits_]);
     end
 
     % nbQubits
     function [nbQubits] = nbQubits(obj)
-      nbQubits = int32(length(obj.qubits_) ) ;
+      nbQubits = int64(length(obj.qubits_) ) ;
     end
 
     % visibility
@@ -50,7 +50,8 @@ classdef Barrier < qclab.QObject
 
     % matrix
     function [mat] = matrix(obj)
-      mat = qclab.qId(obj.nbQubits);
+      isSparse = qclab.isSparse(obj.nbQubits);
+      mat = qclab.qId(obj.nbQubits,isSparse);
     end
 
     % ==========================================================================
@@ -68,6 +69,7 @@ classdef Barrier < qclab.QObject
     %> @param offset offset applied to qubits
     % ==========================================================================
     function [current] = apply(obj, side, op, nbQubits, current, offset)
+      isSparse = qclab.isSparse(nbQubits) ;
       if isa(current, 'double')
         if strcmp(side,'L') % left
           assert( size(current,2) == 2^nbQubits);
@@ -77,7 +79,7 @@ classdef Barrier < qclab.QObject
       else
         assert( length(current.states{1}) == 2^nbQubits )
       end
-      matn = qclab.qId(nbQubits);
+      matn = qclab.qId(nbQubits, isSparse);
       % apply
       current = qclab.applyGateTo( current, matn, side ) ;
     end

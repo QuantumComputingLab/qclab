@@ -538,8 +538,8 @@ classdef test_qclab_QSimulate < matlab.unittest.TestCase
         qclab.Measurement(1)]},1);
 
        % measuredQubits
-      test.verifyEqual(sim.measuredQubits(),int32([0,1]))
-      test.verifyEqual(sim.measuredQubits(1),int32(0))
+      test.verifyEqual(sim.measuredQubits(),int64([0,1]))
+      test.verifyEqual(sim.measuredQubits(1),int64(0))
       measuredQubits = sim.measuredQubits();
       test.verifyEqual(length(measuredQubits),2)
 
@@ -549,8 +549,8 @@ classdef test_qclab_QSimulate < matlab.unittest.TestCase
       test.verifyEqual(length(measuredQubitsMid),0)
 
       % measuredQubitsEnd
-      test.verifyEqual(sim.measuredQubitsEnd(),int32([0,1]))
-      test.verifyEqual(sim.measuredQubitsEnd(1),int32(0))
+      test.verifyEqual(sim.measuredQubitsEnd(),int64([0,1]))
+      test.verifyEqual(sim.measuredQubitsEnd(1),int64(0))
       measuredQubitsEnd = sim.measuredQubitsEnd();
       test.verifyEqual(length(measuredQubitsEnd),2)
 
@@ -560,8 +560,8 @@ classdef test_qclab_QSimulate < matlab.unittest.TestCase
                       {[qclab.Measurement],[],[qclab.Measurement]},1);
 
        % measuredQubits
-      test.verifyEqual(sim.measuredQubits(),int32(0))
-      test.verifyEqual(sim.measuredQubits(1),int32(0))
+      test.verifyEqual(sim.measuredQubits(),int64(0))
+      test.verifyEqual(sim.measuredQubits(1),int64(0))
       measuredQubits = sim.measuredQubits();
       test.verifyEqual(length(measuredQubits),1)
 
@@ -571,8 +571,8 @@ classdef test_qclab_QSimulate < matlab.unittest.TestCase
       test.verifyEqual(length(measuredQubitsMid),0)
 
       % measuredQubitsEnd
-      test.verifyEqual(sim.measuredQubitsEnd(),int32(0))
-      test.verifyEqual(sim.measuredQubitsEnd(1),int32(0))
+      test.verifyEqual(sim.measuredQubitsEnd(),int64(0))
+      test.verifyEqual(sim.measuredQubitsEnd(1),int64(0))
       measuredQubitsEnd = sim.measuredQubitsEnd();
       test.verifyEqual(length(measuredQubitsEnd),1)
 
@@ -582,14 +582,14 @@ classdef test_qclab_QSimulate < matlab.unittest.TestCase
                       {[qclab.Measurement(0)],[qclab.Measurement(0)],[]},1);
 
       % measuredQubits
-      test.verifyEqual(sim.measuredQubits(),int32(0))
-      test.verifyEqual(sim.measuredQubits(1),int32(0))
+      test.verifyEqual(sim.measuredQubits(),int64(0))
+      test.verifyEqual(sim.measuredQubits(1),int64(0))
       measuredQubits = sim.measuredQubits();
       test.verifyEqual(length(measuredQubits),1)
 
       % measuredQubitsMid
-      test.verifyEqual(sim.measuredQubitsMid(),int32(0))
-      test.verifyEqual(sim.measuredQubitsMid(1),int32(0))
+      test.verifyEqual(sim.measuredQubitsMid(),int64(0))
+      test.verifyEqual(sim.measuredQubitsMid(1),int64(0))
       measuredQubitsMid = sim.measuredQubitsMid();
       test.verifyEqual(length(measuredQubitsMid),1)
 
@@ -604,20 +604,20 @@ classdef test_qclab_QSimulate < matlab.unittest.TestCase
         [qclab.Measurement],[qclab.Measurement(1)]},1);
 
       % measuredQubits
-      test.verifyEqual(sim.measuredQubits(),int32([0,1]))
-      test.verifyEqual(sim.measuredQubits(1),int32(0))
+      test.verifyEqual(sim.measuredQubits(),int64([0,1]))
+      test.verifyEqual(sim.measuredQubits(1),int64(0))
       measuredQubits = sim.measuredQubits();
       test.verifyEqual(length(measuredQubits),2)
 
       % measuredQubitsMid
-      test.verifyEqual(sim.measuredQubitsMid(),int32(0))
-      test.verifyEqual(sim.measuredQubitsMid(1),int32(0))
+      test.verifyEqual(sim.measuredQubitsMid(),int64(0))
+      test.verifyEqual(sim.measuredQubitsMid(1),int64(0))
       measuredQubitsMid = sim.measuredQubitsMid();
       test.verifyEqual(length(measuredQubitsMid),1)
 
       % measuredQubitsEnd
-      test.verifyEqual(sim.measuredQubitsEnd(),int32(1))
-      test.verifyEqual(sim.measuredQubitsEnd(1),int32(1))
+      test.verifyEqual(sim.measuredQubitsEnd(),int64(1))
+      test.verifyEqual(sim.measuredQubitsEnd(1),int64(1))
       measuredQubitsEnd = sim.measuredQubitsEnd();
       test.verifyEqual(length(measuredQubitsEnd),1)
 
@@ -626,8 +626,8 @@ classdef test_qclab_QSimulate < matlab.unittest.TestCase
         {[qclab.Measurement],[],[qclab.Measurement()]},1);
 
       % measuredQubits
-      test.verifyEqual(sim.measuredQubits(),int32(0))
-      test.verifyEqual(sim.measuredQubits(1),int32(0))
+      test.verifyEqual(sim.measuredQubits(),int64(0))
+      test.verifyEqual(sim.measuredQubits(1),int64(0))
       measuredQubits = sim.measuredQubits();
       test.verifyEqual(length(measuredQubits),1)
 
@@ -637,8 +637,8 @@ classdef test_qclab_QSimulate < matlab.unittest.TestCase
       test.verifyEqual(length(measuredQubitsMid),0)
 
       % measuredQubitsEnd
-      test.verifyEqual(sim.measuredQubitsEnd(),int32(0))
-      test.verifyEqual(sim.measuredQubitsEnd(1),int32(0))
+      test.verifyEqual(sim.measuredQubitsEnd(),int64(0))
+      test.verifyEqual(sim.measuredQubitsEnd(1),int64(0))
       measuredQubitsEnd = sim.measuredQubitsEnd();
       test.verifyEqual(length(measuredQubitsEnd),1)
 
@@ -656,20 +656,20 @@ classdef test_qclab_QSimulate < matlab.unittest.TestCase
         qclab.Measurement(1)],[qclab.Measurement(0),qclab.Measurement(1,'x')]},1);
 
       % measuredQubits
-      test.verifyEqual(sim.measuredQubits(),int32([1,0,1,0,1]))
-      test.verifyEqual(sim.measuredQubits(1),int32(1))
+      test.verifyEqual(sim.measuredQubits(),int64([1,0,1,0,1]))
+      test.verifyEqual(sim.measuredQubits(1),int64(1))
       measuredQubits = sim.measuredQubits();
       test.verifyEqual(length(measuredQubits),5)
 
       % measuredQubitsMid
-      test.verifyEqual(sim.measuredQubitsMid(),int32([1,0,1]))
-      test.verifyEqual(sim.measuredQubitsMid(1),int32(1))
+      test.verifyEqual(sim.measuredQubitsMid(),int64([1,0,1]))
+      test.verifyEqual(sim.measuredQubitsMid(1),int64(1))
       measuredQubitsMid = sim.measuredQubitsMid();
       test.verifyEqual(length(measuredQubitsMid),3)
 
       % measuredQubitsEnd
-      test.verifyEqual(sim.measuredQubitsEnd(),int32([0,1]))
-      test.verifyEqual(sim.measuredQubitsEnd(1),int32(0))
+      test.verifyEqual(sim.measuredQubitsEnd(),int64([0,1]))
+      test.verifyEqual(sim.measuredQubitsEnd(1),int64(0))
       measuredQubitsEnd = sim.measuredQubitsEnd();
       test.verifyEqual(length(measuredQubitsEnd),2)
 

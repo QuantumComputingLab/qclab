@@ -266,6 +266,18 @@ classdef QRotationGate1 < qclab.qgates.QGate1 & ...
       cp = copyElement@matlab.mixin.Copyable( obj );
       cp.rotation_ = obj.rotation ;
     end
+
+    %> Property groups
+    function groups = getPropertyGroups(obj)
+     import matlab.mixin.util.PropertyGroup
+     props = struct();
+     props.nbQubits = obj.nbQubits;  
+     props.Qubit = obj.qubit;
+     props.Theta = obj.theta; 
+     props.Sin = obj.sin; 
+     props.Cos = obj.cos; 
+     groups = PropertyGroup(props);
+    end
     
   end
   

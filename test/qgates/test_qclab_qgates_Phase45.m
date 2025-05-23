@@ -2,22 +2,22 @@ classdef test_qclab_qgates_Phase45 < matlab.unittest.TestCase
   methods (Test)
     function test_Phase45(test)
       T = qclab.qgates.Phase45() ;
-      test.verifyEqual( T.nbQubits, int32(1) );    % nbQubits
+      test.verifyEqual( T.nbQubits, int64(1) );    % nbQubits
       test.verifyTrue( T.fixed );                  % fixed
       test.verifyFalse( T.controlled );            % controlled
       
       % qubit
-      test.verifyEqual( T.qubit, int32(0) );
+      test.verifyEqual( T.qubit, int64(0) );
       T.setQubit( 2 );
-      test.verifyEqual( T.qubit, int32(2) );
+      test.verifyEqual( T.qubit, int64(2) );
       
       % qubits
       qubits = T.qubits;
       test.verifyEqual( length(qubits), 1 );
-      test.verifyEqual( qubits(1), int32(2) );
+      test.verifyEqual( qubits(1), int64(2) );
       qnew = 3 ;
       T.setQubits( qnew );
-      test.verifyEqual( T.qubit, int32(3) );
+      test.verifyEqual( T.qubit, int64(3) );
       
       % matrix
       sqrt2 = 1/sqrt(2);
@@ -51,7 +51,7 @@ classdef test_qclab_qgates_Phase45 < matlab.unittest.TestCase
       % ctranspose
       T = qclab.qgates.Phase45();
       Tp = T';
-      test.verifyEqual( Tp.nbQubits, int32(1) );
+      test.verifyEqual( Tp.nbQubits, int64(1) );
       test.verifyEqual(Tp.matrix, T.matrix', 'AbsTol', eps );
     end
   end

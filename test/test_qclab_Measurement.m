@@ -3,22 +3,22 @@ classdef test_qclab_Measurement < matlab.unittest.TestCase
     function test_Measurement(test)
       M = qclab.Measurement();
       
-      test.verifyEqual( M.nbQubits, int32(1) );     % nbQubits
+      test.verifyEqual( M.nbQubits, int64(1) );     % nbQubits
       test.verifyFalse( M.fixed );               % fixed
       test.verifyFalse( M.controlled );         % controlled
       
       % qubit
-      test.verifyEqual( M.qubit, int32(0) );
+      test.verifyEqual( M.qubit, int64(0) );
       M.setQubit( 2 );
-      test.verifyEqual( M.qubit, int32(2) );
+      test.verifyEqual( M.qubit, int64(2) );
       
       % qubits
       qubits = M.qubits;
       test.verifyEqual( length(qubits), 1 );
-      test.verifyEqual( qubits(1), int32(2) );
+      test.verifyEqual( qubits(1), int64(2) );
       qnew = 3 ;
       M.setQubits( qnew );
-      test.verifyEqual( M.qubit, int32(3) );
+      test.verifyEqual( M.qubit, int64(3) );
 
       % toQASM      
       [T,out] = evalc('M.toQASM(1)'); % capture output to std::out in T
@@ -28,9 +28,12 @@ classdef test_qclab_Measurement < matlab.unittest.TestCase
 
       % basisChange
       M = qclab.Measurement(2, 'x');
-      test.verifyEqual(M.qubit, int32(2));
+      test.verifyEqual(M.qubit, int64(2));
       test.verifyEqual(M.basisChange, qclab.qgates.Hadamard);
-      
+      test.verifyEqual(M.matrix, qclab.qgates.Hadamard.matrix);
+      M = qclab.Measurement(2, [qclab.qgates.Hadamard, qclab.qgates.PauliX]);
+      test.verifyEqual(M.matrix, ...
+                       qclab.qgates.Hadamard.matrix*qclab.qgates.PauliX.matrix);
       % draw gate
       [out] = M.draw(1, 'N');
       test.verifyEqual( out, 0 );
@@ -59,7 +62,7 @@ classdef test_qclab_Measurement < matlab.unittest.TestCase
       M = qclab.Measurement(1, [qclab.qgates.Hadamard; qclab.qgates.Phase90],'test');
 
       M1 = ctranspose(M);
-      test.verifyEqual( M1.qubit, int32(1) );
+      test.verifyEqual( M1.qubit, int64(1) );
       test.verifyTrue( equals(M1.basisChange(1), [qclab.qgates.Phase(0,-pi/2)])) ;
       test.verifyTrue( equals(M1.basisChange(2), [qclab.qgates.Hadamard])) ;
       test.verifyTrue(strcmp(M1.label, 'test'));

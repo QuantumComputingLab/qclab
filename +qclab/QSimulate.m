@@ -57,7 +57,8 @@
 % (C) Copyright Sophia Keip, Daan Camps and Roel Van Beeumen 2025.
 % ==============================================================================
 classdef QSimulate < handle & ...
-    matlab.mixin.Copyable
+                     matlab.mixin.Copyable & ...
+                     matlab.mixin.CustomDisplay
 
   properties (Access = protected)
     %> States of the quantum simulation.
@@ -645,6 +646,27 @@ classdef QSimulate < handle & ...
       end
 
       bool = true;
+    end
+  end
+
+   methods ( Access = protected )
+    %> display Heterogeneous header
+    function header = getHeader(obj)
+         object = matlab.mixin.CustomDisplay.getClassNameForHeader(obj);
+         headerStr = [object ' with properties '];
+         header =  sprintf('%s\n',headerStr);
+    end
+    
+    %> Property groups
+    function groups = getPropertyGroups(obj)
+     import matlab.mixin.util.PropertyGroup
+     props = struct();
+     props.nbOutcomes = obj.nbOutcomes;  
+     props.measuredQubits = obj.measuredQubits;  
+     props.results = obj.results;
+     props.probabilities = obj.probabilities;
+     props.states = obj.states;
+     groups = PropertyGroup(props);
     end
   end
 end % class QSimulate

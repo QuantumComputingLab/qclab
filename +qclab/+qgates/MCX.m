@@ -36,31 +36,38 @@ classdef MCX < qclab.qgates.QMultiControlledGate
       if isa(other,'qclab.qgates.MCX') && ...
          sum(obj.controlStates == other.controlStates) == ...
             length(obj.controlStates)
-        bool = (sum(obj.controls < obj.target) == ...
-                sum(other.controls < other.target)) && ...
-               (sum(obj.controls > obj.target) == ...
-                sum(other.controls > other.target)) ;
+        bool = (sum(obj.controls < obj.targets) == ...
+                sum(other.controls < other.targets)) && ...
+               (sum(obj.controls > obj.targets) == ...
+                sum(other.controls > other.targets)) ;
       end
     end
     
-     % target
-    function [target] = target(obj)
-      target = obj.gate_.qubit ;
+     % targets
+    function [targets] = targets(obj)
+      targets = obj.gate_.qubit ;
     end
     
-    %> Copy of 1-qubit gate of multi-controlled-NOT gate
-    function [gate] = gate(obj)
-      gate = copy(obj.gate_);
-    end
-    
-    % setTarget
-    function setTarget(obj, target)
+    % setTargets
+    function setTargets(obj, target)
       assert( qclab.isNonNegInteger(target) ) ; 
       controls = obj.controls() ;
       assert( ~(any(controls(:) == target) ) ) ;
       obj.gate_.setQubit( target );
     end
+
+    %> Copy of 1-qubit gate of multi-controlled-NOT gate
+    function [gate] = gate(obj)
+      gate = copy(obj.gate_);
+    end
     
+    % setQubits
+    function setQubits(obj, qubits)
+      assert( qclab.isNonNegIntegerArray(qubits) ) ;
+      assert( length(qubits) == length(unique(qubits)) );
+      obj.controls_ = sort(qubits(1:end-1)) ;
+      obj.setTargets( qubits(end) ) ;
+    end
     
     % ==========================================================================
     %> @brief draw a multi-qubit gate of a multi-controlled 1-qubit gate.
@@ -84,7 +91,7 @@ classdef MCX < qclab.qgates.QMultiControlledGate
       qclab.drawCommands ; % load draw commands
       
       controls = obj.controls ;
-      target = obj.target ;
+      target = obj.targets ;
       minq = min([controls(1), target]);
       maxq = max([controls(end), target]);
       target_idx = find(controls > target, 1);
@@ -209,7 +216,7 @@ classdef MCX < qclab.qgates.QMultiControlledGate
       if nargin < 3, parameter = 'N'; end
       if nargin < 4, offset = 0; end
       controls = obj.controls ;
-      target = obj.target ;
+      target = obj.targets ;
       minq = min([controls(1), target]);
       maxq = max([controls(end), target]);
       target_idx = find(controls > target, 1);

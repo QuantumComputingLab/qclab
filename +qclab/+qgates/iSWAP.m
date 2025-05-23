@@ -16,7 +16,7 @@
 classdef iSWAP < qclab.qgates.QGate2
   properties (Access = protected)
     %> Qubits of this iSWAP gate.
-    qubits_(1,2)  int32
+    qubits_(1,2)  int64
   end
   
   methods

@@ -60,7 +60,7 @@
 classdef Measurement < qclab.QObject
   properties (Access = protected)
     %> Qubit of this 1-qubit measurement.
-    qubit_(1,1)  int32
+    qubit_(1,1)  int64
     %> BasisChange of this 1-qubit measurement.
     basisChange_ 
     %> Label of this 1-qubit measurement.
@@ -87,9 +87,8 @@ classdef Measurement < qclab.QObject
     %> basis and label is set to 'z', 'x' or 'y'.
     % ==========================================================================
     function obj = Measurement( qubit, basisChange, label )
-      if nargin == 0, qubit = 0; basisChange = qclab.qgates.QGate1.empty; 
-        label = ''; end
-      if nargin == 1, basisChange = qclab.qgates.QGate1.empty; 
+      if nargin < 1, qubit = 0; end
+      if nargin < 2, basisChange = qclab.qgates.QGate1.empty; 
         label = ''; end
       if nargin == 2, label = 'U'; end
 
@@ -178,8 +177,8 @@ classdef Measurement < qclab.QObject
     end
 
     function [mat] = matrix(obj)
-      % matrix - Return the matrix representation of the basis change of the 
-      %          measurement.
+      % matrix - Return the matrix representation of the basis 
+      %          change of the measurement.
       %
       % Syntax:
       %   mat = obj.matrix()
@@ -247,8 +246,18 @@ classdef Measurement < qclab.QObject
       % Outputs:
       %   bool - True if the objects are equal, false otherwise.
       if isa(other, 'qclab.Measurement')
-        bool = (obj.qubit == other.qubit) && isequal(obj.matrix, ...
-          other.matrix);
+        basisChange1 = obj.basisChange;
+      mat1 = [1,0;0,1];
+       for i = 1:length(basisChange1)
+         mat1 = mat1*basisChange1(i).matrix;
+       end
+       basisChange2 = other.basisChange;
+      mat2 = [1,0;0,1];
+       for i = 1:length(basisChange2)
+         mat2 = mat2*basisChange2(i).matrix;
+       end
+        bool = (obj.qubit == other.qubit) && isequal(mat1, ...
+          mat2);
       else
         bool = false;
       end
@@ -430,8 +439,9 @@ classdef Measurement < qclab.QObject
   end
 
   methods (Static)
+
     function [nbQubits] = nbQubits
-      nbQubits = int32(1);
+      nbQubits = int64(1);
     end
 
     function [bool] = controlled
@@ -440,6 +450,18 @@ classdef Measurement < qclab.QObject
 
     function [bool] = fixed
       bool = false;
+    end
+  end
+
+   methods (Access = protected)
+    %> Property groups
+    function groups = getPropertyGroups(obj)
+      import matlab.mixin.util.PropertyGroup
+      props = struct();
+      props.Qubit = obj.qubit;
+      props.BasisChange = obj.basisChange;
+         
+      groups = PropertyGroup(props);
     end
   end
 

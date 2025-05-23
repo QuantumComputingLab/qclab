@@ -3,22 +3,22 @@ classdef test_qclab_qgates_PauliZ < matlab.unittest.TestCase
     function test_PauliZ(test)
       Z = qclab.qgates.PauliZ();
       
-      test.verifyEqual( Z.nbQubits, int32(1) );     % nbQubits
+      test.verifyEqual( Z.nbQubits, int64(1) );     % nbQubits
       test.verifyTrue( Z.fixed );               % fixed
       test.verifyFalse( Z.controlled );         % controlled
       
       % qubit
-      test.verifyEqual( Z.qubit, int32(0) );
+      test.verifyEqual( Z.qubit, int64(0) );
       Z.setQubit( 2 );
-      test.verifyEqual( Z.qubit, int32(2) );
+      test.verifyEqual( Z.qubit, int64(2) );
       
       % qubits
       qubits = Z.qubits;
       test.verifyEqual( length(qubits), 1 );
-      test.verifyEqual( qubits(1), int32(2) );
+      test.verifyEqual( qubits(1), int64(2) );
       qnew = 3 ;
       Z.setQubits( qnew );
-      test.verifyEqual( Z.qubit, int32(3) );
+      test.verifyEqual( Z.qubit, int64(3) );
       
       % matrix
       test.verifyEqual( Z.matrix, [1, 0; 0 -1]);
@@ -51,7 +51,7 @@ classdef test_qclab_qgates_PauliZ < matlab.unittest.TestCase
       % ctranspose
       Z = qclab.qgates.PauliZ();
       Zp = Z';
-      test.verifyEqual( Zp.nbQubits, int32(1) );
+      test.verifyEqual( Zp.nbQubits, int64(1) );
       test.verifyEqual(Zp.matrix, Z.matrix' );
     end
   end
