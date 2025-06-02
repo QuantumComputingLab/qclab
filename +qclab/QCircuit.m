@@ -1044,6 +1044,139 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
         out = circuitCell ;
       end
     end
+        % ==========================================================================
+        %> ALIASES
+        % ==========================================================================
+        function H(obj,qubit)
+            obj.push_back(qclab.qgates.Hadamard(qubit))
+        end
+        function CNOT(obj, varargin)
+            obj.push_back(qclab.qgates.CNOT(varargin{:}));
+        end
+        function CPhase(obj, varargin)
+            obj.push_back(qclab.qgates.CPhase(varargin{:}));
+        end
+        function CRX(obj, varargin)
+            obj.push_back(qclab.qgates.CRotationX(varargin{:}));
+        end
+        function CRY(obj, varargin)
+            obj.push_back(qclab.qgates.CRotationY(varargin{:}));
+        end
+        function CRZ(obj, varargin)
+            obj.push_back(qclab.qgates.CRotationZ(varargin{:}));
+        end
+        function CU2(obj, varargin)
+            obj.push_back(qclab.qgates.CU2(varargin{:}));
+        end
+
+        function CU3(obj, varargin)
+            obj.push_back(qclab.qgates.CU3(varargin{:}));
+        end
+        function CY(obj, varargin)
+            obj.push_back(qclab.qgates.CY(varargin{:}));
+        end
+        function CZ(obj, varargin)
+            obj.push_back(qclab.qgates.CZ(varargin{:}));
+        end
+        function I(obj, varargin)
+            obj.push_back(qclab.qgates.Identity(varargin{:}));
+        end
+        function iSWAP(obj, varargin)
+            obj.push_back(qclab.qgates.iSWAP(varargin{:}));
+        end
+        function HG1(obj, varargin)
+            obj.push_back(qclab.qgates.HandleGate1(varargin{:}));
+        end
+        function HG2(obj, varargin)
+            obj.push_back(qclab.qgates.HandleGate2(varargin{:}));
+        end
+        function MG(obj, varargin)
+            obj.push_back(qclab.qgates.MatrixGate(varargin{:}));
+        end
+        function MCMG(obj, varargin)
+            obj.push_back(qclab.qgates.MCMatrixGate(varargin{:}));
+        end
+        function MCRX(obj, varargin)
+            obj.push_back(qclab.qgates.MCRotationX(varargin{:}));
+        end
+        function MCRY(obj, varargin)
+            obj.push_back(qclab.qgates.MCRotationY(varargin{:}));
+        end
+        function MCRZ(obj, varargin)
+            obj.push_back(qclab.qgates.MCRotationZ(varargin{:}));
+        end
+        function MCX(obj, varargin)
+            obj.push_back(qclab.qgates.MCX(varargin{:}));
+        end
+        function MCY(obj, varargin)
+            obj.push_back(qclab.qgates.MCY(varargin{:}));
+        end
+        function MCZ(obj, varargin)
+            obj.push_back(qclab.qgates.MCZ(varargin{:}));
+        end
+        function X(obj, varargin)
+            obj.push_back(qclab.qgates.PauliX(varargin{:}));
+        end
+        function Y(obj, varargin)
+            obj.push_back(qclab.qgates.PauliY(varargin{:}));
+        end
+        function Z(obj, varargin)
+            obj.push_back(qclab.qgates.PauliZ(varargin{:}));
+        end
+        function Phase(obj, varargin)
+            obj.push_back(qclab.qgates.Phase(varargin{:}));
+        end
+        function Phase45(obj, varargin)
+            obj.push_back(qclab.qgates.Phase45(varargin{:}));
+        end
+        function Phase90(obj, varargin)
+            obj.push_back(qclab.qgates.Phase90(varargin{:}));
+        end
+        function QCG(obj, varargin)
+            obj.push_back(qclab.qgates.QControlledGate(varargin{:}));
+        end
+        function QGate1(obj, varargin)
+            obj.push_back(qclab.qgates.QGate1(varargin{:}));
+        end
+        function QGate2(obj, varargin)
+            obj.push_back(qclab.qgates.QGate2(varargin{:}));
+        end
+        function QMCG(obj, varargin)
+            obj.push_back(qclab.qgates.QMultiControlledGate(varargin{:}));
+        end
+        function QRG1(obj, varargin)
+            obj.push_back(qclab.qgates.QRotationGate1(varargin{:}));
+        end
+        function QRG2(obj, varargin)
+            obj.push_back(qclab.qgates.QRotationGate2(varargin{:}));
+        end
+        function RX(obj, varargin)
+            obj.push_back(qclab.qgates.RotationX(varargin{:}));
+        end
+        function RXX(obj, varargin)
+            obj.push_back(qclab.qgates.RotationXX(varargin{:}));
+        end
+        function RY(obj, varargin)
+            obj.push_back(qclab.qgates.RotationY(varargin{:}));
+        end
+        function RYY(obj, varargin)
+            obj.push_back(qclab.qgates.RotationYY(varargin{:}));
+        end
+        function RZ(obj, varargin)
+            obj.push_back(qclab.qgates.RotationZ(varargin{:}));
+        end
+        function RZZ(obj, varargin)
+            obj.push_back(qclab.qgates.RotationZZ(varargin{:}));
+        end
+        function SWAP(obj, varargin)
+            obj.push_back(qclab.qgates.SWAP(varargin{:}));
+        end
+        function U2(obj, varargin)
+            obj.push_back(qclab.qgates.U2(varargin{:}));
+        end
+        function U3(obj, varargin)
+            obj.push_back(qclab.qgates.U3(varargin{:}));
+        end
   end
 
   methods (Static)
