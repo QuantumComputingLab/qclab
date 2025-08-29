@@ -1,29 +1,60 @@
 % RotationY - 1-qubit rotation gate about the Y axis
-% The RotationY class implements a 1-qubit rotation gate around the Y axis.
-% This gate performs a rotation by an angle θ around the Y axis of the Bloch
-% sphere. 
+% The RotationY class implements a 1-qubit rotation gate that performs a
+% rotation by an angle θ around the Y axis of the Bloch sphere.
 %
 % The matrix representation of the RotationY gate is:
-%   R_y(θ) = [cos(θ/2)  -sin(θ/2);
-%             sin(θ/2)   cos(θ/2)]
+%   Ry(θ) = [cos(θ/2)   -sin(θ/2);
+%            sin(θ/2)    cos(θ/2)]
 %
 % Creation
-%   Syntax
+%   Syntax:
+%     RY = qclab.qgates.RotationY()
+%       - Default constructor. Constructs an adjustable Y-rotation gate on
+%         qubit 0 with θ = 0.
+%
+%     RY = qclab.qgates.RotationY(qubit)
+%       - Constructs an adjustable Y-rotation gate on the specified `qubit`
+%         with θ = 0.
+%
 %     RY = qclab.qgates.RotationY(qubit, theta)
+%       - Constructs an adjustable Y-rotation gate on `qubit` with rotation
+%         angle `theta` (in radians).
 %
-%   Input Arguments
-%     qubit - qubit to which the RotationY gate is applied
-%             non-negative integer, (default: 0)
-%     theta - rotation angle in radians
+%     RY = qclab.qgates.RotationY(qubit, theta, fixed)
+%       - Constructs a Y-rotation gate with the given angle `theta` and
+%         optional logical flag `fixed`. Set `fixed` to true for a
+%         non-adjustable gate.
 %
-%   Output:
+%     RY = qclab.qgates.RotationY(qubit, angle, fixed)
+%       - Constructs a Y-rotation gate using a QAngle object `angle`.
+%
+%     RY = qclab.qgates.RotationY(qubit, cos_theta, sin_theta, fixed)
+%       - Constructs a Y-rotation gate from trigonometric values of θ/2:
+%         `cos_theta = cos(θ/2)`, `sin_theta = sin(θ/2)`
+%
+% Input Arguments:
+%     qubit      - Target qubit (non-negative integer, default: 0)
+%     theta      - Rotation angle in radians
+%     angle      - QAngle object
+%     cos_theta  - Cosine of θ/2
+%     sin_theta  - Sine of θ/2
+%     fixed      - Logical flag indicating whether the gate is adjustable 
+%                  (default: false)
+%
+% Output:
 %     RY - A quantum object of type `RotationY`, representing the 1-qubit
-%          rotation gate about the Y axis on qubit `qubit` with rotation
-%          angle `theta`.
+%          rotation gate about the Y axis applied to the specified qubit.
 %
-% Example:
-%   Create a RotationY gate object for qubit 0 with a rotation angle of π/2:
+% Examples:
+%   Create a default Y-rotation gate:
+%     RY = qclab.qgates.RotationY();
+%
+%   Create a RotationY gate on qubit 0 with θ = π/2:
 %     RY = qclab.qgates.RotationY(0, pi/2);
+%
+%   Create a non-adjustable RotationY gate using cosine and sine:
+%     RY = qclab.qgates.RotationY(1, cos(pi/4), sin(pi/4), true);
+
 
 %> @file RotationY.m
 %> @brief Implements RotationY class.

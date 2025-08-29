@@ -1,3 +1,31 @@
+% Phase90 - 1-qubit S gate (π/2 phase gate) for quantum circuits
+% The Phase90 class implements a 1-qubit phase gate with a phase angle
+% of π/2, also known as the S gate.
+%
+% The matrix representation of the Phase90 gate is:
+%   S = [1  0;
+%        0  i]
+%
+% Creation
+%   Syntax
+%     S = qclab.qgates.Phase90()
+%       - Creates a S gate (Phase90) on qubit 0.
+%
+%     S = qclab.qgates.Phase90(qubit)
+%       - Creates a S gate (Phase90) on the specified `qubit`.
+%
+%   Input Arguments
+%     qubit - Qubit to which the Phase90 gate is applied.
+%             Non-negative integer, default is 0.
+%
+%   Output
+%     S - A quantum object of type `Phase90`, representing the 1-qubit S gate
+%         on qubit `qubit`.
+%
+% Examples:
+%   Create an S gate on qubit 1:
+%     S = qclab.qgates.Phase90(1);
+
 %> @file Phase90.m
 %> @brief Implements Phase90 gate (S gate) class.
 % ==============================================================================

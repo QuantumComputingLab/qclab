@@ -139,7 +139,7 @@ classdef QSimulate < handle & ...
       %
       % Outputs:
       %   nbOutcomes - Number of outcomes (results) in the simulation.
-      nbOutcomes = numel(obj.states_);
+      nbOutcomes = numel(obj.results_);
     end
 
     %> @brief Return the results of the simulation.
@@ -530,7 +530,7 @@ classdef QSimulate < handle & ...
       %
       % Outputs:
       %   rho - Density matrix of the whole quantum state (double).
-      if obj.nbOutcomes == 1
+      if obj.nbOutcomes == 0
         rho = obj.states * obj.states';
       else
         rho = zeros(length(obj.states_{1}));
@@ -562,7 +562,7 @@ classdef QSimulate < handle & ...
       nbOutcomes = obj.nbOutcomes;
       reducedStates = cell(nbOutcomes, 1);
       if isempty(obj.measuredQubitsEnd)
-        reducedStates = obj.states;
+        reducedStates = {};
       else
         [resultsEnd, idx] = obj.resultsEnd;
         for i = 1:nbOutcomes

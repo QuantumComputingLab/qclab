@@ -18,7 +18,7 @@
 %     qubits  - vector of consecutive non-negative integers specifying the qubits
 %               on which the matrix gate acts
 %     unitary - unitary matrix of size 2^n × 2^n, where n = length(qubits)
-%     label   - (optional) string label used for visualization 
+%     label   - string label used for visualization (default = 'U')
 %
 %   Output
 %     G - A quantum object of type `MatrixGate`, representing a custom 
@@ -196,7 +196,7 @@ classdef MatrixGate < qclab.QObject
     %> @retval out if fid > 0 then out == 0 on succesfull completion, otherwise
     %>             out contains a cell array with the drawing info.
     % ==========================================================================
-    function [out] = draw(obj, fid, parameter, offset)
+    function [varargout] = draw(obj, fid, parameter, offset)
       if nargin < 2, fid = 1; end
       if nargin < 3, parameter = 'N'; end
       if nargin < 4, offset = 0; end
@@ -236,6 +236,12 @@ classdef MatrixGate < qclab.QObject
         out = 0;
       else
         out = gateCell ;
+      end
+
+      if nargout > 0
+        varargout = {out};
+      else
+        varargout = {};
       end
     end
 

@@ -1,3 +1,49 @@
+% MCRotationY - Multi-Controlled Rotation-Y gate
+% The MCRotationY class implements a multi-controlled rotation gate about
+% the Y axis. It applies an RY(θ) operation to the target qubit if all 
+% control qubits are in the specified control states.
+%
+% Creation
+%   Syntax
+%     G = qclab.qgates.MCRotationY(controls, target)
+%       - Creates an MCRotationY gate with control qubits `controls` 
+%         (array of indices), target qubit `target`, and default angle θ = 0.
+%
+%     G = qclab.qgates.MCRotationY(controls, target, controlStates)
+%       - Creates an MCRotationY gate with control qubits `controls`, target 
+%         qubit `target`, and an array `controlStates` specifying the required 
+%         control state (0 or 1) for each control qubit.
+%
+%     G = qclab.qgates.MCRotationY(controls, target, controlStates, theta)
+%       - Additionally specifies the rotation angle θ (in radians) for the RY 
+%         rotation.
+%
+%     G = qclab.qgates.MCRotationY(controls, target, controlStates, angle)
+%       - Alternatively, specify the rotation via a QAngle object `angle`.
+%
+%     G = qclab.qgates.MCRotationY(controls, target, controlStates, cos, sin)
+%       - Construct the gate from the cosine and sine of the rotation angle θ/2.
+%
+% Input Arguments
+%     controls       - Array of non-negative integers specifying control qubits
+%     target         - Non-negative integer specifying the target qubit
+%     controlStates  - Binary array (0 or 1), same length as `controls` 
+%                      (default: all 1)
+%     theta          - Rotation angle θ in radians
+%     angle          - QAngle object
+%     cos, sin       - Cosine and sine of θ/2
+%
+% Output
+%     G - A quantum object of type `MCRotationY`, representing the multi-controlled
+%         rotation-Y gate acting on the specified qubits.
+%
+% Examples:
+%   Create an MCRotationY gate with controls [0,2], target 3, and angle θ = π:
+%     G = qclab.qgates.MCRotationY([0,2], 3, [1,1], pi);
+%
+%   Create an MCRotationY gate using cosine and sine of θ/2:
+%     G = qclab.qgates.MCRotationY([1,4], 5, [0,1], cos(pi/4), sin(pi/4));
+
 %> @file MCRotationY.m
 %> @brief Implements MCRotationY class
 % ==============================================================================

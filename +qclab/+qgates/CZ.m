@@ -1,3 +1,45 @@
+% CZ - Controlled Pauli-Z gate
+% The CZ class implements a 2-qubit controlled-Z gate with a control qubit,
+% target qubit, and optional control state (0 or 1).
+%
+% The matrix representation (in standard basis order) is:
+%   If control < target and controlState = 1:
+%     [ 1   0   0   0;
+%       0   1   0   0;
+%       0   0   1   0;
+%       0   0   0  -1 ]
+%
+% Creation
+%   Syntax
+%     G = qclab.qgates.CZ()
+%       - Creates a CZ gate with control = 0, target = 1, and controlState = 1.
+%
+%     G = qclab.qgates.CZ(control, target)
+%       - Creates a CZ gate with given control and target qubits,
+%         using controlState = 1 by default.
+%
+%     G = qclab.qgates.CZ(control, target, controlState)
+%       - Creates a CZ gate with given control and target qubits,
+%         and the specified control state (0 or 1).
+%
+% Input Arguments
+%     control        - Integer index of control qubit.
+%     target         - Integer index of target qubit.
+%     controlState   - (optional) Control state (0 or 1). Default: 1.
+%
+% Output
+%     G - A quantum object of type `CZ`, representing the controlled Pauli-Z gate.
+%
+% Examples:
+%   CZ gate with default parameters:
+%     G = qclab.qgates.CZ();
+%
+%   CZ gate with control=2, target=5:
+%     G = qclab.qgates.CZ(2, 5);
+%
+%   CZ gate triggered on controlState = 0:
+%     G = qclab.qgates.CZ(1, 3, 0);
+
 %> @file CZ.m
 %> @brief Implements CZ class
 % ==============================================================================

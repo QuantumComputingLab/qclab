@@ -206,12 +206,9 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
 
       circuit2.push_back( H(0) );
       circ2.states = {kron(H0.matrix,I1)*v};
-      circ2.res = dec2bin(0:3);
-      circ2.res = circ2.res(circ2.states{1} ~= 0,:);
-      circ2.res = cellstr(circ2.res);
-      circ2.prob = (kron(H0.matrix,I1)*v).^2;
-      circ2.prob = circ2.prob(circ2.states{1} ~= 0);
-      circ2.meas = {[qclab.Measurement(0),qclab.Measurement(1)], [], [qclab.Measurement(0),qclab.Measurement(1)]};
+      circ2.res = {};
+      circ2.prob = [];
+      circ2.meas = {[], [], []};
 
       w = circuit2.simulate(v);
 
@@ -219,20 +216,18 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
 
       circuit2.push_back( H(1) );
       circ2.states = {kron(H0.matrix,H0.matrix)*v};
-      circ2.res = dec2bin(0:3);
-      circ2.res = cellstr(circ2.res);
-      circ2.prob = (kron(H0.matrix,H0.matrix)*v).^2;
-      circ2.meas = {[qclab.Measurement(0),qclab.Measurement(1)], [], [qclab.Measurement(0),qclab.Measurement(1)]};
+      circ2.res = {};
+      circ2.prob = [];
+      circ2.meas = {[], [], []};
 
       w = circuit2.simulate(v);
       test.verifyEqual(w,qclab.QSimulate(circ2.states, circ2.res, circ2.prob, circ2.meas,1))
 
       circuit2.push_back( X(0) );
       circ2.states = {kron(X0.matrix * H0.matrix,H0.matrix)*v};
-      circ2.res = dec2bin(0:3);
-      circ2.res = cellstr(circ2.res);
-      circ2.prob = (kron(X0.matrix * H0.matrix,H0.matrix)*v).^2;
-      circ2.meas = {[qclab.Measurement(0),qclab.Measurement(1)], [], [qclab.Measurement(0),qclab.Measurement(1)]};
+      circ2.res = {};
+      circ2.prob = [];
+      circ2.meas = {[], [], []};
 
       w = circuit2.simulate(v);
       test.verifyEqual(w,qclab.QSimulate(circ2.states, circ2.res, circ2.prob, circ2.meas,1))
@@ -582,12 +577,12 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
       test.verifyTrue( circuit.objectHandles(3) == Z(2) );
       test.verifyTrue( circuit.objectHandles(4) == H(1) );
 
-      test.verifyTrue( circuit.objectsFlattend(1) == X(0) );
-      test.verifyTrue( circuit.objectsFlattend(1) ~= Y(1) );
-      test.verifyTrue( circuit.objectsFlattend(1) ~= Z(2) );
-      test.verifyTrue( circuit.objectsFlattend(2) == Y(1) );
-      test.verifyTrue( circuit.objectsFlattend(3) == Z(2) );
-      test.verifyTrue( circuit.objectsFlattend(4) == H(1) );
+      test.verifyTrue( circuit.objectsFlattened(1) == X(0) );
+      test.verifyTrue( circuit.objectsFlattened(1) ~= Y(1) );
+      test.verifyTrue( circuit.objectsFlattened(1) ~= Z(2) );
+      test.verifyTrue( circuit.objectsFlattened(2) == Y(1) );
+      test.verifyTrue( circuit.objectsFlattened(3) == Z(2) );
+      test.verifyTrue( circuit.objectsFlattened(4) == H(1) );
 
       test.verifySameHandle(  circuit.objectHandles(1), X0 );
       test.verifySameHandle(  circuit.objectHandles(2), Y1 );
@@ -606,29 +601,29 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
 
       circuit.push_back(subCircuit);
 
-      test.verifyTrue( circuit.objectsFlattend(1) == X(0) );
-      test.verifyTrue( circuit.objectsFlattend(2) == Y(1) );
-      test.verifyTrue( circuit.objectsFlattend(3) == Z(2) );
-      test.verifyTrue( circuit.objectsFlattend(4) == H(1) );
-      test.verifyTrue( circuit.objectsFlattend(5) == M(2) );
+      test.verifyTrue( circuit.objectsFlattened(1) == X(0) );
+      test.verifyTrue( circuit.objectsFlattened(2) == Y(1) );
+      test.verifyTrue( circuit.objectsFlattened(3) == Z(2) );
+      test.verifyTrue( circuit.objectsFlattened(4) == H(1) );
+      test.verifyTrue( circuit.objectsFlattened(5) == M(2) );
 
       circuit.insert(1,subCircuit);
       circuit.pop_back
 
-      test.verifyTrue( circuit.objectsFlattend(1) == M(2) );
-      test.verifyTrue( circuit.objectsFlattend(2) == X(0) );
-      test.verifyTrue( circuit.objectsFlattend(3) == Y(1) );
-      test.verifyTrue( circuit.objectsFlattend(4) == Z(2) );
-      test.verifyTrue( circuit.objectsFlattend(5) == H(1) );
+      test.verifyTrue( circuit.objectsFlattened(1) == M(2) );
+      test.verifyTrue( circuit.objectsFlattened(2) == X(0) );
+      test.verifyTrue( circuit.objectsFlattened(3) == Y(1) );
+      test.verifyTrue( circuit.objectsFlattened(4) == Z(2) );
+      test.verifyTrue( circuit.objectsFlattened(5) == H(1) );
 
       circuit.erase(1)
       circuit.insert(2,subCircuit);
 
-      test.verifyTrue( circuit.objectsFlattend(1) == X(0) );
-      test.verifyTrue( circuit.objectsFlattend(2) == M(2) );
-      test.verifyTrue( circuit.objectsFlattend(3) == Y(1) );
-      test.verifyTrue( circuit.objectsFlattend(4) == Z(2) );
-      test.verifyTrue( circuit.objectsFlattend(5) == H(1) );
+      test.verifyTrue( circuit.objectsFlattened(1) == X(0) );
+      test.verifyTrue( circuit.objectsFlattened(2) == M(2) );
+      test.verifyTrue( circuit.objectsFlattened(3) == Y(1) );
+      test.verifyTrue( circuit.objectsFlattened(4) == Z(2) );
+      test.verifyTrue( circuit.objectsFlattened(5) == H(1) );
 
       circuit.erase(2)
 
@@ -641,13 +636,13 @@ classdef test_qclab_QCircuit < matlab.unittest.TestCase
 
       circuit.insert(2,subCircuit2)
 
-      test.verifyTrue( circuit.objectsFlattend(1) == X(0) );
-      test.verifyTrue( circuit.objectsFlattend(2) == H(1) );
-      test.verifyTrue( circuit.objectsFlattend(3) == H(2) );
-      test.verifyTrue( circuit.objectsFlattend(4) == M(2) );
-      test.verifyTrue( circuit.objectsFlattend(5) == Y(1) );
-      test.verifyTrue( circuit.objectsFlattend(6) == Z(2) );
-      test.verifyTrue( circuit.objectsFlattend(7) == H(1) );
+      test.verifyTrue( circuit.objectsFlattened(1) == X(0) );
+      test.verifyTrue( circuit.objectsFlattened(2) == H(1) );
+      test.verifyTrue( circuit.objectsFlattened(3) == H(2) );
+      test.verifyTrue( circuit.objectsFlattened(4) == M(2) );
+      test.verifyTrue( circuit.objectsFlattened(5) == Y(1) );
+      test.verifyTrue( circuit.objectsFlattened(6) == Z(2) );
+      test.verifyTrue( circuit.objectsFlattened(7) == H(1) );
 
     end
 

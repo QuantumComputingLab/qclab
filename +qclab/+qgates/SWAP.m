@@ -1,3 +1,44 @@
+% SWAP - 2-qubit SWAP gate
+% The SWAP class implements a 2-qubit SWAP gate that exchanges the states
+% of two qubits. 
+%
+% The matrix representation of the SWAP gate is:
+%   SWAP =
+%     [ 1  0  0  0;
+%       0  0  1  0;
+%       0  1  0  0;
+%       0  0  0  1 ]
+%
+% Creation
+%   Syntax
+%     G = qclab.qgates.SWAP()
+%       - Default constructor. Creates a SWAP gate on qubits [0, 1].
+%
+%     G = qclab.qgates.SWAP(qubits)
+%       - Creates a SWAP gate on the specified qubit pair `qubits`.
+%
+%     G = qclab.qgates.SWAP(qubit0, qubit1)
+%       - Creates a SWAP gate on the specified qubits `qubit0` and `qubit1`.
+%
+% Input Arguments
+%     qubits   - 2-element vector of non-negative integers [q0, q1]
+%     qubit0   - First qubit index (non-negative integer)
+%     qubit1   - Second qubit index (non-negative integer)
+%
+% Output
+%     G - A quantum object of type `SWAP`, representing a 2-qubit SWAP gate.
+%
+% Examples:
+%   Create a default SWAP gate on qubits 0 and 1:
+%     G = qclab.qgates.SWAP();
+%
+%   Create a SWAP gate using a qubit vector:
+%     G = qclab.qgates.SWAP([3, 6]);
+%
+%   Create a SWAP gate on qubits 2 and 5:
+%     G = qclab.qgates.SWAP(2, 5);
+
+
 %> @file SWAP.m
 %> @brief Implements SWAP class
 % ==============================================================================
@@ -109,7 +150,7 @@ classdef SWAP < qclab.qgates.QGate2
     %> @retval out if fid > 0 then out == 0 on succesfull completion, otherwise
     %>             out contains a cell array with the drawing info.
     % ==========================================================================
-    function [out] = draw(obj, fid, parameter, offset)
+    function [varargout] = draw(obj, fid, parameter, offset)
       if nargin < 2, fid = 1; end
       if nargin < 3, parameter = 'N'; end
       if nargin < 4, offset = 0; end
@@ -139,6 +180,12 @@ classdef SWAP < qclab.qgates.QGate2
         out = 0;
       else
         out = gateCell ;
+      end
+
+      if nargout > 0
+        varargout = {out};
+      else
+        varargout = {};
       end
     end
     

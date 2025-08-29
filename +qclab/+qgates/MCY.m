@@ -1,3 +1,36 @@
+% MCY - Multi-Controlled Pauli-Y gate
+% The MCY class implements a multi-controlled Pauli-Y gate. It applies a
+% Pauli-Y operation to the target qubit if all control qubits are in the
+% specified control states.
+%
+% Creation
+%   Syntax
+%     G = qclab.qgates.MCY(controls, target)
+%       - Creates an MCY gate with control qubits `controls` (array of indices)
+%         and a target qubit `target`. All control states default to 1.
+%
+%     G = qclab.qgates.MCY(controls, target, controlStates)
+%       - Creates an MCY gate with control qubits `controls`, target qubit `target`,
+%         and an array `controlStates` of the same length as `controls` with values
+%         0 or 1 indicating the required control state for each control qubit.
+%
+% Input Arguments
+%     controls       - Array of non-negative integers specifying control qubits
+%     target         - Non-negative integer specifying the target qubit
+%     controlStates  - Binary array (0 or 1) specifying control states
+%                      for each control qubit (default: all 1)
+%
+% Output
+%     G - A quantum object of type `MCY`, representing the multi-controlled
+%         Pauli-Y gate acting on the specified qubits.
+%
+% Examples:
+%   Create a 2-control MCY gate with controls 1 and 2, target 3:
+%     G = qclab.qgates.MCY([1, 2], 3);
+%
+%   Create an MCY gate where qubit 0 must be |0⟩ and qubit 1 must be |1⟩:
+%     G = qclab.qgates.MCY([0, 1], 2, [0, 1]);
+
 %> @file MCY.m
 %> @brief Implements MCY class
 % ==============================================================================

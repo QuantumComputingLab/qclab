@@ -1,3 +1,67 @@
+% CRotationZ - 2-qubit controlled rotation-Z gate
+% The CRotationZ class implements a 2-qubit controlled rotation gate that
+% performs a rotation by an angle θ around the Z axis on the target qubit,
+% conditioned on the control qubit being in a specified state (default: 1).
+%
+% Creation
+%   Syntax:
+%     G = qclab.qgates.CRotationZ()
+%       - Default constructor. Constructs an adjustable CRotationZ gate with
+%         control = 0, target = 1, controlState = 1, and θ = 0.
+%
+%     G = qclab.qgates.CRotationZ(control)
+%       - Constructs an adjustable CRotationZ gate with the given `control`
+%         qubit, target = 1, θ = 0, controlState = 1.
+%
+%     G = qclab.qgates.CRotationZ(control, target)
+%       - Constructs an adjustable CRotationZ gate on the specified `control`
+%         and `target` qubits with θ = 0, controlState = 1.
+%
+%     G = qclab.qgates.CRotationZ(control, target, theta)
+%       - Constructs an adjustable CRotationZ gate with the given rotation
+%         angle θ (in radians).
+%
+%     G = qclab.qgates.CRotationZ(control, target, theta, controlState)
+%       - Same as above, but with specified `controlState` (0 or 1).
+%
+%     G = qclab.qgates.CRotationZ(control, target, angle)
+%       - Constructs a CRotationZ gate using a qclab.QAngle object `angle`.
+%
+%     G = qclab.qgates.CRotationZ(control, target, angle, controlState)
+%       - Same as above, with specified `controlState`.
+%
+%     G = qclab.qgates.CRotationZ(control, target, cos_theta, sin_theta)
+%       - Constructs a CRotationZ gate from trigonometric values of θ/2:
+%         `cos_theta = cos(θ/2)`, `sin_theta = sin(θ/2)`
+%
+%     G = qclab.qgates.CRotationZ(control, target, cos_theta, sin_theta, controlState)
+%       - Same as above, with specified `controlState`.
+%
+% Input Arguments:
+%     control        - Index of the control qubit (non-negative integer)
+%     target         - Index of the target qubit (non-negative integer)
+%     theta          - Rotation angle θ in radians
+%     angle          - QAngle object
+%     cos_theta      - Cosine of θ/2
+%     sin_theta      - Sine of θ/2
+%     controlState   - Logical value (0 or 1) indicating control condition 
+%                      (default: 1)
+%
+% Output:
+%     G - A quantum object of type `CRotationZ`, representing a 2-qubit
+%         controlled Z-rotation gate applied to the specified qubits.
+%
+% Examples:
+%   Create a default CRotationZ gate:
+%     G = qclab.qgates.CRotationZ();
+%
+%   Create a controlled Z-rotation with θ = π:
+%     G = qclab.qgates.CRotationZ(0, 1, pi);
+%
+%   Create a fixed CRotationZ gate with controlState = 0:
+%     G = qclab.qgates.CRotationZ(2, 3, pi/2, 0);
+
+
 %> @file CRotationZ.m
 %> @brief Implements CRotationZ class
 % ==============================================================================

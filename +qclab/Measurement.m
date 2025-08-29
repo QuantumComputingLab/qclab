@@ -354,7 +354,7 @@ classdef Measurement < qclab.QObject
       end
     end
 
-    function [out] = draw(obj, fid, parameter, offset)
+    function [varargout] = draw(obj, fid, parameter, offset)
       % draw - Draw the measurement in the command window or a file.
       %
       % Syntax:
@@ -393,6 +393,12 @@ classdef Measurement < qclab.QObject
         out = 0;
       else
         out = gateCell;
+      end
+
+      if nargout > 0
+        varargout = {out};
+      else
+        varargout = {};
       end
     end
 

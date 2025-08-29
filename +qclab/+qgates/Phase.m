@@ -17,24 +17,27 @@
 %
 %     P = qclab.qgates.Phase(qubit, angle, fixed)
 %       - Creates a phase gate on the given `qubit` with the provided quantum angle.
-%         The `fixed` flag indicates whether the phase is adjustable (false) or not (true).
+%         The `fixed` flag indicates whether the phase is adjustable (false) or 
+%         not (true).
 %
 %     P = qclab.qgates.Phase(qubit, theta, fixed)
-%       - Creates a phase gate on the given `qubit` with the provided phase angle θ.
-%         The `fixed` flag indicates whether the phase is adjustable (false) or not (true).
+%       - Creates a phase gate on the given `qubit` with the provided phase 
+%         angle θ. The `fixed` flag indicates whether the phase is adjustable 
+%         (false) or not (true).
 %
 %     P = qclab.qgates.Phase(qubit, cos, sin, fixed)
-%       - Creates a phase gate on the given `qubit` with the provided cosine and sine values
-%         of the phase angle. The `fixed` flag indicates whether the phase is adjustable (false) or not (true).
+%       - Creates a phase gate on the given `qubit` with the provided cosine and 
+%         sine values of the phase angle. The `fixed` flag indicates whether the 
+%         phase is adjustable (false) or not (true).
 %
 %   Input Arguments
 %     qubit - qubit to which the Phase gate is applied
-%             non-negative integer, default 0
-%     angle - (optional) quantum angle 
-%     theta - (optional) phase angle in radians 
-%     cos   - (optional) cosine of the phase angle 
-%     sin   - (optional) sine of the phase angle 
-%     fixed - (optional) logical flag indicating if the phase is fixed (default: false)
+%             non-negative integer, (default = 0)
+%     angle - QAngle object 
+%     theta - phase angle in radians 
+%     cos   - cosine of the phase angle 
+%     sin   - sine of the phase angle 
+%     fixed - logical flag indicating if the phase is fixed (default: false)
 %
 %   Output:
 %     P - A quantum object of type `Phase`, representing the 1-qubit phase 

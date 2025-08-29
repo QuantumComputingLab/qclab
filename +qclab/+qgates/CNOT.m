@@ -1,3 +1,45 @@
+% CNOT - Controlled NOT gate
+% The CNOT class implements a 2-qubit controlled NOT gate with control qubit,
+% target qubit, and optional control state (0 or 1).
+%
+% The matrix representation is
+%     [ 1  0  0  0;
+%       0  1  0  0;
+%       0  0  0  1;
+%       0  0  1  0 ]
+% if control < target and controlState = 1.
+%
+% Creation
+%   Syntax
+%     G = qclab.qgates.CNOT()
+%       - Creates a CNOT gate with control = 0, target = 1, and controlState = 1.
+%
+%     G = qclab.qgates.CNOT(control, target)
+%       - Creates a CNOT gate with given control and target qubits,
+%         using controlState = 1 by default.
+%
+%     G = qclab.qgates.CNOT(control, target, controlState)
+%       - Creates a CNOT gate with given control and target qubits,
+%         and the specified control state (0 or 1).
+%
+% Input Arguments
+%     control        - Integer index of control qubit.
+%     target         - Integer index of target qubit.
+%     controlState   - (optional) Control state (0 or 1). Default: 1.
+%
+% Output
+%     G - A quantum object of type `CNOT`, representing the controlled NOT gate.
+%
+% Examples:
+%   CNOT gate with default parameters:
+%     G = qclab.qgates.CNOT();
+%
+%   CNOT gate with control=2, target=5:
+%     G = qclab.qgates.CNOT(2, 5);
+%
+%   CNOT gate triggered on controlState = 0:
+%     G = qclab.qgates.CNOT(1, 3, 0);
+
 %> @file CNOT.m
 %> @brief Implements CNOT class
 % ==============================================================================
@@ -99,7 +141,7 @@ classdef CNOT < qclab.qgates.QControlledGate2
     %> @retval out if fid > 0 then out == 0 on succesfull completion, otherwise
     %>             out contains a cell array with the drawing info.
     % ==========================================================================
-    function [out] = draw(obj, fid, parameter, offset)
+    function [varargout] = draw(obj, fid, parameter, offset)
       if nargin < 2, fid = 1; end
       if nargin < 3, parameter = 'N'; end
       if nargin < 4, offset = 0; end
@@ -152,6 +194,12 @@ classdef CNOT < qclab.qgates.QControlledGate2
         out = 0;
       else
         out = gateCell ;
+      end
+
+      if nargout > 0
+        varargout = {out};
+      else
+        varargout = {};
       end
     end
     

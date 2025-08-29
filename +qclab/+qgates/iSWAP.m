@@ -1,3 +1,43 @@
+% iSWAP - 2-qubit iSWAP gate
+% The iSWAP class implements a 2-qubit iSWAP gate that exchanges the
+% states of two qubits and adds a phase of i to ∣01⟩ and ∣10⟩.
+%
+% The matrix representation of the iSWAP gate is:
+%   iSWAP =
+%     [ 1  0   0   0;
+%       0  0   i   0;
+%       0  i   0   0;
+%       0  0   0   1 ]
+%
+% Creation
+%   Syntax
+%     G = qclab.qgates.iSWAP()
+%       - Default constructor. Creates an iSWAP gate on qubits [0, 1].
+%
+%     G = qclab.qgates.iSWAP(qubits)
+%       - Creates an iSWAP gate on the specified qubit pair `qubits`.
+%
+%     G = qclab.qgates.iSWAP(qubit0, qubit1)
+%       - Creates an iSWAP gate on the specified qubits `qubit0` and `qubit1`.
+%
+% Input Arguments
+%     qubits   - 2-element vector of non-negative integers [q0, q1]
+%     qubit0   - First qubit index (non-negative integer)
+%     qubit1   - Second qubit index (non-negative integer)
+%
+% Output
+%     G - A quantum object of type `iSWAP`, representing a 2-qubit iSWAP gate.
+%
+% Examples:
+%   Create a default iSWAP gate on qubits 0 and 1:
+%     G = qclab.qgates.iSWAP();
+%
+%   Create an iSWAP gate using a qubit vector:
+%     G = qclab.qgates.iSWAP([3, 6]);
+%
+%   Create an iSWAP gate on qubits 2 and 5:
+%     G = qclab.qgates.iSWAP(2, 5);
+
 %> @file iSWAP.m
 %> @brief Implements iSWAP class
 % ==============================================================================
@@ -134,7 +174,7 @@ classdef iSWAP < qclab.qgates.QGate2
     %> @retval out if fid > 0 then out == 0 on succesfull completion, otherwise
     %>             out contains a cell array with the drawing info.
     % ==========================================================================
-    function [out] = draw(obj, fid, parameter, offset)
+    function [varargout] = draw(obj, fid, parameter, offset)
       if nargin < 2, fid = 1; end
       if nargin < 3, parameter = 'N'; end
       if nargin < 4, offset = 0; end
@@ -164,6 +204,12 @@ classdef iSWAP < qclab.qgates.QGate2
         out = 0;
       else
         out = gateCell ;
+      end
+
+      if nargout > 0
+        varargout = {out};
+      else
+        varargout = {};
       end
     end
     

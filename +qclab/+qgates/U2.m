@@ -1,3 +1,56 @@
+% U2 - 1-qubit gate with two phase parameters for quantum circuits
+% The U2 class implements a 1-qubit gate parameterized by two angles
+% φ and λ.
+%
+% The matrix representation of the U2 gate is:
+%   U2(φ, λ) = (1/√2) * [ 1            , -exp(i·λ);
+%                         exp(i·φ)     ,  exp(i·(φ+λ)) ]
+%
+% Creation
+%   Syntax
+%     U = qclab.qgates.U2()
+%       - Default constructor, creates an adjustable U2 gate on qubit 0
+%         with angles φ = λ = 0.
+%
+%     U = qclab.qgates.U2(qubit)
+%       - Creates an adjustable U2 gate on the specified `qubit` with
+%         angles φ = λ = 0.
+%
+%     U = qclab.qgates.U2(qubit, angle_phi, angle_lambda, fixed)
+%       - Creates a U2 gate on `qubit` with quantum angles `angle_phi` and
+%         `angle_lambda`. Set `fixed` to true for a non-adjustable gate.
+%
+%     U = qclab.qgates.U2(qubit, phi, lambda, fixed)
+%       - Creates a U2 gate with numerical values for φ and λ (in radians).
+%         Set `fixed` to true for a non-adjustable gate.
+%
+%     U = qclab.qgates.U2(qubit, cos_phi, sin_phi, cos_lambda, sin_lambda, fixed)
+%       - Creates a U2 gate from trigonometric values of φ and λ.
+%         Set `fixed` to true for a non-adjustable gate.
+%
+% Input Arguments
+%     qubit                  - Target qubit (non-negative integer, default: 0)
+%     angle_phi              - QAngle object 
+%     angle_lambda           - QAngle object 
+%     phi, lambda            - Numerical values of φ and λ
+%     cos_phi, sin_phi       - Cosine and sine of φ
+%     cos_lambda, sin_lambda - Cosine and sine of λ
+%     fixed                  - Logical flag indicating if the gate is adjustable 
+%                              (default: false)
+%
+% Output
+%     U - A quantum object of type `U2`, representing the 1-qubit U2 gate.
+%
+% Examples:
+%   Create a default U2 gate:
+%     U = qclab.qgates.U2();
+%
+%   Create a U2 gate on qubit 1 with φ = π/2 and λ = π:
+%     U = qclab.qgates.U2(1, pi/2, pi);
+%
+%   Create a non-adjustable U2 gate using trigonometric input:
+%     U = qclab.qgates.U2(0, cos(pi/4), sin(pi/4), cos(pi/3), sin(pi/3), true);
+
 %> @file U2.m
 %> @brief Implements U2 gate class.
 % ==============================================================================

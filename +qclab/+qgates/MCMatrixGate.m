@@ -12,13 +12,15 @@
 %          Control states default to 1.
 %
 %     G = qclab.qgates.MCMatrixGate(controls, targets, unitary, controlStates)
-%       - Additionally specifies the control states (0 or 1) for each control qubit.
+%       - Additionally specifies the control states (0 or 1) for each control 
+%         qubit.
 %
 %     G = qclab.qgates.MCMatrixGate(controls, targets, unitary, label)
 %       - Additionally specifies a label for the matrix gate. 
 %         Control states default to 1.
 %
-%     G = qclab.qgates.MCMatrixGate(controls, targets, unitary, controlStates, label)
+%     G = qclab.qgates.MCMatrixGate(controls, targets, unitary, ...
+%                                                      ... controlStates, label)
 %       - Fully specifies control qubits and their states, the target qubits, 
 %         the unitary matrix, and a label for display.
 %
@@ -26,9 +28,9 @@
 %     controls       - vector of control qubit indices (non-negative integers)
 %     targets        - vector of target qubit indices (non-negative integers)
 %     unitary        - unitary matrix of size 2^n x 2^n, where n = length(targets)
-%     controlStates  - (optional) vector of 0s and 1s, same length as `controls` 
+%     controlStates  - vector of 0s and 1s, same length as `controls` 
 %                      (default: all ones)
-%     label          - (optional) string label used for visualization 
+%     label          - string label used for visualization 
 %                      (default: 'U')
 %
 %   Output
@@ -90,8 +92,6 @@ classdef MCMatrixGate < qclab.qgates.QMultiControlledGate
       assert( isempty( intersect(controls, targets) )) ;
     end
 
-    
-
     % equals
     function [bool] = equals(obj, other)
       bool = false ;
@@ -103,6 +103,15 @@ classdef MCMatrixGate < qclab.qgates.QMultiControlledGate
                (sum(obj.controls > max(obj.targets)) == ...
                 sum(other.controls > max(other.targets))) ;
       end
+    end
+
+    % setQubits
+    function setQubits(obj, qubits)
+      assert( qclab.isNonNegIntegerArray(qubits) ) ;
+      assert( length(qubits) == length(unique(qubits)) );
+      nbControls = length(obj.controls_) ;
+      obj.controls_ = sort(qubits(1:nbControls)) ;
+      obj.setTargets( qubits(nbControls+1:end) ) ;
     end
 
     %> @brief Returns the target qubits of this multi-qubit gate.

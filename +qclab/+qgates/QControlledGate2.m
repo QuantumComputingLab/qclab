@@ -186,7 +186,7 @@ classdef QControlledGate2 < qclab.qgates.QGate2
     %> @retval out if fid > 0 then out == 0 on succesfull completion, otherwise
     %>             out contains a cell array with the drawing info.
     % ==========================================================================
-    function [out] = draw(obj, fid, parameter, offset)
+    function [varargout] = draw(obj, fid, parameter, offset)
       if nargin < 2, fid = 1; end
       if nargin < 3, parameter = 'N'; end
       if nargin < 4, offset = 0; end
@@ -259,6 +259,12 @@ classdef QControlledGate2 < qclab.qgates.QGate2
         out = 0;
       else
         out = gateCell ;
+      end
+
+      if nargout > 0
+        varargout = {out};
+      else
+        varargout = {};
       end
     end
 

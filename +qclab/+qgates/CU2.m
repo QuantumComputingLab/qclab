@@ -1,3 +1,62 @@
+% CU2 - Controlled U2 gate
+% The CU2 class implements a 2-qubit controlled-U2 gate with control and target
+% qubit, angles phi and lambda, and optional control state.
+%
+% Creation
+%   Syntax:
+%     G = qclab.qgates.CU2()
+%       - Default constructor. Constructs an adjustable CU2 gate with:
+%         control = 0, target = 1, controlState = 1, phi = 0, lambda = 0.
+%
+%     G = qclab.qgates.CU2(control)
+%     G = qclab.qgates.CU2(control, target)
+%     G = qclab.qgates.CU2(control, target, controlState)
+%       - Constructs an adjustable CU2 gate with optional control state.
+%
+%     G = qclab.qgates.CU2(control, target, controlState, phi, lambda, fixed)
+%       - Constructs a CU2 gate with given angles φ and λ, the default of `fixed` 
+%         is false.
+%
+%     G = qclab.qgates.CU2(control, target, controlState, phi_angle, ...
+%                                                       ... lambda_angle, fixed)
+%       - Constructs a CU2 gate using qclab.QAngle objects for φ and λ, 
+%         the default of `fixed` is false.
+%
+%     G = qclab.qgates.CU2(control, target, controlState, cos_phi, sin_phi, ...
+%                                             ... cos_lambda, sin_lambda, fixed)
+%       - Constructs a CU2 gate using trigonometric values of φ and λ, 
+%         the default of `fixed` is false.
+%
+% Input Arguments:
+%     control                             - Integer index of the control qubit.
+%     target                              - Integer index of the target qubit.
+%     controlState                        - Optional control state (0 or 1). 
+%                                           Default: 1.
+%     phi, lambda                         - Quantum angles φ and λ (in radians) 
+%                                           as numeric values.
+%     phi_angle, lambda_angle             - QAngle objects representing φ and λ.
+%     cos_phi, sin_phi                    - Trigonometric values of angle φ.
+%     cos_lambda, sin_lambda              - Trigonometric values of angle λ.
+%     fixed                               - Logical flag indicating whether the 
+%                                           angles are fixed.
+%
+% Output:
+%     G - A `CU2` object representing a controlled-U2 gate.
+%
+% Examples:
+%     % Create default CU2 gate:
+%     G = qclab.qgates.CU2();
+%
+%     % Create adjustable CU2 gate with control and target:
+%     G = qclab.qgates.CU2(0, 2);
+%
+%     % Create fixed CU2 gate with angles in radians:
+%     G = qclab.qgates.CU2(1, 3, 1, pi/4, pi/2, true);
+%
+%     % Update an adjustable CU2 gate:
+%     G.update(pi/6, -pi/3);
+
+
 %> @file CU2.m
 %> @brief Implements CU2 class
 % ==============================================================================

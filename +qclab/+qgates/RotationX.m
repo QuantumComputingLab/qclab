@@ -1,29 +1,59 @@
 % RotationX - 1-qubit rotation gate about the X axis
-% The RotationX class implements a 1-qubit rotation gate around the X axis.
-% This gate performs a rotation by an angle θ around the X axis of the Bloch
-% sphere. 
+% The RotationX class implements a 1-qubit rotation gate that performs a
+% rotation by an angle θ around the X axis of the Bloch sphere.
 %
 % The matrix representation of the RotationX gate is:
-%   R_x(θ) = [cos(θ/2)    -i*sin(θ/2);
-%             -i*sin(θ/2)  cos(θ/2)]
+%   Rx(θ) = [cos(θ/2)    -i·sin(θ/2);
+%            -i·sin(θ/2)  cos(θ/2)]
 %
 % Creation
-%   Syntax
+%   Syntax:
+%     RX = qclab.qgates.RotationX()
+%       - Default constructor. Constructs an adjustable X-rotation gate on
+%         qubit 0 with θ = 0.
+%
+%     RX = qclab.qgates.RotationX(qubit)
+%       - Constructs an adjustable X-rotation gate on the specified `qubit`
+%         with θ = 0.
+%
 %     RX = qclab.qgates.RotationX(qubit, theta)
+%       - Constructs an adjustable X-rotation gate on `qubit` with rotation
+%         angle `theta` (in radians).
 %
-%   Input Arguments
-%     qubit - qubit to which the RotationX gate is applied
-%             non-negative integer, (default: 0)
-%     theta - rotation angle in radians
+%     RX = qclab.qgates.RotationX(qubit, theta, fixed)
+%       - Constructs an X-rotation gate with the given angle `theta` and
+%         optional logical flag `fixed`. Set `fixed` to true for a
+%         non-adjustable gate.
 %
-%   Output:
+%     RX = qclab.qgates.RotationX(qubit, angle, fixed)
+%       - Constructs an X-rotation gate using a QAngle object `angle`.
+%
+%     RX = qclab.qgates.RotationX(qubit, cos_theta, sin_theta, fixed)
+%       - Constructs an X-rotation gate from trigonometric values of θ/2:
+%         `cos_theta = cos(θ/2)`, `sin_theta = sin(θ/2)`
+%
+% Input Arguments:
+%     qubit      - Target qubit (non-negative integer, default: 0)
+%     theta      - Rotation angle in radians
+%     angle      - QAngle object
+%     cos_theta  - Cosine of θ/2
+%     sin_theta  - Sine of θ/2
+%     fixed      - Logical flag indicating whether the gate is adjustable 
+%                  (default: false)
+%
+% Output:
 %     RX - A quantum object of type `RotationX`, representing the 1-qubit
-%          rotation gate about the X axis on qubit `qubit` with rotation
-%          angle `theta`.
+%          rotation gate about the X axis applied to the specified qubit.
 %
-% Example:
-%   Create a RotationX gate object on qubit 0 with a rotation angle of π/2:
+% Examples:
+%   Create a default X-rotation gate:
+%     RX = qclab.qgates.RotationX();
+%
+%   Create a RotationX gate on qubit 0 with θ = π/2:
 %     RX = qclab.qgates.RotationX(0, pi/2);
+%
+%   Create a non-adjustable RotationX gate using cosine and sine:
+%     RX = qclab.qgates.RotationX(1, cos(pi/4), sin(pi/4), true);
 
 %> @file RotationX.m
 %> @brief Implements RotationX class.

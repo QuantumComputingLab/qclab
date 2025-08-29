@@ -1,3 +1,36 @@
+% MCX - Multi-Controlled Pauli-X gate (multi-controlled NOT gate)
+% The MCX class implements a multi-controlled Pauli-X gate, also known as the
+% multi-controlled NOT gate. It flips the target qubit if all control qubits
+% are in the specified control states.
+%
+% Creation
+%   Syntax
+%     G = qclab.qgates.MCX(controls, target)
+%       - Creates an MCX gate with control qubits `controls` (array of indices)
+%         and a target qubit `target`. All control states default to 1.
+%
+%     G = qclab.qgates.MCX(controls, target, controlStates)
+%       - Creates an MCX gate with control qubits `controls`, target qubit `target`,
+%         and an array `controlStates` of the same length as `controls` with values
+%         0 or 1 indicating the required control state for each control qubit.
+%
+% Input Arguments
+%     controls       - Array of non-negative integers specifying control qubits
+%     target         - Non-negative integer specifying the target qubit
+%     controlStates  - Binary array (0 or 1) specifying control states
+%                      for each control qubit (default: all 1)
+%
+% Output
+%     G - A quantum object of type `MCX`, representing the multi-controlled
+%         Pauli-X gate acting on the specified qubits.
+%
+% Examples:
+%   Create a 2-control MCX gate with controls 0 and 1, target 2:
+%     G = qclab.qgates.MCX([0, 1], 2);
+%
+%   Create an MCX gate where qubit 0 must be |0⟩ and qubit 1 must be |1⟩:
+%     G = qclab.qgates.MCX([0, 1], 3, [0, 1]);
+
 %> @file MCX.m
 %> @brief Implements MCX class
 % ==============================================================================
@@ -84,7 +117,7 @@ classdef MCX < qclab.qgates.QMultiControlledGate
     %> @retval out if fid > 0 then out == 0 on succesfull completion, otherwise
     %>             out contains a cell array with the drawing info.
     % ==========================================================================
-    function [out] = draw(obj, fid, parameter, offset)
+    function [varargout] = draw(obj, fid, parameter, offset)
       if nargin < 2, fid = 1; end
       if nargin < 3, parameter = 'N'; end
       if nargin < 4, offset = 0; end
@@ -191,6 +224,12 @@ classdef MCX < qclab.qgates.QMultiControlledGate
         out = 0;
       else
         out = gateCell ;
+      end
+
+      if nargout > 0
+        varargout = {out};
+      else
+        varargout = {};
       end
       
     end

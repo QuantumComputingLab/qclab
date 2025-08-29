@@ -1,3 +1,61 @@
+% U3 - 1-qubit gate with three parameters for quantum circuits
+% The U3 class implements a 1-qubit gate parameterized by three angles
+% θ, φ, and λ.
+%
+% The matrix representation of the U3 gate is:
+%   U3(θ, φ, λ) =
+%     [ cos(θ/2)                   , -exp(i·λ)·sin(θ/2);
+%       exp(i·φ)·sin(θ/2)          ,  exp(i·(φ+λ))·cos(θ/2) ]
+%
+% Creation
+%   Syntax
+%     U = qclab.qgates.U3()
+%       - Default constructor, creates an adjustable U3 gate on qubit 0
+%         with θ = φ = λ = 0.
+%
+%     U = qclab.qgates.U3(qubit)
+%       - Creates an adjustable U3 gate on the specified `qubit` with
+%         θ = φ = λ = 0.
+%
+%     U = qclab.qgates.U3(qubit, angle_theta, angle_phi, angle_lambda, fixed)
+%       - Creates a U3 gate on `qubit` with given quantum angles. Set `fixed` to
+%         true for a non-adjustable gate.
+%
+%     U = qclab.qgates.U3(qubit, theta, phi, lambda, fixed)
+%       - Creates a U3 gate with numerical values for θ, φ, and λ (in radians).
+%         Set `fixed` to true to make the gate non-adjustable.
+%
+%     U = qclab.qgates.U3(qubit, cos_theta, sin_theta, cos_phi, sin_phi, ...
+%                                             ... cos_lambda, sin_lambda, fixed)
+%       - Creates a U3 gate using trigonometric values for θ/2, φ, and λ.
+%         Set `fixed` to true for a non-adjustable gate.
+%
+% Input Arguments
+%     qubit                  - Target qubit (non-negative integer, default: 0)
+%     angle_theta            - QAngle object
+%     angle_phi              - QAngle object
+%     angle_lambda           - QAngle object 
+%     theta, phi, lambda     - Numerical values of θ, φ, and λ (in radians)
+%     cos_theta, sin_theta   - Cosine and sine of θ/2
+%     cos_phi, sin_phi       - Cosine and sine of φ
+%     cos_lambda, sin_lambda - Cosine and sine of λ
+%     fixed                  - Logical flag indicating if the gate is adjustable 
+%                              (default: false)
+%
+% Output
+%     U - A quantum object of type `U3`, representing the 1-qubit U3 gate.
+%
+% Examples:
+%   Create a default U3 gate:
+%     U = qclab.qgates.U3();
+%
+%   Create a U3 gate on qubit 1 with θ = π/2, φ = π/4, and λ = π:
+%     U = qclab.qgates.U3(1, pi/2, pi/4, pi);
+%
+%   Create a non-adjustable U3 gate using trigonometric input:
+%     U = qclab.qgates.U3(0, cos(pi/4), sin(pi/4), cos(pi/3), sin(pi/3), ...
+%                                                   ... cos(pi), sin(pi), true);
+
 %> @file U3.m
 %> @brief Implements U3 gate class.
 % ==============================================================================

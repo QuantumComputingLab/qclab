@@ -39,7 +39,7 @@
 %   <a href="matlab:help qclab.QCircuit.setOffset">setOffset</a>       - Set the offset of this quantum circuit.
 %   <a href="matlab:help qclab.QCircuit.objectHandles">objectHandles</a>   - Return array of handles of the objects of this quantum circuit.
 %   <a href="matlab:help qclab.QCircuit.objects">objects</a>         - Return a copy of the objects of this quantum circuit.
-%   <a href="matlab:help qclab.QCircuit.objectsFlattend">objectsFlattend</a> - Return a copy of the objects of this quantum circuit where subcircuits are resolved.
+%   <a href="matlab:help qclab.QCircuit.objectsFlattened">objectsFlattened</a> - Return a copy of the objects of this quantum circuit where subcircuits are resolved.
 %   <a href="matlab:help qclab.QCircuit.isempty">isempty</a>         - Check if this quantum circuit is empty.
 %   <a href="matlab:help qclab.QCircuit.nbObjects">nbObjects</a>       - Return the number of objects in this quantum circuit.
 %   <a href="matlab:help qclab.QCircuit.clear">clear</a>           - Clear the objects of this quantum circuit.
@@ -197,14 +197,11 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
         w = v;
         v = struct;
         v.states = {w};
-        v.res = dec2bin(0:length(w)-1);
-        v.res = v.res(w ~= 0,:);
-        v.res = cellstr(v.res);
-        v.prob = abs(w).^2;
-        v.prob = v.prob(w ~= 0);
-        meas = [arrayfun(@(x) qclab.Measurement(x), 0:obj.nbQubits-1)];
+        v.res = {};
+        v.prob = [];
+        meas = [];
         measMid = [];
-        measEnd = [arrayfun(@(x) qclab.Measurement(x), 0:obj.nbQubits-1)];
+        measEnd = [];
       
       simulation = qclab.QSimulate(v.states, v.res, v.prob, ...
         {meas, measMid, measEnd}, seed);
@@ -293,22 +290,22 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       % first_time is needed to change meas and meas_end to a
       % qclab.Measurement object in order to add measurements
       first_time = true;
-      for i = 1:length(obj.objectsFlattend)
+      for i = 1:length(obj.objectsFlattened)
         % Deleting measurements from end circuit measurement, if another
         % object is applied to the measurements qubit.
         qubits_meas_end = arrayfun(@(measurement) measurement.qubit, meas_end);
         indicesToDelete = ismember(qubits_meas_end, ...
-          obj.objectsFlattend(i).qubits);
+          obj.objectsFlattened(i).qubits);
         meas_end(indicesToDelete) = [];
         % Add object to meas and meas_end if it is a Measurement
-        if isa(obj.objectsFlattend(i), 'qclab.Measurement')
+        if isa(obj.objectsFlattened(i), 'qclab.Measurement')
           if first_time
             meas = qclab.Measurement.empty;
             meas_end = qclab.Measurement.empty;
             first_time = false;
           end
-          meas(end+1) = obj.objectsFlattend(i);
-          meas_end(end+1) = obj.objectsFlattend(i);
+          meas(end+1) = obj.objectsFlattened(i);
+          meas_end(end+1) = obj.objectsFlattened(i);
         end
       end
       % getting meas_mid by deleting meas_end from meas
@@ -383,7 +380,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
             bool = true;
             % Check if all sub matrices between a layer of measurements and
             % the layers of measurements are the same
-            rest_objects_comb = {obj.objectsFlattend, other.objectsFlattend};
+            rest_objects_comb = {obj.objectsFlattened, other.objectsFlattened};
             while (~isempty(rest_objects_comb{1}) || ...
                 ~isempty(rest_objects_comb{2})) && bool == true
               subcircuits = {qclab.QCircuit(obj.nbQubits_),
@@ -506,27 +503,27 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       end
     end
 
-    % objectsFlattend
-    function [objectsFlattend] = objectsFlattend( obj, pos )
-      % objectsFlattend - Return a copy of objects where subcircuits are resolved.
+    % objectsFlattened
+    function [objectsFlattened] = objectsFlattened( obj, pos )
+      % objectsFlattened - Return a copy of objects where subcircuits are resolved.
       %
       % Syntax:
-      %   objectsFlattend = obj.objectsFlattend()
+      %   objectsFlattened = obj.objectsFlattened()
       %
       % Outputs:
-      %   objectsFlattend - Array of quantum objects where subcircuits are resolved.
-      objectsFlattend = obj.objects;
+      %   objectsFlattened - Array of quantum objects where subcircuits are resolved.
+      objectsFlattened = obj.objects;
       i = 1;
-      while i <= length(objectsFlattend)
-        if isa(objectsFlattend(i), 'qclab.QCircuit')
-          sub_circuit = objectsFlattend(i);
-          sub_objects = sub_circuit.objectsFlattend;
+      while i <= length(objectsFlattened)
+        if isa(objectsFlattened(i), 'qclab.QCircuit')
+          sub_circuit = objectsFlattened(i);
+          sub_objects = sub_circuit.objectsFlattened;
           offset = sub_circuit.offset;
           for j = 1:length(sub_objects)
             sub_objects(j).setQubits(sub_objects(j).qubits + offset);
           end
-          objectsFlattend = [objectsFlattend(1:i-1), sub_objects, ...
-            objectsFlattend(i+1:end)];
+          objectsFlattened = [objectsFlattened(1:i-1), sub_objects, ...
+            objectsFlattened(i+1:end)];
           i = i + length(sub_objects);
         else
           i = i + 1;
@@ -534,7 +531,7 @@ classdef QCircuit < qclab.QObject & qclab.QAdjustable
       end
       if nargin == 2
         assert(qclab.isNonNegIntegerArray( pos - 1 ));
-        objectsFlattend = objectsFlattend( pos );
+        objectsFlattened = objectsFlattened( pos );
       end
     end
 
