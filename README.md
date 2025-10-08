@@ -1,4 +1,4 @@
-# QCLAB Matlab Toolbox [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14968124.svg)](https://doi.org/10.5281/zenodo.14968124)
+# QCLAB Matlab Toolbox [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5160554.svg)](https://doi.org/10.5281/zenodo.5160554)
 
 <p align="center"><img src="doc/doxygen/QCLAB.png?raw=true" /></p>
 
@@ -39,6 +39,13 @@ and is compatible with MATLAB R2020b or newer.
 - [Sophia Keip](https://www.fernuni-hagen.de/MATHEMATIK/DMO/mitarbeiter/keip.html) (FernUniversität in Hagen) - sophia.keip@fernuni-hagen.de
 - [Roel Van Beeumen](http://www.roelvanbeeumen.be/) (Lawrence Berkeley National Laboratory) - rvanbeeumen@lbl.gov
 
+## Recent Releases
+- v1.1.1
+  - Bugfix for `objectFlattened` function of `QCircuit`
+  - Improved docstrings for quantum gates
+- v1.1.0
+  - Introduced `MatrixGate` and `MCMatrixGate`
+  - Improved performance using sparse matrices
 
 ## Funding
 The QCLAB project is supported by the Laboratory Directed Research and

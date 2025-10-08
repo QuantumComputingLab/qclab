@@ -1,3 +1,65 @@
+% RotationXX - 2-qubit rotation gate about the XX axis
+% The RotationXX class implements a 2-qubit quantum gate that performs a
+% rotation around the XX axis.
+%
+% The matrix representation of the RotationXX gate is:
+%   RXX(θ) =
+%     [ cos(θ/2)     0           0         -i·sin(θ/2);
+%       0           cos(θ/2)   -i·sin(θ/2)   0;
+%       0          -i·sin(θ/2)  cos(θ/2)     0;
+%      -i·sin(θ/2)   0           0         cos(θ/2) ]
+%
+% Creation
+%   Syntax
+%     G = qclab.qgates.RotationXX()
+%       - Default constructor. Creates a RotationXX gate with qubits [0, 1]
+%         and angle θ = 0.
+%
+%     G = qclab.qgates.RotationXX(qubits)
+%       - Creates a RotationXX gate on the given qubit pair `qubits` with
+%         θ = 0. The argument `qubits` must be a 2-element vector of non-negative 
+%         integers.
+%
+%     G = qclab.qgates.RotationXX(qubits, angle, fixed)
+%       - Creates a RotationXX gate on `qubits` with the given quantum `angle`.
+%         Set `fixed` to true to make the gate non-adjustable.
+%
+%     G = qclab.qgates.RotationXX(qubits, rotation, fixed)
+%       - Creates a RotationXX gate on `qubits` with the given quantum `rotation`.
+%         Set `fixed` to true to make the gate non-adjustable.
+%
+%     G = qclab.qgates.RotationXX(qubits, theta, fixed)
+%       - Creates a RotationXX gate with the given angle θ (in radians).
+%         Set `fixed` to true for a non-adjustable gate.
+%
+%     G = qclab.qgates.RotationXX(qubits, cos, sin, fixed)
+%       - Creates a RotationXX gate with given cosine and sine values
+%         of θ/2. Set `fixed` to true for a non-adjustable gate.
+%
+% Input Arguments
+%     qubits    - 2-element vector specifying the two qubits the gate acts on
+%     angle     - QAngle object
+%     rotation  - QRotation object 
+%     theta     - Rotation angle θ (in radians)
+%     cos       - Cosine of θ/2
+%     sin       - Sine of θ/2
+%     fixed     - Logical flag indicating whether the gate is adjustable 
+%                 (default: false)
+%
+% Output
+%     G - A quantum object of type `RotationXX`, representing a 2-qubit
+%         rotation around the XX axis on the specified qubit pair.
+%
+% Examples:
+%   Create a default XX rotation gate on qubits 0 and 1:
+%     G = qclab.qgates.RotationXX();
+%
+%   Create an XX rotation gate on qubits [1, 3] with angle π/2:
+%     G = qclab.qgates.RotationXX([1, 3], pi/2);
+%
+%   Create a non-adjustable gate with given cosine and sine values:
+%     G = qclab.qgates.RotationXX([0, 2], cos(pi/4), sin(pi/4), true);
+
 %> @file RotationXX.m
 %> @brief Implements RotationXX class.
 % ==============================================================================

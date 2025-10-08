@@ -86,11 +86,11 @@ grover_circuit.push_back(M(0));
 grover_circuit.push_back(M(1));
 
 fprintf( 1, '\n\n grover circuit:\n\n' );
+
 grover_circuit.draw;
-tic;
+
 res = grover_circuit.simulate('00');
-elapsed_time = toc;
-fprintf('Ausführungszeit: %.4f Sekunden\n', elapsed_time);
+
 fprintf( 1, '\n We measure \n' );
 
 res.results(1)

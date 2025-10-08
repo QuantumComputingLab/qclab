@@ -1,3 +1,36 @@
+% MCZ - Multi-Controlled Pauli-Z gate
+% The MCZ class implements a multi-controlled Pauli-Z gate. It applies a
+% Pauli-Z operation to the target qubit if all control qubits are in the
+% specified control states.
+%
+% Creation
+%   Syntax
+%     G = qclab.qgates.MCZ(controls, target)
+%       - Creates an MCZ gate with control qubits `controls` (array of indices)
+%         and a target qubit `target`. All control states default to 1.
+%
+%     G = qclab.qgates.MCZ(controls, target, controlStates)
+%       - Creates an MCZ gate with control qubits `controls`, target qubit `target`,
+%         and an array `controlStates` of the same length as `controls` with values
+%         0 or 1 indicating the required control state for each control qubit.
+%
+% Input Arguments
+%     controls       - Array of non-negative integers specifying control qubits
+%     target         - Non-negative integer specifying the target qubit
+%     controlStates  - Binary array (0 or 1) specifying control states
+%                      for each control qubit (default: all 1)
+%
+% Output
+%     G - A quantum object of type `MCZ`, representing the multi-controlled
+%         Pauli-Z gate acting on the specified qubits.
+%
+% Examples:
+%   Create a 3-control MCZ gate with controls 0, 2, and 4, target 6:
+%     G = qclab.qgates.MCZ([0, 2, 4], 6);
+%
+%   Create an MCZ gate where control qubits must be in states [1, 0, 1]:
+%     G = qclab.qgates.MCZ([1, 3, 5], 7, [1, 0, 1]);
+
 %> @file MCZ.m
 %> @brief Implements MCZ class
 % ==============================================================================

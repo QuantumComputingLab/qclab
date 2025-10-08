@@ -1,3 +1,66 @@
+% RotationYY - 2-qubit rotation gate about the YY axis
+% The RotationYY class implements a 2-qubit quantum gate that performs a
+% rotation around the YY axis.
+%
+% The matrix representation of the RotationYY gate is:
+%   RYY(θ) =
+%     [ cos(θ/2)     0           0          i·sin(θ/2);
+%       0           cos(θ/2)   -i·sin(θ/2)   0;
+%       0          -i·sin(θ/2)  cos(θ/2)     0;
+%       i·sin(θ/2)   0           0         cos(θ/2) ]
+%
+% Creation
+%   Syntax
+%     G = qclab.qgates.RotationYY()
+%       - Default constructor. Creates a RotationYY gate with qubits [0, 1]
+%         and angle θ = 0.
+%
+%     G = qclab.qgates.RotationYY(qubits)
+%       - Creates a RotationYY gate on the given qubit pair `qubits` with
+%         θ = 0. The argument `qubits` must be a 2-element vector of non-negative 
+%         integers.
+%
+%     G = qclab.qgates.RotationYY(qubits, angle, fixed)
+%       - Creates a RotationYY gate on `qubits` with the given quantum `angle`.
+%         Set `fixed` to true to make the gate non-adjustable.
+%
+%     G = qclab.qgates.RotationYY(qubits, rotation, fixed)
+%       - Creates a RotationYY gate on `qubits` with the given quantum `rotation`.
+%         Set `fixed` to true to make the gate non-adjustable.
+%
+%     G = qclab.qgates.RotationYY(qubits, theta, fixed)
+%       - Creates a RotationYY gate with the given angle θ (in radians).
+%         Set `fixed` to true for a non-adjustable gate.
+%
+%     G = qclab.qgates.RotationYY(qubits, cos, sin, fixed)
+%       - Creates a RotationYY gate with given cosine and sine values
+%         of θ/2. Set `fixed` to true for a non-adjustable gate.
+%
+% Input Arguments
+%     qubits    - 2-element vector specifying the two qubits the gate acts on
+%     angle     - QAngle object
+%     rotation  - QRotation object
+%     theta     - Rotation angle θ (in radians)
+%     cos       - Cosine of θ/2
+%     sin       - Sine of θ/2
+%     fixed     - Logical flag indicating whether the gate is adjustable 
+%                 (default: false)
+%
+% Output
+%     G - A quantum object of type `RotationYY`, representing a 2-qubit
+%         rotation around the YY axis on the specified qubit pair.
+%
+% Examples:
+%   Create a default YY rotation gate on qubits 0 and 1:
+%     G = qclab.qgates.RotationYY();
+%
+%   Create a YY rotation gate on qubits [2, 3] with angle π/2:
+%     G = qclab.qgates.RotationYY([2, 3], pi/2);
+%
+%   Create a non-adjustable gate with given cosine and sine values:
+%     G = qclab.qgates.RotationYY([1, 4], cos(pi/6), sin(pi/6), true);
+
+
 %> @file RotationYY.m
 %> @brief Implements RotationYY class.
 % ==============================================================================

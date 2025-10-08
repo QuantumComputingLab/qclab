@@ -1,3 +1,45 @@
+% CY - Controlled Pauli-Y gate
+% The CY class implements a 2-qubit controlled-Y gate with a control qubit,
+% target qubit, and optional control state (0 or 1).
+%
+% The matrix representation (in standard basis order) is:
+%   If control < target and controlState = 1:
+%     [ 1   0    0    0;
+%       0   1    0    0;
+%       0   0    0  -1i;
+%       0   0  +1i    0 ]
+%
+% Creation
+%   Syntax
+%     G = qclab.qgates.CY()
+%       - Creates a CY gate with control = 0, target = 1, and controlState = 1.
+%
+%     G = qclab.qgates.CY(control, target)
+%       - Creates a CY gate with given control and target qubits,
+%         using controlState = 1 by default.
+%
+%     G = qclab.qgates.CY(control, target, controlState)
+%       - Creates a CY gate with given control and target qubits,
+%         and the specified control state (0 or 1).
+%
+% Input Arguments
+%     control        - Integer index of control qubit.
+%     target         - Integer index of target qubit.
+%     controlState   - (optional) Control state (0 or 1). Default: 1.
+%
+% Output
+%     G - A quantum object of type `CY`, representing the controlled Pauli-Y gate.
+%
+% Examples:
+%   CY gate with default parameters:
+%     G = qclab.qgates.CY();
+%
+%   CY gate with control=1, target=3:
+%     G = qclab.qgates.CY(1, 3);
+%
+%   CY gate triggered on controlState = 0:
+%     G = qclab.qgates.CY(0, 2, 0);
+
 %> @file CY.m
 %> @brief Implements CY class
 % ==============================================================================

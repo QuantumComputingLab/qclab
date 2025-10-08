@@ -2,15 +2,14 @@ classdef test_qclab_QSimulate < matlab.unittest.TestCase
   methods (Test)
     function test_QSimulate_states_nbOutcomes(test)
       % no measurements
-      sim = qclab.QSimulate({[1/sqrt(2);0;1/sqrt(2);0]},{'00';'10'},[0.5;0.5]...
-        ,{[qclab.Measurement(0),qclab.Measurement(1)],[],...
-        [qclab.Measurement(0),qclab.Measurement(1)]},1);
+      sim = qclab.QSimulate({[1/sqrt(2);0;1/sqrt(2);0]},{},[]...
+        ,{[],[],[]},1);
       % states
       test.verifyEqual(sim.states(),[1/sqrt(2);0;1/sqrt(2);0])
       test.verifyEqual(sim.states(1),[1/sqrt(2);0;1/sqrt(2);0])
 
       % nbOutcomes
-      test.verifyEqual(sim.nbOutcomes,1)
+      test.verifyEqual(sim.nbOutcomes,0)
 
       % just end circuit measurements
       sim = qclab.QSimulate({[1/sqrt(2);1/sqrt(2);0;0];...
@@ -678,9 +677,8 @@ classdef test_qclab_QSimulate < matlab.unittest.TestCase
     function test_QSimulate_densityMatrix(test)
       
       % no measurements
-      sim = qclab.QSimulate({[1/sqrt(2);0;1/sqrt(2);0]},{'00';'10'},...
-                      [0.5;0.5],{[qclab.Measurement(0),qclab.Measurement(1)],...
-                      [],[qclab.Measurement(0), qclab.Measurement(1)]},1);
+      sim = qclab.QSimulate({[1/sqrt(2);0;1/sqrt(2);0]},{},...
+                      [],{[],[],[]},1);
 
       dens = [1/sqrt(2);0;1/sqrt(2);0]*[1/sqrt(2);0;1/sqrt(2);0]';
       test.verifyEqual( sim.densityMatrix, dens, 'AbsTol', eps )
@@ -744,13 +742,12 @@ classdef test_qclab_QSimulate < matlab.unittest.TestCase
 
     function test_QSimulate_reducedStates(test)
       % no measurements
-      sim = qclab.QSimulate({[1/sqrt(2);0;1/sqrt(2);0]},{'00';'10'},...
-                      [0.5;0.5],{[qclab.Measurement(0),qclab.Measurement(1)],...
-                      [],[qclab.Measurement(0),qclab.Measurement(1)]},1);
+      sim = qclab.QSimulate({[1/sqrt(2);0;1/sqrt(2);0]},{},...
+                      [],{[],[],[]},1);
 
-      test.verifyEqual(sim.reducedStates(),{[]})
+      test.verifyEqual(sim.reducedStates(),{})
       reducedStates = sim.reducedStates();
-      test.verifyEqual(length(reducedStates),1)
+      test.verifyEqual(length(reducedStates),0)
 
       % just end circuit measurements
       sim = qclab.QSimulate({[1/sqrt(2);1/sqrt(2);0;0]; ...
@@ -769,11 +766,9 @@ classdef test_qclab_QSimulate < matlab.unittest.TestCase
                       [0;0;1/sqrt(2);1/sqrt(2)]},{'0';'1'},[0.5;0.5], ...
                       {[qclab.Measurement(0)],[qclab.Measurement(0)],[]},1);
 
-      test.verifyEqual(sim.reducedStates(),{[1/sqrt(2);1/sqrt(2);0;0];...
-                            [0;0;1/sqrt(2);1/sqrt(2)]})
-      test.verifyEqual(sim.reducedStates(1),[1/sqrt(2);1/sqrt(2);0;0])
+      test.verifyEqual(sim.reducedStates(),{})
       reducedStates = sim.reducedStates();
-      test.verifyEqual(length(reducedStates),2)
+      test.verifyEqual(length(reducedStates),0)
 
       % mid and end circuit measurements
       sim = qclab.QSimulate({[0;1;0;0];[0;0;0;1]},{'01';'11'},[0.4;0.6], ...

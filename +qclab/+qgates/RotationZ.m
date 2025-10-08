@@ -1,29 +1,59 @@
 % RotationZ - 1-qubit rotation gate about the Z axis
-% The RotationZ class implements a 1-qubit rotation gate around the Z axis.
-% This gate performs a rotation by an angle θ around the Z axis of the Bloch
-% sphere. 
+% The RotationZ class implements a 1-qubit rotation gate that performs a
+% rotation by an angle θ around the Z axis of the Bloch sphere.
 %
 % The matrix representation of the RotationZ gate is:
-%   R_z(θ) = [cos(θ/2) - i*sin(θ/2)    0;
-%                    0        cos(θ/2) + i*sin(θ/2)]
+%   Rz(θ) = [exp(-i·θ/2)     0;
+%               0        exp(i·θ/2)]
 %
 % Creation
-%   Syntax
+%   Syntax:
+%     RZ = qclab.qgates.RotationZ()
+%       - Default constructor. Constructs an adjustable Z-rotation gate on
+%         qubit 0 with θ = 0.
+%
+%     RZ = qclab.qgates.RotationZ(qubit)
+%       - Constructs an adjustable Z-rotation gate on the specified `qubit`
+%         with θ = 0.
+%
 %     RZ = qclab.qgates.RotationZ(qubit, theta)
+%       - Constructs an adjustable Z-rotation gate on `qubit` with rotation
+%         angle `theta` (in radians).
 %
-%   Input Arguments
-%     qubit - qubit to which the RotationZ gate is applied
-%             non-negative integer, (default: 0)
-%     theta - rotation angle in radians
+%     RZ = qclab.qgates.RotationZ(qubit, theta, fixed)
+%       - Constructs a Z-rotation gate with the given angle `theta` and
+%         optional logical flag `fixed`. Set `fixed` to true for a
+%         non-adjustable gate.
 %
-%   Output:
+%     RZ = qclab.qgates.RotationZ(qubit, angle, fixed)
+%       - Constructs a Z-rotation gate using a QAngle object `angle`.
+%
+%     RZ = qclab.qgates.RotationZ(qubit, cos_theta, sin_theta, fixed)
+%       - Constructs a Z-rotation gate from trigonometric values of θ/2:
+%         `cos_theta = cos(θ/2)`, `sin_theta = sin(θ/2)`
+%
+% Input Arguments:
+%     qubit      - Target qubit (non-negative integer, default: 0)
+%     theta      - Rotation angle in radians
+%     angle      - QAngle object
+%     cos_theta  - Cosine of θ/2
+%     sin_theta  - Sine of θ/2
+%     fixed      - Logical flag indicating whether the gate is adjustable 
+%                  (default: false)
+%
+% Output:
 %     RZ - A quantum object of type `RotationZ`, representing the 1-qubit
-%          rotation gate about the Z axis on qubit `qubit` with rotation
-%          angle `theta`.
+%          rotation gate about the Z axis applied to the specified qubit.
 %
-% Example:
-%   Create a RotationZ gate object for qubit 0 with a rotation angle of π/2:
+% Examples:
+%   Create a default Z-rotation gate:
+%     RZ = qclab.qgates.RotationZ();
+%
+%   Create a RotationZ gate on qubit 0 with θ = π/2:
 %     RZ = qclab.qgates.RotationZ(0, pi/2);
+%
+%   Create a non-adjustable RotationZ gate using cosine and sine:
+%     RZ = qclab.qgates.RotationZ(1, cos(pi/4), sin(pi/4), true);
 
 %> @file RotationZ.m
 %> @brief Implements RotationZ class.

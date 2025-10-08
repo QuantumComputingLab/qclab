@@ -1,3 +1,64 @@
+% CPhase - 2-qubit controlled phase gate
+% The CPhase class implements a 2-qubit controlled phase gate. The gate
+% applies a phase shift of angle θ to the target qubit if the control qubit
+% is in the specified control state (default: 1).
+%
+% Creation
+%   Syntax:
+%     G = qclab.qgates.CPhase()
+%       - Default constructor. Constructs an adjustable CPhase gate with
+%         control = 0, target = 1, controlState = 1, and θ = 0.
+%
+%     G = qclab.qgates.CPhase(control)
+%       - Constructs an adjustable CPhase gate with the given `control`
+%         qubit, target = 1, θ = 0, controlState = 1.
+%
+%     G = qclab.qgates.CPhase(control, target)
+%       - Constructs an adjustable CPhase gate on the specified `control`
+%         and `target` qubits with θ = 0, controlState = 1.
+%
+%     G = qclab.qgates.CPhase(control, target, theta)
+%       - Constructs an adjustable CPhase gate with the given phase angle
+%         `theta` (in radians).
+%
+%     G = qclab.qgates.CPhase(control, target, theta, controlState)
+%       - Same as above, but with specified `controlState` (0 or 1).
+%
+%     G = qclab.qgates.CPhase(control, target, angle)
+%       - Constructs a CPhase gate using a qclab.QAngle object `angle`.
+%
+%     G = qclab.qgates.CPhase(control, target, angle, controlState)
+%       - Same as above, with specified `controlState`.
+%
+%     G = qclab.qgates.CPhase(control, target, cos_theta, sin_theta)
+%       - Constructs a CPhase gate from trigonometric values of θ:
+%         `cos_theta = cos(θ)`, `sin_theta = sin(θ)`
+%
+%     G = qclab.qgates.CPhase(control, target, cos_theta, sin_theta, controlState)
+%       - Same as above, with specified `controlState`.
+%
+% Input Arguments:
+%     control        - Index of the control qubit (non-negative integer)
+%     target         - Index of the target qubit (non-negative integer)
+%     theta          - Phase angle θ in radians
+%     angle          - QAngle object
+%     cos_theta      - Cosine of θ
+%     sin_theta      - Sine of θ
+%     controlState   - Logical value (0 or 1) indicating control condition 
+%                      (default: 1)
+%
+% Output:
+%     G - A quantum object of type `CPhase`, representing a 2-qubit
+%         controlled phase gate acting on the specified qubits.
+%
+% Examples:
+%   Create a controlled phase gate with θ = π:
+%     G = qclab.qgates.CPhase(0, 1, pi);
+%
+%   Create a fixed CPhase gate with controlState = 0:
+%     G = qclab.qgates.CPhase(1, 2, pi/2, 0);
+
+
 %> @file CPhase.m
 %> @brief Implements CPhase class
 % ==============================================================================

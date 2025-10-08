@@ -1,3 +1,49 @@
+% MCRotationZ - Multi-Controlled Rotation-Z gate
+% The MCRotationZ class implements a multi-controlled rotation gate about
+% the Z axis. It applies an RZ(θ) operation to the target qubit if all 
+% control qubits are in the specified control states.
+%
+% Creation
+%   Syntax
+%     G = qclab.qgates.MCRotationZ(controls, target)
+%       - Creates an MCRotationZ gate with control qubits `controls` 
+%         (array of indices), target qubit `target`, and default angle θ = 0.
+%
+%     G = qclab.qgates.MCRotationZ(controls, target, controlStates)
+%       - Creates an MCRotationZ gate with control qubits `controls`, target 
+%         qubit `target`, and an array `controlStates` specifying the required 
+%         control state (0 or 1) for each control qubit.
+%
+%     G = qclab.qgates.MCRotationZ(controls, target, controlStates, theta)
+%       - Additionally specifies the rotation angle θ (in radians) for the RZ 
+%         rotation.
+%
+%     G = qclab.qgates.MCRotationZ(controls, target, controlStates, angle)
+%       - Alternatively, specify the rotation via a QAngle object `angle`.
+%
+%     G = qclab.qgates.MCRotationZ(controls, target, controlStates, cos, sin)
+%       - Construct the gate from the cosine and sine of the rotation angle θ/2.
+%
+% Input Arguments
+%     controls       - Array of non-negative integers specifying control qubits
+%     target         - Non-negative integer specifying the target qubit
+%     controlStates  - Binary array (0 or 1), same length as `controls` 
+%                      (default: all 1)
+%     theta          - Rotation angle θ in radians
+%     angle          - QAngle object
+%     cos, sin       - Cosine and sine of θ/2
+%
+% Output
+%     G - A quantum object of type `MCRotationZ`, representing the multi-controlled
+%         rotation-Z gate acting on the specified qubits.
+%
+% Examples:
+%   Create an MCRotationZ gate with controls [1,2], target 4, and θ = π:
+%     G = qclab.qgates.MCRotationZ([1,2], 4, [1,1], pi);
+%
+%   Create an adjustable MCRotationZ gate using cosine and sine of θ/2:
+%     G = qclab.qgates.MCRotationZ([0,3], 5, [1,0], cos(pi/4), sin(pi/4));
+
 %> @file MCRotationZ.m
 %> @brief Implements MCRotationZ class
 % ==============================================================================

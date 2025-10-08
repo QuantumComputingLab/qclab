@@ -1,3 +1,65 @@
+% RotationZZ - 2-qubit rotation gate about the ZZ axis
+% The RotationZZ class implements a 2-qubit quantum gate that performs a
+% rotation around the ZZ axis.
+%
+% The matrix representation of the RotationZZ gate is:
+%   RZZ(θ) =
+%     [ cos(θ/2) - i·sin(θ/2)     0                   0                   0;
+%       0                   cos(θ/2) + i·sin(θ/2)     0                   0;
+%       0                   0                   cos(θ/2) + i·sin(θ/2)     0;
+%       0                   0                   0                   cos(θ/2) - i·sin(θ/2) ]
+%
+% Creation
+%   Syntax
+%     G = qclab.qgates.RotationZZ()
+%       - Default constructor. Creates a RotationZZ gate with qubits [0, 1]
+%         and angle θ = 0.
+%
+%     G = qclab.qgates.RotationZZ(qubits)
+%       - Creates a RotationZZ gate on the given qubit pair `qubits` with
+%         θ = 0. The argument `qubits` must be a 2-element vector of non-negative 
+%         integers.
+%
+%     G = qclab.qgates.RotationZZ(qubits, angle, fixed)
+%       - Creates a RotationZZ gate on `qubits` with the given quantum `angle`.
+%         Set `fixed` to true to make the gate non-adjustable.
+%
+%     G = qclab.qgates.RotationZZ(qubits, rotation, fixed)
+%       - Creates a RotationZZ gate on `qubits` with the given quantum `rotation`.
+%         Set `fixed` to true to make the gate non-adjustable.
+%
+%     G = qclab.qgates.RotationZZ(qubits, theta, fixed)
+%       - Creates a RotationZZ gate with the given angle θ (in radians).
+%         Set `fixed` to true for a non-adjustable gate.
+%
+%     G = qclab.qgates.RotationZZ(qubits, cos, sin, fixed)
+%       - Creates a RotationZZ gate with given cosine and sine values
+%         of θ/2. Set `fixed` to true for a non-adjustable gate.
+%
+% Input Arguments
+%     qubits    - 2-element vector specifying the two qubits the gate acts on
+%     angle     - QAngle object
+%     rotation  - QRotation object
+%     theta     - Rotation angle θ (in radians)
+%     cos       - Cosine of θ/2
+%     sin       - Sine of θ/2
+%     fixed     - Logical flag indicating whether the gate is adjustable 
+%                 (default: false)
+%
+% Output
+%     G - A quantum object of type `RotationZZ`, representing a 2-qubit
+%         rotation around the ZZ axis on the specified qubit pair.
+%
+% Examples:
+%   Create a default ZZ rotation gate on qubits 0 and 1:
+%     G = qclab.qgates.RotationZZ();
+%
+%   Create a ZZ rotation gate on qubits [1, 2] with angle π:
+%     G = qclab.qgates.RotationZZ([1, 2], pi);
+%
+%   Create a non-adjustable gate with cosine and sine input:
+%     G = qclab.qgates.RotationZZ([0, 3], cos(pi/4), sin(pi/4), true);
+
 %> @file RotationZZ.m
 %> @brief Implements RotationZZ class.
 % ==============================================================================

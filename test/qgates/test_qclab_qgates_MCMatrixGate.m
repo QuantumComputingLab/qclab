@@ -7,13 +7,18 @@ classdef test_qclab_qgates_MCMatrixGate < matlab.unittest.TestCase
                  0, 1, 0, 0;
                  0, 0, 0, 1];
       % no varargin
-      gate = MCMatrixGate([0,1], [2,3], unitary) ;
-      test.verifyEqual( gate.nbQubits, int64(4) );
-      test.verifyTrue( gate.fixed );
+      gate = MCMatrixGate( [0,1], [2,3], unitary ) ;
+      test.verifyEqual( gate.nbQubits, int64(4) ) ;
+      test.verifyTrue( gate.fixed ) ;
       test.verifyTrue( gate.controlled ) ;
-      test.verifyEqual( gate.controls, int64([0,1]) );
-      test.verifyEqual( gate.targets, int64([2,3]) );
-      test.verifyEqual( gate.controlStates, int64([1,1]) );
+      test.verifyEqual( gate.controls, int64( [0,1]) ) ;
+      test.verifyEqual( gate.targets, int64( [2,3]) ) ;
+      test.verifyEqual( gate.controlStates, int64( [1,1]) ) ;
+
+      gate.setQubits([2,3,4,5]) ;
+      test.verifyEqual( gate.controls, int64( [2,3] ) ) ;
+      test.verifyEqual( gate.targets, int64( [4,5] ) ) ;
+
       % one varargin label
       gate = MCMatrixGate([0,1], [2,3], unitary, 'hi') ;
       test.verifyEqual( gate.nbQubits, int64(4) );
@@ -23,6 +28,11 @@ classdef test_qclab_qgates_MCMatrixGate < matlab.unittest.TestCase
       test.verifyEqual( gate.targets, int64([2,3]) );
       test.verifyEqual( gate.controlStates, int64([1,1]) );
       test.verifyEqual( gate.label, ' hi ') ;
+
+      gate.setQubits([5,1,3,4]) ;
+      test.verifyEqual( gate.controls, int64( [1,5] ) ) ;
+      test.verifyEqual( gate.targets, int64( [3,4] ) ) ;
+
       % one varargin controlstates
       gate = MCMatrixGate([0,1], [2,3], unitary, [0,0]) ;
       test.verifyEqual( gate.nbQubits, int64(4) );
@@ -67,7 +77,6 @@ classdef test_qclab_qgates_MCMatrixGate < matlab.unittest.TestCase
       matrix_check(3,3) = 0;
       test.verifyEqual(gate.matrix, matrix_check );
 
-
       gate.setControlStates([0,1]) ;
       matrix_check = eye(16);
       matrix_check(6,6) = 0;
@@ -84,7 +93,6 @@ classdef test_qclab_qgates_MCMatrixGate < matlab.unittest.TestCase
       matrix_check(11,11) = 0;
       test.verifyEqual(gate.matrix, matrix_check );
 
-
       % apply
       % 1 target qubit
       Y = @qclab.qgates.PauliY ;
@@ -100,6 +108,10 @@ classdef test_qclab_qgates_MCMatrixGate < matlab.unittest.TestCase
       vec1 = gate.apply('R','N', 7, vec, 0);
       vec2 = gate_check.apply('R','N', 7, vec, 0);
       test.verifyEqual( vec1, vec2 );
+
+      gate.setQubits([2,3,4,5]) ;
+      test.verifyEqual( gate.controls, int64( [2,3,4] ) ) ;
+      test.verifyEqual( gate.targets, int64( 5 ) ) ;
 
       Y = @qclab.qgates.PauliY ;
       MCY = @qclab.qgates.MCY ;
@@ -128,6 +140,10 @@ classdef test_qclab_qgates_MCMatrixGate < matlab.unittest.TestCase
       vec1 = gate.apply('R','N', 7, vec, 0);
       vec2 = gate_check.apply('R','N', 7, vec, 0);
       test.verifyEqual( vec1, vec2 );
+      
+      gate.setQubits([2,3,4,5]) ;
+      test.verifyEqual( gate.controls, int64( [2,3,4]) ) ;
+      test.verifyEqual( gate.targets, int64(5) ) ;
 
       % 2 target qubits
       E0 = [1 0; 0 0]; E1 = [0 0; 0 1];
@@ -183,12 +199,20 @@ classdef test_qclab_qgates_MCMatrixGate < matlab.unittest.TestCase
       vec2 = gate_check.apply('R','N', 7, vec, 0);
       test.verifyEqual( vec1, vec2 );
 
+      gate.setQubits([2,3,4,5]) ;
+      test.verifyEqual( gate.controls, int64(2)) ;
+      test.verifyEqual( gate.targets, int64( [3,4,5]) ) ;
+
       gate = qclab.qgates.MCMatrixGate([0,6],[1,2,3],U3,[0,0]) ;
       gate_check = qclab.qgates.MatrixGate([1,2,3],U3,'test') ;
       vec = eye(2^7,1);
       vec1 = gate.apply('R','N', 7, vec, 0);
       vec2 = gate_check.apply('R','N', 7, vec, 0);
       test.verifyEqual( vec1, vec2 );
+
+      gate.setQubits([3,2,4,5,6]) ;
+      test.verifyEqual( gate.controls, int64( [2,3]) ) ;
+      test.verifyEqual( gate.targets, int64( [4,5,6]) ) ;
 
       gate = qclab.qgates.MCMatrixGate([0,6],[1,2,3],U3,[0,1]) ;
       vec = eye(2^7,1);

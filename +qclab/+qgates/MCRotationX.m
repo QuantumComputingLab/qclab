@@ -1,3 +1,49 @@
+% MCRotationX - Multi-Controlled Rotation-X gate
+% The MCRotationX class implements a multi-controlled rotation gate about
+% the X axis. It applies an RX(θ) operation to the target qubit if all 
+% control qubits are in the specified control states.
+%
+% Creation
+%   Syntax
+%     G = qclab.qgates.MCRotationX(controls, target)
+%       - Creates an MCRotationX gate with control qubits `controls` 
+%         (array of indices), target qubit `target`, and default angle θ = 0 
+%
+%     G = qclab.qgates.MCRotationX(controls, target, controlStates)
+%       - Creates an MCRotationX gate with control qubits `controls`, 
+%         target qubit `target`, and an array `controlStates` specifying the 
+%         required control state (0 or 1) for each control qubit.
+%
+%     G = qclab.qgates.MCRotationX(controls, target, controlStates, theta)
+%       - Additionally specifies the rotation angle θ (in radians) for the RX 
+%         rotation.
+%
+%     G = qclab.qgates.MCRotationX(controls, target, controlStates, angle)
+%       - Alternatively, specify the rotation via a QAngle object `angle`.
+%
+%     G = qclab.qgates.MCRotationX(controls, target, controlStates, cos, sin)
+%       - Construct the gate from the cosine and sine of the rotation angle θ/2.
+%
+% Input Arguments
+%     controls       - Array of non-negative integers specifying control qubits
+%     target         - Non-negative integer specifying the target qubit
+%     controlStates  - Binary array (0 or 1), same length as `controls` 
+%                      (default: all 1)
+%     theta          - Rotation angle θ in radians
+%     angle          - QAngle object
+%     cos, sin       - Cosine and sine of θ/2
+%
+% Output
+%     G - A quantum object of type `MCRotationX`, representing the multi-controlled
+%         rotation-X gate acting on the specified qubits.
+%
+% Examples:
+%   Create an MCRotationX gate with controls [0,1], target 2, and rotation θ = π/2:
+%     G = qclab.qgates.MCRotationX([0,1], 2, [1,1], pi/2);
+%
+%   Create an adjustable MCRotationX gate using cosine and sine values:
+%     G = qclab.qgates.MCRotationX([0,3], 4, [1,0], cos(pi/4), sin(pi/4));
+
 %> @file MCRotationX.m
 %> @brief Implements MCRotationX class
 % ==============================================================================

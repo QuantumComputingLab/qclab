@@ -1,3 +1,59 @@
+% CU3 - Controlled U3 gate
+% The CU3 class implements a 2-qubit controlled-U3 gate with control and target
+% qubit, quantum angles theta, phi, lambda, and optional control state.
+%
+% Creation
+%   Syntax
+%     G = qclab.qgates.CU3()
+%       - Default: control = 0, target = 1, controlState = 1,
+%         theta = phi = lambda = 0 (adjustable).
+%
+%     G = qclab.qgates.CU3(control)
+%     G = qclab.qgates.CU3(control, target)
+%     G = qclab.qgates.CU3(control, target, controlState)
+%       - Specify control/target qubits and optional controlState.
+%
+%     G = qclab.qgates.CU3(control, target, controlState, theta, phi, ...
+%                                                             ... lambda, fixed)
+%       - Construct CU3 gate with specified angles (in radians) and optional
+%         `fixed` flag (default: false).
+%
+%     G = qclab.qgates.CU3(control, target, controlState, angle_theta, ...
+%                                            ... angle_phi, angle_lambda, fixed)
+%       - Constructs a CU3 gate using qclab.QAngle objects for θ, φ and λ, 
+%         the default of `fixed` is false.
+%
+%     G = qclab.qgates.CU3(control, target, controlState, ...
+%                          cos_theta, sin_theta, cos_phi, sin_phi, ...
+%                          cos_lambda, sin_lambda, fixed)
+%       - Construct CU3 gate using trigonometric representations, 
+%         the default of `fixed` is false.
+%
+% Input Arguments
+%     control                 - Integer index of control qubit.
+%     target                  - Integer index of target qubit.
+%     controlState            - control state (0 or 1). (default = 1)
+%     theta, phi, lambda      - Numerical values of θ, φ, and λ (in radians)
+%     angle_theta             - QAngle object
+%     angle_phi               - QAngle object
+%     angle_lambda            - QAngle object 
+%     cos_theta, sin_theta    - Cosine and sine of θ/2
+%     cos_phi, sin_phi        - Cosine and sine of φ
+%     cos_lambda, sin_lambda  - Cosine and sine of λ
+%     fixed                   - Logical flag to indicate whether angles are fixed.
+%
+%
+% Output
+%     G - A quantum object of type `CU3`, representing the controlled U3 gate.
+%
+% Examples:
+%   Create default CU3 gate:
+%     G = qclab.qgates.CU3();
+%
+%   Create fixed CU3 gate:
+%     G = qclab.qgates.CU3(0, 1, 1, pi/2, pi/4, pi, true);
+
+
 %> @file CU3.m
 %> @brief Implements CU3 class
 % ==============================================================================

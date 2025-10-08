@@ -1,7 +1,7 @@
 % PauliY - 1-qubit Pauli-Y gate for quantum circuits
 % The PauliY class implements a 1-qubit Pauli-Y gate. The Pauli-Y gate
 % combines a bit flip and a phase flip. It maps the |0⟩ state to -i|1⟩ and 
-% the |1⟩ state to i|0⟩, introducing a phase shift in the process.
+% the |1⟩ state to i|0⟩.
 %
 % The matrix representation of the Pauli-Y gate is:
 %   Y = [0  -i; 

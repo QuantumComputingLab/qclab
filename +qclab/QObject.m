@@ -38,7 +38,7 @@ classdef (Abstract) QObject < handle & ...
     %> @brief Saves the quantum circuit diagram as tex
     [out] = toTex(obj, fid, parameter, offset)
     %> @brief Applies this quantum gate to the given input current. 
-    [current] = apply(obj,side,op, nbQubits, current, offset)
+    [current] = apply(obj, side, op, nbQubits, current, offset)
     %> @brief Returns the unitary matrix corresponding to this quantum object. 
     [mat] = matrix(obj)
     %> @brief Return conjugate transpose of this quantum object.
@@ -91,6 +91,9 @@ classdef (Abstract) QObject < handle & ...
     function footer = getFooter(obj)
          footer = getFooter@matlab.mixin.CustomDisplay(obj);
     end
+  end
+
+   methods ( Sealed, Access = protected )
       
     %> display Heterogeneous Arrays
     function displayNonScalarObject(obj)
@@ -102,6 +105,7 @@ classdef (Abstract) QObject < handle & ...
          displayNonScalarObject@matlab.mixin.CustomDisplay(obj);
       end
     end
-  end
+   end
+   
 end % class QObject
 

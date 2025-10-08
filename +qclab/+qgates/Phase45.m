@@ -1,3 +1,31 @@
+% Phase45 - 1-qubit T gate (π/4 phase gate) for quantum circuits
+% The Phase45 class implements a 1-qubit phase gate with a phase angle
+% of π/4, also known as the T gate.
+%
+% The matrix representation of the Phase45 gate is:
+%   T = [1        0;
+%        0  exp(i·π/4)]
+%
+% Creation
+%   Syntax
+%     T = qclab.qgates.Phase45()
+%       - Creates a T gate (Phase45) on qubit 0.
+%
+%     T = qclab.qgates.Phase45(qubit)
+%       - Creates a T gate (Phase45) on the specified `qubit`.
+%
+%   Input Arguments
+%     qubit - Qubit to which the Phase45 gate is applied.
+%             Non-negative integer, default is 0.
+%
+%   Output
+%     T - A quantum object of type `Phase45`, representing a 1-qubit T gate
+%         on qubit `qubit`.
+%
+% Examples:
+%   Create a T gate on qubit 1:
+%     T = qclab.qgates.Phase45(1);
+
 %> @file Phase45.m
 %> @brief Implements Phase45 gate (T gate) class.
 % ==============================================================================
