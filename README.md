@@ -78,3 +78,8 @@ such, the U.S. Government has been granted for itself and others acting on
 its behalf a paid-up, nonexclusive, irrevocable, worldwide license in the
 Software to reproduce, distribute copies to the public, prepare derivative
 works, and perform publicly and display publicly, and to permit others to do so.
+
+## Cite as
+S. Keip, D. Camps and R. Van Beeumen, "QCLAB: A Matlab Toolbox for Quantum Computing," 2025 IEEE International Parallel and Distributed Processing Symposium Workshops (IPDPSW), Milano, Italy, 2025, pp. 1175-1181, doi: 10.1109/IPDPSW66978.2025.00184. Open-access version: arXiv:2503.03016.
+
+@INPROCEEDINGS{qclab2025, author={Keip, Sophia and Camps, Daan and Van Beeumen, Roel}, booktitle={2025 IEEE International Parallel and Distributed Processing Symposium Workshops (IPDPSW)}, title={QCLAB: A Matlab Toolbox for Quantum Computing}, year={2025}, pages={1175-1181}, doi={10.1109/IPDPSW66978.2025.00184}, eprint={arXiv:2503.03016}}
